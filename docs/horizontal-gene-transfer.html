@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Horizontal Gene Transfer | Vikings Project</title>
+  <meta name="description" content="Exploring yeast phenotypic diversity in traditional European farmhouse ale cultures as a source of novel industrial traits" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Horizontal Gene Transfer | Vikings Project" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Exploring yeast phenotypic diversity in traditional European farmhouse ale cultures as a source of novel industrial traits" />
+  <meta name="github-repo" content="19ADC99/VikingsProject" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Horizontal Gene Transfer | Vikings Project" />
+  
+  <meta name="twitter:description" content="Exploring yeast phenotypic diversity in traditional European farmhouse ale cultures as a source of novel industrial traits" />
+  
+
+<meta name="author" content="Andrea Del Cortona" />
+
+
+<meta name="date" content="2023-03-19" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="genome-assembly-and-annotation.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.24/datatables.js"></script>
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="libs/dt-ext-fixedcolumns-1.11.3/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-fixedcolumns-1.11.3/js/dataTables.fixedColumns.min.js"></script>
+<link href="libs/dt-ext-fixedheader-1.11.3/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-fixedheader-1.11.3/js/dataTables.fixedHeader.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Vikings Project</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Abstract</a></li>
+<li class="chapter" data-level="1" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html"><i class="fa fa-check"></i><b>1</b> QC and Genome Composition assessment</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html#reads-qc-and-filtering"><i class="fa fa-check"></i><b>1.1</b> Reads QC and Filtering</a></li>
+<li class="chapter" data-level="1.2" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html#genome-composition"><i class="fa fa-check"></i><b>1.2</b> Genome Composition</a></li>
+<li class="chapter" data-level="1.3" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html#ploydies-estimation"><i class="fa fa-check"></i><b>1.3</b> Ploydies estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="copy-number-variants.html"><a href="copy-number-variants.html"><i class="fa fa-check"></i><b>2</b> Copy Number Variants</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#call-cnvs"><i class="fa fa-check"></i><b>2.1</b> Call CNVs</a></li>
+<li class="chapter" data-level="2.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#identify-common-cnvs-in-farmhouse-yeasts"><i class="fa fa-check"></i><b>2.2</b> Identify common CNVs in Farmhouse yeasts</a></li>
+<li class="chapter" data-level="2.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv-functional-enrichment"><i class="fa fa-check"></i><b>2.3</b> CNV Functional Enrichment</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---i1-160000"><i class="fa fa-check"></i><b>2.3.1</b> CNV - I:1-160,000</a>
+<ul>
+<li class="chapter" data-level="2.3.1.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms"><i class="fa fa-check"></i><b>2.3.1.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.1.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms"><i class="fa fa-check"></i><b>2.3.1.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.1.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms"><i class="fa fa-check"></i><b>2.3.1.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.1.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways"><i class="fa fa-check"></i><b>2.3.1.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---i160501-230500"><i class="fa fa-check"></i><b>2.3.2</b> CNV - I:160,501-230,500</a>
+<ul>
+<li class="chapter" data-level="2.3.2.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-1"><i class="fa fa-check"></i><b>2.3.2.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.2.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-1"><i class="fa fa-check"></i><b>2.3.2.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.2.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-1"><i class="fa fa-check"></i><b>2.3.2.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.2.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-1"><i class="fa fa-check"></i><b>2.3.2.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---iii1001-317000"><i class="fa fa-check"></i><b>2.3.3</b> CNV - III:1,001-317,000</a>
+<ul>
+<li class="chapter" data-level="2.3.3.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-2"><i class="fa fa-check"></i><b>2.3.3.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.3.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-2"><i class="fa fa-check"></i><b>2.3.3.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.3.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-2"><i class="fa fa-check"></i><b>2.3.3.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.3.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-2"><i class="fa fa-check"></i><b>2.3.3.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---iv1-18500"><i class="fa fa-check"></i><b>2.3.4</b> CNV - IV:1-18,500</a>
+<ul>
+<li class="chapter" data-level="2.3.4.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-3"><i class="fa fa-check"></i><b>2.3.4.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.4.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-3"><i class="fa fa-check"></i><b>2.3.4.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.4.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-3"><i class="fa fa-check"></i><b>2.3.4.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.4.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-3"><i class="fa fa-check"></i><b>2.3.4.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.5" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---iv527001-540000"><i class="fa fa-check"></i><b>2.3.5</b> CNV - IV:527,001-540,000</a>
+<ul>
+<li class="chapter" data-level="2.3.5.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-4"><i class="fa fa-check"></i><b>2.3.5.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.5.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-4"><i class="fa fa-check"></i><b>2.3.5.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.5.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-4"><i class="fa fa-check"></i><b>2.3.5.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.5.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-4"><i class="fa fa-check"></i><b>2.3.5.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.6" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---vi4001-270500"><i class="fa fa-check"></i><b>2.3.6</b> CNV - VI:4,001-270,500</a>
+<ul>
+<li class="chapter" data-level="2.3.6.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-5"><i class="fa fa-check"></i><b>2.3.6.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.6.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-5"><i class="fa fa-check"></i><b>2.3.6.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.6.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-5"><i class="fa fa-check"></i><b>2.3.6.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.6.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-5"><i class="fa fa-check"></i><b>2.3.6.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.7" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---viii85501-556000"><i class="fa fa-check"></i><b>2.3.7</b> CNV - VIII:85,501-556,000</a>
+<ul>
+<li class="chapter" data-level="2.3.7.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-6"><i class="fa fa-check"></i><b>2.3.7.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.7.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-6"><i class="fa fa-check"></i><b>2.3.7.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.7.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-6"><i class="fa fa-check"></i><b>2.3.7.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.7.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-6"><i class="fa fa-check"></i><b>2.3.7.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.8" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---xi645001-667000"><i class="fa fa-check"></i><b>2.3.8</b> CNV - XI:645,001-667,000</a>
+<ul>
+<li class="chapter" data-level="2.3.8.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-7"><i class="fa fa-check"></i><b>2.3.8.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.8.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-7"><i class="fa fa-check"></i><b>2.3.8.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.8.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-7"><i class="fa fa-check"></i><b>2.3.8.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.8.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-7"><i class="fa fa-check"></i><b>2.3.8.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.9" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---xii451001-490000"><i class="fa fa-check"></i><b>2.3.9</b> CNV - XII:451,001-490,000</a>
+<ul>
+<li class="chapter" data-level="2.3.9.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-8"><i class="fa fa-check"></i><b>2.3.9.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.9.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-8"><i class="fa fa-check"></i><b>2.3.9.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.9.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-8"><i class="fa fa-check"></i><b>2.3.9.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.9.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-8"><i class="fa fa-check"></i><b>2.3.9.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.10" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---xv1-38000"><i class="fa fa-check"></i><b>2.3.10</b> CNV - XV:1-38,000</a>
+<ul>
+<li class="chapter" data-level="2.3.10.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-9"><i class="fa fa-check"></i><b>2.3.10.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.10.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-9"><i class="fa fa-check"></i><b>2.3.10.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.10.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-9"><i class="fa fa-check"></i><b>2.3.10.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.10.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-9"><i class="fa fa-check"></i><b>2.3.10.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.11" data-path="copy-number-variants.html"><a href="copy-number-variants.html#summary-of-enriched-or-depleted-functions"><i class="fa fa-check"></i><b>2.3.11</b> Summary of enriched or depleted functions</a>
+<ul>
+<li class="chapter" data-level="2.3.11.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#enriched-go-terms"><i class="fa fa-check"></i><b>2.3.11.1</b> Enriched GO terms</a></li>
+<li class="chapter" data-level="2.3.11.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#enriched-kegg-pathways"><i class="fa fa-check"></i><b>2.3.11.2</b> Enriched KEGG pathways</a></li>
+<li class="chapter" data-level="2.3.11.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#enriched-reactome-pathways"><i class="fa fa-check"></i><b>2.3.11.3</b> Enriched Reactome pathways</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html"><i class="fa fa-check"></i><b>3</b> Genome Assembly and Annotation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html#genome-assembly"><i class="fa fa-check"></i><b>3.1</b> Genome Assembly</a></li>
+<li class="chapter" data-level="3.2" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html#genome-annotation"><i class="fa fa-check"></i><b>3.2</b> Genome Annotation</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html"><i class="fa fa-check"></i><b>4</b> Horizontal Gene Transfer</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#taxonomic-annotation-of-predicted-genes"><i class="fa fa-check"></i><b>4.1</b> Taxonomic annotation of predicted genes</a></li>
+<li class="chapter" data-level="4.2" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#evidence-for-bacterial-hgt"><i class="fa fa-check"></i><b>4.2</b> Evidence for bacterial HGT</a></li>
+<li class="chapter" data-level="4.3" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#evidence-for-hgt-from-ascomycota"><i class="fa fa-check"></i><b>4.3</b> Evidence for HGT from Ascomycota</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Vikings Project</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="horizontal-gene-transfer" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Horizontal Gene Transfer<a href="horizontal-gene-transfer.html#horizontal-gene-transfer" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>To identify genuine Bacterial (or Fungal) Horizontal Gene Transfer, we apply the following protocol:</p>
+<ul>
+<li>sequence similarity search against non-redundant proteins database, including taxonomic annotations</li>
+<li>identify protein coding genes with best hits (top 5) to Bacterial proteins</li>
+<li>select assembled contigs where putative bacterial genes are</li>
+<li>discard short contigs with only one bacterial hit (Noise)</li>
+<li>if putative bacterial gene flanked by Eukaryotic genes, manual sequence similarity search to confirm a <em>bona fide</em> hit</li>
+</ul>
+<p>To have internal controls in this (and in the following analyses), we will add the ones of 18 <em>S. cerevisiae</em> industrial strains as well.</p>
+<div id="taxonomic-annotation-of-predicted-genes" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Taxonomic annotation of predicted genes<a href="horizontal-gene-transfer.html#taxonomic-annotation-of-predicted-genes" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>For each predicted protein-coding gene, we can make a sequence similarity search against the non-redundant protein database at NCBI (nr). To assign the taxonomy id of the nr BLAST hit, we need the <code>prot.accession2taxid.gz</code> and <code>nodes.dmp</code> files provided by NCBI taxonomy. This can help us identify horizontal gene transfer and traces of contamination in the library prep of yeast samples.</p>
+<p>For each sample, first we do a blast search using DIAMOND, and then we associate to the protein_id of the top 5 best hits to the corresponding taxonomy the python library ete and customs scripts. BLAST is run against nr, excluding <em>Saccharomyces cerevisiae</em>, so that we can judge if the protein was present in other yeasts, or if it is indeed of bacterial origin.</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb89-1"><a href="horizontal-gene-transfer.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BLAST search</span></span>
+<span id="cb89-2"><a href="horizontal-gene-transfer.html#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.all.maker.proteins.fasta<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb89-3"><a href="horizontal-gene-transfer.html#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">~/bin/DIAMOND/diamond</span> blastp <span class="dt">\</span></span>
+<span id="cb89-4"><a href="horizontal-gene-transfer.html#cb89-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">--query</span> <span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb89-5"><a href="horizontal-gene-transfer.html#cb89-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">--db</span> ~/taxonomy/nr <span class="dt">\</span></span>
+<span id="cb89-6"><a href="horizontal-gene-transfer.html#cb89-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">--taxonmap</span> ~/taxonomy/prot.accession2taxid.gz <span class="dt">\</span></span>
+<span id="cb89-7"><a href="horizontal-gene-transfer.html#cb89-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">--taxonnodes</span> ~/taxonomy/nodes.dmp <span class="dt">\</span></span>
+<span id="cb89-8"><a href="horizontal-gene-transfer.html#cb89-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">--threads</span> 70 <span class="dt">\</span></span>
+<span id="cb89-9"><a href="horizontal-gene-transfer.html#cb89-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">--sensitive</span> <span class="dt">\</span></span>
+<span id="cb89-10"><a href="horizontal-gene-transfer.html#cb89-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">--max-target-seqs</span> 5 <span class="dt">\</span></span>
+<span id="cb89-11"><a href="horizontal-gene-transfer.html#cb89-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">--outfmt</span> 6 qseqid sseqid pident length mismatch gapopen qstart qend</span>
+<span id="cb89-12"><a href="horizontal-gene-transfer.html#cb89-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">sstart</span> send evalue bitscore staxids <span class="op">&gt;</span> <span class="va">$file</span>.diamond</span>
+<span id="cb89-13"><a href="horizontal-gene-transfer.html#cb89-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb89-14"><a href="horizontal-gene-transfer.html#cb89-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-15"><a href="horizontal-gene-transfer.html#cb89-15" aria-hidden="true" tabindex="-1"></a><span class="co"># BLAST to taxid</span></span>
+<span id="cb89-16"><a href="horizontal-gene-transfer.html#cb89-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.diamond<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb89-17"><a href="horizontal-gene-transfer.html#cb89-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">~/anaconda_ete/bin/python3.6</span> Vikings.tax.topath.py <span class="at">--input</span> <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.tax</span>
+<span id="cb89-18"><a href="horizontal-gene-transfer.html#cb89-18" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb89-19"><a href="horizontal-gene-transfer.html#cb89-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.tax <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb89-20"><a href="horizontal-gene-transfer.html#cb89-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span> <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb89-21"><a href="horizontal-gene-transfer.html#cb89-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grep</span> <span class="va">$line</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1,5<span class="kw">;</span></span>
+<span id="cb89-22"><a href="horizontal-gene-transfer.html#cb89-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span><span class="kw">;</span></span>
+<span id="cb89-23"><a href="horizontal-gene-transfer.html#cb89-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">done</span> <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">grep</span> Bacteria <span class="va">$file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1 <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">$file</span>.bact</span>
+<span id="cb89-24"><a href="horizontal-gene-transfer.html#cb89-24" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p>Now we have the full taxonomic annotation of the five best hits for each of the protein coding genes we annotated on the kveiks.</p>
+</div>
+<div id="evidence-for-bacterial-hgt" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Evidence for bacterial HGT<a href="horizontal-gene-transfer.html#evidence-for-bacterial-hgt" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb90"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb90-1"><a href="horizontal-gene-transfer.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># filter annot.gff files</span></span>
+<span id="cb90-2"><a href="horizontal-gene-transfer.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.gff <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb90-3"><a href="horizontal-gene-transfer.html#cb90-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span> CDS <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.CDSonly.gff<span class="kw">;</span></span>
+<span id="cb90-4"><a href="horizontal-gene-transfer.html#cb90-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gzip</span> <span class="va">$file</span><span class="kw">;</span></span>
+<span id="cb90-5"><a href="horizontal-gene-transfer.html#cb90-5" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb90-6"><a href="horizontal-gene-transfer.html#cb90-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-7"><a href="horizontal-gene-transfer.html#cb90-7" aria-hidden="true" tabindex="-1"></a><span class="co"># identify putative bacterial genes and the assembled contigs harbouring them</span></span>
+<span id="cb90-8"><a href="horizontal-gene-transfer.html#cb90-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.tax<span class="kw">;</span> <span class="cf">do</span> <span class="fu">cut</span> <span class="at">-f</span> 1,5 <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.all<span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb90-9"><a href="horizontal-gene-transfer.html#cb90-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.all<span class="kw">;</span> <span class="cf">do</span> <span class="fu">grep</span> Bact <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .all<span class="va">)</span>.bact<span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb90-10"><a href="horizontal-gene-transfer.html#cb90-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.bact<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb90-11"><a href="horizontal-gene-transfer.html#cb90-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb90-12"><a href="horizontal-gene-transfer.html#cb90-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">[[</span> <span class="va">$line</span> <span class="ot">=</span> <span class="st">&quot;&quot;</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb90-13"><a href="horizontal-gene-transfer.html#cb90-13" aria-hidden="true" tabindex="-1"></a>      <span class="cf">continue</span><span class="kw">;</span></span>
+<span id="cb90-14"><a href="horizontal-gene-transfer.html#cb90-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb90-15"><a href="horizontal-gene-transfer.html#cb90-15" aria-hidden="true" tabindex="-1"></a>      <span class="va">GENE</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="va">$line</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span> <span class="st">&quot; &quot;</span> <span class="at">-f</span> 1 <span class="va">)</span><span class="kw">;</span></span>
+<span id="cb90-16"><a href="horizontal-gene-transfer.html#cb90-16" aria-hidden="true" tabindex="-1"></a>      <span class="va">CHR</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">&quot;</span><span class="va">${GENE}</span><span class="st">&quot;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .maker.proteins.fasta.diamond.tax.bact<span class="va">)</span>.CDSonly.gff <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">)</span><span class="kw">;</span></span>
+<span id="cb90-17"><a href="horizontal-gene-transfer.html#cb90-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grep</span> <span class="st">&quot;</span><span class="va">${CHR}</span><span class="st">&quot;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .bact<span class="va">)</span>.all <span class="dt">\</span></span>
+<span id="cb90-18"><a href="horizontal-gene-transfer.html#cb90-18" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="fu">uniq</span> <span class="dt">\</span></span>
+<span id="cb90-19"><a href="horizontal-gene-transfer.html#cb90-19" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-C5</span> <span class="st">&quot;</span><span class="va">${GENE}</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb90-20"><a href="horizontal-gene-transfer.html#cb90-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">&quot;</span><span class="va">${GENE}</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb90-21"><a href="horizontal-gene-transfer.html#cb90-21" aria-hidden="true" tabindex="-1"></a>        <span class="op">&gt;&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .maker.proteins.fasta.diamond.tax.bact<span class="va">)</span>.<span class="st">&quot;</span><span class="va">${GENE}</span><span class="st">&quot;</span>.tmp<span class="kw">;</span></span>
+<span id="cb90-22"><a href="horizontal-gene-transfer.html#cb90-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span><span class="kw">;</span></span>
+<span id="cb90-23"><a href="horizontal-gene-transfer.html#cb90-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">done</span> <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span><span class="op">)</span><span class="kw">;</span></span>
+<span id="cb90-24"><a href="horizontal-gene-transfer.html#cb90-24" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb90-25"><a href="horizontal-gene-transfer.html#cb90-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-26"><a href="horizontal-gene-transfer.html#cb90-26" aria-hidden="true" tabindex="-1"></a><span class="co"># pull the putative bacterial contigs</span></span>
+<span id="cb90-27"><a href="horizontal-gene-transfer.html#cb90-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.bact<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb90-28"><a href="horizontal-gene-transfer.html#cb90-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> <span class="va">$file</span>.lst<span class="kw">;</span></span>
+<span id="cb90-29"><a href="horizontal-gene-transfer.html#cb90-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">perl</span> ~/scripts/SelectList_Fasta.pl <span class="dt">\</span></span>
+<span id="cb90-30"><a href="horizontal-gene-transfer.html#cb90-30" aria-hidden="true" tabindex="-1"></a>    <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .diamond.tax.bact<span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb90-31"><a href="horizontal-gene-transfer.html#cb90-31" aria-hidden="true" tabindex="-1"></a>    <span class="va">$file</span>.lst <span class="dt">\</span></span>
+<span id="cb90-32"><a href="horizontal-gene-transfer.html#cb90-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> <span class="va">$file</span>.fa<span class="kw">;</span></span>
+<span id="cb90-33"><a href="horizontal-gene-transfer.html#cb90-33" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb90-34"><a href="horizontal-gene-transfer.html#cb90-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-35"><a href="horizontal-gene-transfer.html#cb90-35" aria-hidden="true" tabindex="-1"></a><span class="co"># check if putative bacterial transcripts are flanked by Euk genes</span></span>
+<span id="cb90-36"><a href="horizontal-gene-transfer.html#cb90-36" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.6</span> Vikings.check_eukbact_contigs.1.py <span class="at">--input</span> ../samples.lst</span>
+<span id="cb90-37"><a href="horizontal-gene-transfer.html#cb90-37" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>HGT.table<span class="kw">;</span> <span class="cf">do</span> <span class="fu">uniq</span> <span class="va">$file</span> <span class="op">&gt;</span> temp<span class="kw">;</span> <span class="fu">mv</span> temp <span class="va">$file</span> <span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb90-38"><a href="horizontal-gene-transfer.html#cb90-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>HGT.table<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb90-39"><a href="horizontal-gene-transfer.html#cb90-39" aria-hidden="true" tabindex="-1"></a>  <span class="ex">python3</span> ../Vikings.Bactmatch.py <span class="at">--input</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 2 <span class="op">&gt;</span> temp<span class="kw">;</span></span>
+<span id="cb90-40"><a href="horizontal-gene-transfer.html#cb90-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cp</span> temp temp2<span class="kw">;</span></span>
+<span id="cb90-41"><a href="horizontal-gene-transfer.html#cb90-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span> temp temp2 <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/\t/\|\&gt;/g&#39;</span> <span class="op">&gt;</span> <span class="va">$file</span>.lst<span class="kw">;</span></span>
+<span id="cb90-42"><a href="horizontal-gene-transfer.html#cb90-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rm</span> temp temp2<span class="kw">;</span></span>
+<span id="cb90-43"><a href="horizontal-gene-transfer.html#cb90-43" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb90-44"><a href="horizontal-gene-transfer.html#cb90-44" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>HGT.table.lst<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb90-45"><a href="horizontal-gene-transfer.html#cb90-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">perl</span> ~/scripts/SelectList_Fasta.pl <span class="dt">\</span></span>
+<span id="cb90-46"><a href="horizontal-gene-transfer.html#cb90-46" aria-hidden="true" tabindex="-1"></a>    <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .HGT.table.lst<span class="va">)</span>.bact.fa <span class="dt">\</span></span>
+<span id="cb90-47"><a href="horizontal-gene-transfer.html#cb90-47" aria-hidden="true" tabindex="-1"></a>    <span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb90-48"><a href="horizontal-gene-transfer.html#cb90-48" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .lst<span class="va">)</span>.fa<span class="kw">;</span></span>
+<span id="cb90-49"><a href="horizontal-gene-transfer.html#cb90-49" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<p><em>THERE ARE NO EVIDENCES FOR SIGNIFICANT BACTERIAL HORIZONTAL GENE TRANSFER.</em></p>
+</div>
+<div id="evidence-for-hgt-from-ascomycota" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Evidence for HGT from Ascomycota<a href="horizontal-gene-transfer.html#evidence-for-hgt-from-ascomycota" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We can check the presence of fungal non-Saccharomyces genes and operons starting from the DIAMOND blast results we have.</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb91-1"><a href="horizontal-gene-transfer.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select non Saccharomyces genes</span></span>
+<span id="cb91-2"><a href="horizontal-gene-transfer.html#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="co"># filter for genes with no top hits to Saccharomyces</span></span>
+<span id="cb91-3"><a href="horizontal-gene-transfer.html#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>tax<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb91-4"><a href="horizontal-gene-transfer.html#cb91-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">grep</span> Ascomycota <span class="va">$file</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> Saccharomyces <span class="op">&gt;</span> <span class="va">$file</span>.Asco<span class="kw">;</span></span>
+<span id="cb91-5"><a href="horizontal-gene-transfer.html#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb91-6"><a href="horizontal-gene-transfer.html#cb91-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grep</span> <span class="va">$line</span> <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.Asco.all<span class="kw">;</span></span>
+<span id="cb91-7"><a href="horizontal-gene-transfer.html#cb91-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">[[</span> <span class="va">$(</span><span class="fu">grep</span> <span class="va">$line</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">grep</span> Saccharomyces<span class="va">)</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb91-8"><a href="horizontal-gene-transfer.html#cb91-8" aria-hidden="true" tabindex="-1"></a>      <span class="cf">continue</span><span class="kw">;</span></span>
+<span id="cb91-9"><a href="horizontal-gene-transfer.html#cb91-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb91-10"><a href="horizontal-gene-transfer.html#cb91-10" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="va">$line</span><span class="kw">;</span></span>
+<span id="cb91-11"><a href="horizontal-gene-transfer.html#cb91-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span><span class="kw">;</span></span>
+<span id="cb91-12"><a href="horizontal-gene-transfer.html#cb91-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">done</span> <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">$file</span>.Asco <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">$file</span>.Asco.candidates<span class="kw">;</span></span>
+<span id="cb91-13"><a href="horizontal-gene-transfer.html#cb91-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb91-14"><a href="horizontal-gene-transfer.html#cb91-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-15"><a href="horizontal-gene-transfer.html#cb91-15" aria-hidden="true" tabindex="-1"></a><span class="co"># retrieve fasta sequences</span></span>
+<span id="cb91-16"><a href="horizontal-gene-transfer.html#cb91-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>candidates<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb91-17"><a href="horizontal-gene-transfer.html#cb91-17" aria-hidden="true" tabindex="-1"></a><span class="fu">perl</span> ~/scripts/SelectList_Fasta.pl <span class="dt">\</span></span>
+<span id="cb91-18"><a href="horizontal-gene-transfer.html#cb91-18" aria-hidden="true" tabindex="-1"></a>  ../../11_domestication/00_prot_DB/<span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span></span>
+<span id="cb91-19"><a href="horizontal-gene-transfer.html#cb91-19" aria-hidden="true" tabindex="-1"></a>  <span class="ex">.diamond.tax.Asco.candidates</span><span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb91-20"><a href="horizontal-gene-transfer.html#cb91-20" aria-hidden="true" tabindex="-1"></a>  <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.fa<span class="kw">;</span></span>
+<span id="cb91-21"><a href="horizontal-gene-transfer.html#cb91-21" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb91-22"><a href="horizontal-gene-transfer.html#cb91-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-23"><a href="horizontal-gene-transfer.html#cb91-23" aria-hidden="true" tabindex="-1"></a><span class="co"># generate table stats</span></span>
+<span id="cb91-24"><a href="horizontal-gene-transfer.html#cb91-24" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> 2 3<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb91-25"><a href="horizontal-gene-transfer.html#cb91-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">wc</span> <span class="at">-l</span> <span class="pp">*</span>candidates <span class="dt">\</span></span>
+<span id="cb91-26"><a href="horizontal-gene-transfer.html#cb91-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/.SPAdes.*//g&quot;</span> <span class="dt">\</span></span>
+<span id="cb91-27"><a href="horizontal-gene-transfer.html#cb91-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/.aa.*//g&quot;</span> <span class="dt">\</span></span>
+<span id="cb91-28"><a href="horizontal-gene-transfer.html#cb91-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/.contigs.*//g&quot;</span> <span class="dt">\</span></span>
+<span id="cb91-29"><a href="horizontal-gene-transfer.html#cb91-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> total <span class="dt">\</span></span>
+<span id="cb91-30"><a href="horizontal-gene-transfer.html#cb91-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/  / /g&quot;</span> <span class="dt">\</span></span>
+<span id="cb91-31"><a href="horizontal-gene-transfer.html#cb91-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&quot;s/  / /g&quot;</span> <span class="dt">\</span></span>
+<span id="cb91-32"><a href="horizontal-gene-transfer.html#cb91-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> <span class="va">$i</span> <span class="at">-d</span> <span class="st">&quot; &quot;</span> <span class="dt">\</span></span>
+<span id="cb91-33"><a href="horizontal-gene-transfer.html#cb91-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> temp.<span class="va">$i</span><span class="kw">;</span></span>
+<span id="cb91-34"><a href="horizontal-gene-transfer.html#cb91-34" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span><span class="kw">;</span></span>
+<span id="cb91-35"><a href="horizontal-gene-transfer.html#cb91-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-36"><a href="horizontal-gene-transfer.html#cb91-36" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span> temp.3 temp.2 <span class="op">&gt;</span> Vikings.Asco.HGT.stats<span class="kw">;</span></span>
+<span id="cb91-37"><a href="horizontal-gene-transfer.html#cb91-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb91-38"><a href="horizontal-gene-transfer.html#cb91-38" aria-hidden="true" tabindex="-1"></a><span class="co"># clean up</span></span>
+<span id="cb91-39"><a href="horizontal-gene-transfer.html#cb91-39" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> temp.2 temp.3</span></code></pre></div>
+
+</div>
+</div>
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="genome-assembly-and-annotation.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/04-HorizontalGeneTransfer.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
