@@ -109,3 +109,4 @@ horizontal-gene-transfer
 taxonomic-annotation-of-predicted-genes
 evidence-for-bacterial-hgt
 evidence-for-hgt-from-ascomycota
+fig:unnamed-chunk-7
