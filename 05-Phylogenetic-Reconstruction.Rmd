@@ -1,0 +1,428 @@
+# Phylogenetic reconstruction
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("ape", "aplot", "ggtree", "ggtreeExtra", "ggplot2", "ggnewscale", "RColorBrewer", "reshape")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/Andrea/Desktop/kveiks/manuscript/plotting_data/"
+knitr::opts_knit$set(root.dir = mainDir)
+```
+
+
+## Identify quasi single-copy genes
+
+Uniform header sequences, since they come from multiple sources and they are all messed up and incosistent.
+
+```{bash, eval=FALSE}
+# rename protein sequences
+for file in *maker.aa.fa; do
+  NAME=$(basename $file .maker.aa.fa)_;
+  sed -i "s/>/>$NAME/g" $file;
+done
+
+for file in *[0-9].aa.fa; do
+  NAME=$(basename $file .aa.fa)_;
+  sed -i "s/>/>$NAME/g" $file;
+done
+
+# concatenate all files together
+cat *.aa.fa > all_plusKV.aa.fa
+```
+
+
+We will create a set of non-redundant _S. cerevisiae_ proteins, by clustering them based on a 70% sequence similarity groups.
+
+```{bash, eval=FALSE}
+# cluster sequences
+cd-hit -i all_plusKV.aa.fa -o all_plusKV.aa.0.7.fa -T 24 -M 16000 -c 0.7 -d 60
+```
+
+
+We now check protein clusters having only a single copy gene per yeast strain.
+
+```{bash, eval=FALSE}
+# filter clusters into small one gene ortholog clusters
+python3.5 Vikings.filterCDHITclusters.py --clstr all_plusKV.aa.0.7.fa.clstr
+
+# clean folder
+mkdir -p 01_filter_clusters/01_clusters_311-350
+mkdir -p 01_filter_clusters/02_clusters_311-350_noDuplicates
+mv all_plusKV.aa.0.7.fa.clstr.fltr.clstr.* 01_filter_clusters
+
+# remove duplicated genes from orthologs clusters
+python3.5 Vikings.filterCDHITclustersDeduplicates.py \
+	--indir 01_filter_clusters/01_clusters_311-350 \
+	--outdir 01_filter_clusters/02_clusters_311-350_noDuplicate
+
+# retrieve amino acid sequences
+mkdir -p 01_filter_clusters/03_clusters_aa
+
+# format headers
+sed -i 's/ .*//g' ../all_plusKV.aa.fa
+sed -i 's/|.*//g' ../all_plusKV.aa.fa &
+
+for file in 02_clusters_311-350_noDuplicates/*; do sed -i 's/|.*//g' $file ; done
+
+python3.5 Vikings.CDHITclustersList2ntSeq.py \
+  --fasta all_plusKV.aa.fa \
+  --indir ./01_filter_clusters/02_clusters_311-350_noDuplicates/ \
+  --outdir ./01_filter_clusters/03_clusters_aa/
+```
+
+
+
+### Create animo acid and codon alignments
+
+Prepare nucleotidic sequences
+
+
+```{bash, eval=FALSE}
+mkdir 02_nt_start/
+
+# reformat the header to match aa
+for file in *.fa; do
+	STRAIN=$(basename $file | tr '.' ' ' | cut -f 1 -d " ");
+	sed -i 's/ .*//g' $file;
+	sed -i 's/|.*//g' $file;
+	sed -i 's/>/>_/g' $file;
+	sed -i "s/>/>$STRAIN/g" $file;
+done 
+
+# select nt per cluster
+cat *.fa > ../all_plusKV.nt.fa
+# correct worng headers
+sed -i 's/Skudr_Skudr/Skudr/g' all_plusKV.nt.fa;
+sed -i 's/Suvar_Suvar/Suvar/g' all_plusKV.nt.fa;
+sed -i 's/Seuba_Seuba/Seuba/g' all_plusKV.nt.fa
+mkdir 03_nt_clusters
+
+# cluster NT
+cd-hit -T 72 -c 0.98 -aL 0.95 -d 0 -i all_plusKV.nt.fa -o all_plusKV.nt.098.fa
+
+# extract cluster gene lists
+python3.5 Vikings.filterCDHITclusters.nt.py --clstr all_plusKV.nt.098.fa.clstr
+
+# select genes
+cat gene.lst \
+  | xargs -n 1 -P 64 -I {} sh -c \
+    'echo {}; \
+    for file in 00_nt_clusters_lst/*.clstr.*; do 
+      if grep -q {} $file; 
+        then cp $file 00_nt_clusters_lst_select;
+    fi; done'
+
+# add Hittinger IDs
+for file in 99_Hittinger/coding/*.fsa; do
+  grep ">" $file \
+    | sed 's/>//g' \
+    > 99_Hittinger/geneList/$(basename $file .fsa).lst;
+done
+
+python3.5 Vikings.addHittingerID.py \
+  --CDlists 01_nt_clusters_lst_select \
+  --Hit 99_Hittinger/geneList/ \
+  --outdir 02_nt_clusters_lst_select_Hittinger
+
+cat all_plusKV.aa.fa 99_Hittinger/coding/*.aa.mfa > all_plusKV.Hit.aa.fa
+cat all_plusKV.nt.fa 99_Hittinger/coding/*.fsa > all_plusKV.Hit.nt.fa
+
+
+for file in 02_nt_clusters_lst_select_Hittinger/*.Hit; do sed -i 's/ .*//g' $file ; done
+
+# select aa for each cluster
+python3.5 Vikings.CDHITclustersList2ntSeq.py \
+  --fasta all_plusKV.Hit.aa.fa \
+  --indir ./02_nt_clusters_lst_select_Hittinger \
+  --outdir ./03_aa_clusters/
+
+# align aa clusters
+ls ./03_aa_clusters/ \
+  | xargs -n 8 -P 8 -I {} sh -c \
+  'mafft --localpair --maxiterate 1000 --ep 0.123 --thread 8 ./03_aa_clusters/{} > ./04_aa_clusters_aln/{}.aln.fa'
+
+for file in ./04_aa_clusters_aln/*.fa; do
+  perl ~/rubbish/00_Brigida_starting_files/pal2nal.v14/pal2nal.pl \
+    $file 05_nt_clusters/$(basename $file .aln.fa)\
+    -output fasta \
+    > 06_nt_clusters_aln/$(basename $file .fa).fa;
+done
+
+# rename headers to keep only strain name
+find 05_nt_align_long/* | xargs -n 1 -P 64 sed -i 's/_.*//g' 
+
+mkdir ../07_nt_aln_ready;
+for file in ./*; do
+  NAME=$(grep S288C $file | sed 's/>S288C_//g');
+  cp $file ../07_nt_aln_ready/$NAME.nt.aln.fa;
+done
+
+# rename headers to keep only strain name
+find 07_nt_aln_ready/* | xargs -n 1 -P 64 sed -i 's/_.*//g' 
+```
+
+
+## Run phylogenetic reconstruction
+
+This resulted in 1,390 single-copy genes identified across 151 yeast strains of Gallone et al. 2016 and the 44 kveiks strains in this study.
+Let's build a Maximum Likelihood tree to reconstruct the phylogenetic relationships between these _S. cerevisiae_ yeast strains!
+
+
+### Create ML tree
+
+```{bash, eval=FALSE}
+# concatenate alignmnets
+mkdir 08_concatenated_ML
+perl catfasta2phyml.pl \
+  --fasta \
+  --concatenate 07_nt_aln_ready/*.fa \
+  > 08_concatenated_ML/clstr.all.concat.nt.align.fa
+
+# ML analysis on concatenated alignment
+~/bin/iqtree-1.6.8-Linux/bin/iqtree \
+  -s clstr.all.concat.nt.align.fa \
+  -st CODON \
+  -pre clstr.all.concat.nt.align \
+  -nt 52 \
+  -wbt \
+  -bb 1000 \
+  -alrt 1000 \
+  -m MG+F1X4
+```
+
+Plot the reconstructed phylogenetic tree.
+
+```{r, fig.cap="Farmhouse yeasts Maximum Likelihood phynogenetic recontruction", warning=FALSE, message=FALSE}
+# load tree
+best_tree = read.tree(paste(mainDir, "clstr.all.concat.nt.align.short.tre", sep = ""))
+best_tree = as.phylo(best_tree)
+best_tree$node.label = as.numeric(as.character(best_tree$node.label))
+best_tree = ape::root(best_tree,
+                      which(best_tree$tip.label %in% c("Skud")),
+                      edgelabel = TRUE)
+best_tree = ladderize(best_tree, right = TRUE)
+
+# load annotations
+tree_annot_raw = read.table(paste(mainDir, "genetrees.output.BS.annot.txt", sep = ""),
+                            sep = "\t",
+                            header = TRUE,
+                            stringsAsFactors = FALSE)
+tree_annot_raw = data.frame(tree_annot_raw)
+tree_annot_raw$Origin = factor(tree_annot_raw$Origin,
+                               levels = c("North-West Norway", "Eastern Norway", "South-West Norway",
+                                          "Latvia", "Lithuania", "Russia", " "))
+
+# plot
+p = ggtree(best_tree,
+           layout = "fan",
+           open.angle = 0) +
+  geom_tiplab2(offset = 0.001,
+               align = TRUE,
+               size = 2.75) +
+  geom_nodepoint(aes(fill = cut(as.numeric(label), c(0, 70, 90, 100))),
+                 shape = 21, size = 2) +
+  theme_tree(legend.position = c(0.1, 0.55)) +
+  scale_fill_manual(values = c("white", "grey", "black"),
+                    guide = "legend",
+                    name = "Bootstrap",
+                    breaks = c("(90,100]", "(70,90]", "(0,70]"),
+                    labels = expression(BP>=90,70 <= BP * " < 90", BP < 70))
+
+p1 = p +
+  new_scale_fill() +
+  geom_fruit(data = tree_annot_raw,
+             geom = geom_tile,
+             mapping = aes(y = Strain, fill = Clade),
+             color = NA, offset = 0.00975, pwidth = 0.001) +
+  scale_fill_manual(values = c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                               '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                               '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+                               '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080',
+                               '#ffffff', '#000000')) 
+
+p2 = p1 +
+  new_scale_fill() +
+  geom_fruit(data = tree_annot_raw,
+             geom = geom_tile,
+             mapping = aes(y = Strain, fill = Origin),
+             color = NA, offset = 0.0115, pwidth = 0.001) +
+  scale_fill_manual(values = c('#03045e', '#0077b6', '#00b4d8', 
+                               '#808000', '#aaffc3', '#800000',
+                               '#ffffff')) +
+  theme(legend.position = c(1.1, 0.5))
+
+p2
+```
+
+
+Based on the concatenated ML tree, Farmhouse yeasts seems not monophyletic. However, the well enstablished phylogenetic relationships between industrial _S. cerevisiae_ strains (e.g.: Beer1, Beer2, Wine clades, see Gallone et al. 2016, Peter et al. 2018) were not reconstructed, suggesting that the presence of highly heterozigous and possibly hybrid (Preiss et al. 2018) Farmhouse yeasts may impair the phylogenetic reconstruction.
+
+Let's see if the 1,390 genes we have selected for the phylogenetic reconstruction can confirm the phylogenetic relationships between industrial clades reconstructed by Gallone et al. 2016, Peter et al. 2018). We therefore remove the farmhouse yeasts sequences from the alignments, recompute the aa and nt alignments and run the supermatrix ML analysis.
+
+
+```{r, fig.cap="Industrial yeasts Maximum Likelihood phynogenetic recontruction", warning=FALSE, message=FALSE}
+# load tree
+best_tree = read.tree(paste(mainDir, "clstr.all.concat.nt.align.noKV.short.tre", sep = ""))
+best_tree = as.phylo(best_tree)
+best_tree$node.label = as.numeric(as.character(best_tree$node.label))
+best_tree = ape::root(best_tree,
+                      which(best_tree$tip.label %in% c("Skud")),
+                      edgelabel = TRUE)
+best_tree = ladderize(best_tree, right = TRUE)
+
+# load annotations
+tree_annot_raw = read.table(paste(mainDir, "genetrees.output.BS.annot.txt", sep = ""),
+                            sep = "\t",
+                            header = TRUE,
+                            stringsAsFactors = FALSE)
+tree_annot_raw = data.frame(tree_annot_raw)
+tree_annot_raw$Origin = factor(tree_annot_raw$Origin,
+                               levels = c("North-West Norway", "Eastern Norway", "South-West Norway",
+                                          "Latvia", "Lithuania", "Russia", " "))
+
+# plot
+p = ggtree(best_tree,
+           layout = "fan",
+           open.angle = 0) +
+  geom_tiplab2(offset = 0.001,
+               align = TRUE,
+               size = 2.75) +
+  geom_nodepoint(aes(fill = cut(as.numeric(label), c(0, 70, 90, 100))),
+                 shape = 21, size = 2) +
+  theme_tree(legend.position = c(0.1, 0.55)) +
+  scale_fill_manual(values = c("white", "grey", "black"),
+                    guide = "legend",
+                    name = "Bootstrap",
+                    breaks = c("(90,100]", "(70,90]", "(0,70]"),
+                    labels = expression(BP>=90,70 <= BP * " < 90", BP < 70))
+
+p1 = p +
+  new_scale_fill() +
+  geom_fruit(data = tree_annot_raw,
+             geom = geom_tile,
+             mapping = aes(y = Strain, fill = Clade),
+             color = NA, offset = 0.00975, pwidth = 0.001) +
+  scale_fill_manual(values = c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                               '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                               '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+                               '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080',
+                               '#ffffff', '#000000')) +
+  theme(legend.position = c(1.1, 0.5))
+
+p1
+```
+
+
+Yes, we can confirm the well enstablished phylogenetic relationships between already sequenced yeast straind from the industrial clades based on a supermatrix analysis of the concatenated selected 1,390 genes.
+
+
+### Create coalescence-based tree
+
+As seen, ML approaches fail to reconstruct an expected phylogenetic tree of _S. cerevisiae_ when Farmhouse yeasts are included. To better handle high levels of heterozygosity and partial lineage sorting, we inferred the species tree by applying coalescence-based phylognetic reconstruction on the single-gene ML trees.
+
+[supermatrix analyses are based on large datasets and can use complex models that can account for the heterogeneity of the substitution process, but cannot account for gene-tree species-tree incongruence, while coalescence-based approaches accommodate incomplete lineage sorting, but rely on topologies inferred from small datasets using simpler models that make them more sensitive to stochastic noise]
+
+Let's reconstruct the single gene ML trees.
+
+```{bash, eval=FALSE}
+# run IQtree in parallel for each nt gene alignment
+ls ../07_nt_aln_ready/*.fa \
+  | xargs -n 8 -P 8 -I {} sh -c \
+    '~/bin/iqtree-1.6.8-Linux/bin/iqtree \
+       -s {} \
+       -st CODON \
+       -pre {} \
+       -nt 64 \
+       -wbt \
+       -bb 1000 \
+       -alrt 1000 \
+       -m MG+F1X4'
+```
+
+Let's run a coalescence based approach on the reonstructed single-gene ML trees plus the 1,000 ultrafast Boostrap trees generated for each tree by IQtree (~1,400,000 single-gene tree). The coalescensce-based phylogeny was inferred 100 times allowing gene resampling to obtain Bootstrap estimated support values for each node.
+
+
+```{bash, eval=FALSE}
+# colaescence-based species tree
+java -Xmx30000M -jar ~/bin/Astral/astral.5.6.3.jar \
+  --bootstraps genetrees.input.BS \
+  --gene-resampling \
+  -r 100 \
+  --input genetrees.input.tre \
+  --output genetrees.output.BS.tre \
+  2> genetrees.output.BS.log
+```
+
+
+Plot the reconstructed species tree (based on coalescence).
+
+```{r, fig.cap="Farmhouse yeasts coalescence-based phynogenetic recontruction", warning=FALSE, message=FALSE}
+# load tree
+best_tree = read.tree(paste(mainDir, "genetrees.output.BS.best.tre", sep = ""))
+best_tree = as.phylo(best_tree)
+best_tree$node.label = as.numeric(as.character(best_tree$node.label))
+best_tree = ape::root(best_tree,
+                      which(best_tree$tip.label %in% c("Skud")),
+                      edgelabel = TRUE)
+best_tree = ladderize(best_tree, right = TRUE)
+
+# load annotations
+tree_annot_raw = read.table(paste(mainDir, "genetrees.output.BS.annot.txt", sep = ""),
+                            sep = "\t",
+                            header = TRUE,
+                            stringsAsFactors = FALSE)
+tree_annot_raw = data.frame(tree_annot_raw)
+tree_annot_raw$Origin = factor(tree_annot_raw$Origin,
+                               levels = c("North-West Norway", "Eastern Norway", "South-West Norway",
+                                          "Latvia", "Lithuania", "Russia", " "))
+
+# plot
+p = ggtree(best_tree,
+           layout = "fan",
+           open.angle = 0) +
+  geom_tiplab2(offset = 3,
+               size = 2.75) +
+  geom_nodepoint(aes(fill = cut(as.numeric(label), c(0, 70, 90, 100))),
+                 shape = 21, size = 2) +
+  theme_tree(legend.position = c(0.1, 0.55)) +
+  scale_fill_manual(values = c("white", "grey", "black"),
+                    guide = "legend",
+                    name = "Bootstrap",
+                    breaks = c("(90,100]", "(70,90]", "(0,70]"),
+                    labels = expression(BP>=90,70 <= BP * " < 90", BP < 70))
+p = flip(p, 250, 317)
+
+p1 = p +
+  new_scale_fill() +
+  geom_fruit(data = tree_annot_raw,
+             geom = geom_tile,
+             mapping = aes(y = Strain, fill = Clade),
+             color = NA, offset = 0.04, size = 0.02) +
+  scale_fill_manual(values = c('#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
+                               '#911eb4', '#46f0f0', '#f032e6', '#bcf60c', '#fabebe',
+                               '#008080', '#e6beff', '#9a6324', '#fffac8', '#800000',
+                               '#aaffc3', '#808000', '#ffd8b1', '#000075', '#808080',
+                               '#ffffff', '#000000')) 
+p2 = p1 +
+  new_scale_fill() +
+  geom_fruit(data = tree_annot_raw,
+             geom = geom_tile,
+             mapping = aes(y = Strain, fill = Origin),
+             color = NA, offset = 0.06, size = 0.02) +
+  scale_fill_manual(values = c('#03045e', '#0077b6', '#00b4d8', 
+                               '#808000', '#aaffc3', '#800000',
+                               '#ffffff')) +
+  theme(legend.position = c(1.1, 0.5))
+
+p2
+```
+
+
+
+
+
+
+
+
+

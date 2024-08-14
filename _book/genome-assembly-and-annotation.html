@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Genome Assembly and Annotation | Vikings Project</title>
+  <meta name="description" content="Exploring yeast phenotypic diversity in traditional European farmhouse ale cultures as a source of novel industrial traits" />
+  <meta name="generator" content="bookdown 0.32 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Genome Assembly and Annotation | Vikings Project" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Exploring yeast phenotypic diversity in traditional European farmhouse ale cultures as a source of novel industrial traits" />
+  <meta name="github-repo" content="19ADC99/VikingsProject" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Genome Assembly and Annotation | Vikings Project" />
+  
+  <meta name="twitter:description" content="Exploring yeast phenotypic diversity in traditional European farmhouse ale cultures as a source of novel industrial traits" />
+  
+
+<meta name="author" content="Andrea Del Cortona" />
+
+
+<meta name="date" content="2023-03-21" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="copy-number-variants.html"/>
+<link rel="next" href="horizontal-gene-transfer.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="libs/datatables-binding-0.24/datatables.js"></script>
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="libs/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="libs/dt-core-1.11.3/js/jquery.dataTables.min.js"></script>
+<link href="libs/dt-ext-fixedcolumns-1.11.3/css/fixedColumns.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-fixedcolumns-1.11.3/js/dataTables.fixedColumns.min.js"></script>
+<link href="libs/dt-ext-fixedheader-1.11.3/css/fixedHeader.dataTables.min.css" rel="stylesheet" />
+<script src="libs/dt-ext-fixedheader-1.11.3/js/dataTables.fixedHeader.min.js"></script>
+<link href="libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Vikings Project</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Abstract</a></li>
+<li class="chapter" data-level="1" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html"><i class="fa fa-check"></i><b>1</b> QC and Genome Composition assessment</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html#reads-qc-and-filtering"><i class="fa fa-check"></i><b>1.1</b> Reads QC and Filtering</a></li>
+<li class="chapter" data-level="1.2" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html#genome-composition"><i class="fa fa-check"></i><b>1.2</b> Genome Composition</a></li>
+<li class="chapter" data-level="1.3" data-path="qc-and-genome-composition-assessment.html"><a href="qc-and-genome-composition-assessment.html#ploydies-estimation"><i class="fa fa-check"></i><b>1.3</b> Ploydies estimation</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="copy-number-variants.html"><a href="copy-number-variants.html"><i class="fa fa-check"></i><b>2</b> Copy Number Variants</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#call-cnvs"><i class="fa fa-check"></i><b>2.1</b> Call CNVs</a></li>
+<li class="chapter" data-level="2.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#identify-common-cnvs-in-farmhouse-yeasts"><i class="fa fa-check"></i><b>2.2</b> Identify common CNVs in Farmhouse yeasts</a></li>
+<li class="chapter" data-level="2.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv-functional-enrichment"><i class="fa fa-check"></i><b>2.3</b> CNV Functional Enrichment</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---i1-160000"><i class="fa fa-check"></i><b>2.3.1</b> CNV - I:1-160,000</a>
+<ul>
+<li class="chapter" data-level="2.3.1.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms"><i class="fa fa-check"></i><b>2.3.1.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.1.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms"><i class="fa fa-check"></i><b>2.3.1.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.1.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms"><i class="fa fa-check"></i><b>2.3.1.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.1.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways"><i class="fa fa-check"></i><b>2.3.1.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---i160501-230500"><i class="fa fa-check"></i><b>2.3.2</b> CNV - I:160,501-230,500</a>
+<ul>
+<li class="chapter" data-level="2.3.2.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-1"><i class="fa fa-check"></i><b>2.3.2.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.2.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-1"><i class="fa fa-check"></i><b>2.3.2.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.2.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-1"><i class="fa fa-check"></i><b>2.3.2.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.2.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-1"><i class="fa fa-check"></i><b>2.3.2.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---iii1001-317000"><i class="fa fa-check"></i><b>2.3.3</b> CNV - III:1,001-317,000</a>
+<ul>
+<li class="chapter" data-level="2.3.3.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-2"><i class="fa fa-check"></i><b>2.3.3.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.3.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-2"><i class="fa fa-check"></i><b>2.3.3.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.3.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-2"><i class="fa fa-check"></i><b>2.3.3.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.3.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-2"><i class="fa fa-check"></i><b>2.3.3.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---iv1-18500"><i class="fa fa-check"></i><b>2.3.4</b> CNV - IV:1-18,500</a>
+<ul>
+<li class="chapter" data-level="2.3.4.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-3"><i class="fa fa-check"></i><b>2.3.4.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.4.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-3"><i class="fa fa-check"></i><b>2.3.4.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.4.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-3"><i class="fa fa-check"></i><b>2.3.4.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.4.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-3"><i class="fa fa-check"></i><b>2.3.4.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.5" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---iv527001-540000"><i class="fa fa-check"></i><b>2.3.5</b> CNV - IV:527,001-540,000</a>
+<ul>
+<li class="chapter" data-level="2.3.5.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-4"><i class="fa fa-check"></i><b>2.3.5.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.5.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-4"><i class="fa fa-check"></i><b>2.3.5.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.5.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-4"><i class="fa fa-check"></i><b>2.3.5.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.5.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-4"><i class="fa fa-check"></i><b>2.3.5.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.6" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---vi4001-270500"><i class="fa fa-check"></i><b>2.3.6</b> CNV - VI:4,001-270,500</a>
+<ul>
+<li class="chapter" data-level="2.3.6.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-5"><i class="fa fa-check"></i><b>2.3.6.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.6.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-5"><i class="fa fa-check"></i><b>2.3.6.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.6.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-5"><i class="fa fa-check"></i><b>2.3.6.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.6.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-5"><i class="fa fa-check"></i><b>2.3.6.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.7" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---viii85501-556000"><i class="fa fa-check"></i><b>2.3.7</b> CNV - VIII:85,501-556,000</a>
+<ul>
+<li class="chapter" data-level="2.3.7.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-6"><i class="fa fa-check"></i><b>2.3.7.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.7.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-6"><i class="fa fa-check"></i><b>2.3.7.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.7.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-6"><i class="fa fa-check"></i><b>2.3.7.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.7.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-6"><i class="fa fa-check"></i><b>2.3.7.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.8" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---xi645001-667000"><i class="fa fa-check"></i><b>2.3.8</b> CNV - XI:645,001-667,000</a>
+<ul>
+<li class="chapter" data-level="2.3.8.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-7"><i class="fa fa-check"></i><b>2.3.8.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.8.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-7"><i class="fa fa-check"></i><b>2.3.8.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.8.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-7"><i class="fa fa-check"></i><b>2.3.8.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.8.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-7"><i class="fa fa-check"></i><b>2.3.8.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.9" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---xii451001-490000"><i class="fa fa-check"></i><b>2.3.9</b> CNV - XII:451,001-490,000</a>
+<ul>
+<li class="chapter" data-level="2.3.9.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-8"><i class="fa fa-check"></i><b>2.3.9.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.9.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-8"><i class="fa fa-check"></i><b>2.3.9.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.9.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-8"><i class="fa fa-check"></i><b>2.3.9.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.9.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-8"><i class="fa fa-check"></i><b>2.3.9.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.10" data-path="copy-number-variants.html"><a href="copy-number-variants.html#cnv---xv1-38000"><i class="fa fa-check"></i><b>2.3.10</b> CNV - XV:1-38,000</a>
+<ul>
+<li class="chapter" data-level="2.3.10.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---bp-terms-9"><i class="fa fa-check"></i><b>2.3.10.1</b> Over-represented / Enriched GO - BP terms</a></li>
+<li class="chapter" data-level="2.3.10.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---cc-terms-9"><i class="fa fa-check"></i><b>2.3.10.2</b> Over-represented / Enriched GO - CC terms</a></li>
+<li class="chapter" data-level="2.3.10.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-go---mf-terms-9"><i class="fa fa-check"></i><b>2.3.10.3</b> Over-represented / Enriched GO - MF terms</a></li>
+<li class="chapter" data-level="2.3.10.4" data-path="copy-number-variants.html"><a href="copy-number-variants.html#over-represented-enriched-reactome-pathways-9"><i class="fa fa-check"></i><b>2.3.10.4</b> Over-represented / Enriched Reactome Pathways</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.11" data-path="copy-number-variants.html"><a href="copy-number-variants.html#summary-of-enriched-or-depleted-functions"><i class="fa fa-check"></i><b>2.3.11</b> Summary of enriched or depleted functions</a>
+<ul>
+<li class="chapter" data-level="2.3.11.1" data-path="copy-number-variants.html"><a href="copy-number-variants.html#enriched-go-terms"><i class="fa fa-check"></i><b>2.3.11.1</b> Enriched GO terms</a></li>
+<li class="chapter" data-level="2.3.11.2" data-path="copy-number-variants.html"><a href="copy-number-variants.html#enriched-kegg-pathways"><i class="fa fa-check"></i><b>2.3.11.2</b> Enriched KEGG pathways</a></li>
+<li class="chapter" data-level="2.3.11.3" data-path="copy-number-variants.html"><a href="copy-number-variants.html#enriched-reactome-pathways"><i class="fa fa-check"></i><b>2.3.11.3</b> Enriched Reactome pathways</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html"><i class="fa fa-check"></i><b>3</b> Genome Assembly and Annotation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html#genome-assembly"><i class="fa fa-check"></i><b>3.1</b> Genome Assembly</a></li>
+<li class="chapter" data-level="3.2" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html#genome-annotation"><i class="fa fa-check"></i><b>3.2</b> Genome Annotation</a></li>
+<li class="chapter" data-level="3.3" data-path="genome-assembly-and-annotation.html"><a href="genome-assembly-and-annotation.html#identification-of-farmhouse-specific-gene-families"><i class="fa fa-check"></i><b>3.3</b> Identification of Farmhouse-specific Gene Families</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html"><i class="fa fa-check"></i><b>4</b> Horizontal Gene Transfer</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#taxonomic-annotation-of-predicted-genes"><i class="fa fa-check"></i><b>4.1</b> Taxonomic annotation of predicted genes</a></li>
+<li class="chapter" data-level="4.2" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#evidence-for-bacterial-hgt"><i class="fa fa-check"></i><b>4.2</b> Evidence for bacterial HGT</a></li>
+<li class="chapter" data-level="4.3" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#evidence-for-hgt-from-ascomycota"><i class="fa fa-check"></i><b>4.3</b> Evidence for HGT from Ascomycota</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#zygosaccharomyces-parabailli-transferred-operon"><i class="fa fa-check"></i><b>4.3.1</b> <em>Zygosaccharomyces parabailli</em> transferred operon</a>
+<ul>
+<li class="chapter" data-level="4.3.1.1" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#overrepresented-go-bp-terms"><i class="fa fa-check"></i><b>4.3.1.1</b> Overrepresented GO BP terms</a></li>
+<li class="chapter" data-level="4.3.1.2" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#overrepresented-go-cc-terms"><i class="fa fa-check"></i><b>4.3.1.2</b> Overrepresented GO CC terms</a></li>
+<li class="chapter" data-level="4.3.1.3" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#overrepresented-go-mf-terms"><i class="fa fa-check"></i><b>4.3.1.3</b> Overrepresented GO MF terms</a></li>
+<li class="chapter" data-level="4.3.1.4" data-path="horizontal-gene-transfer.html"><a href="horizontal-gene-transfer.html#overrepresented-reactome-pathways"><i class="fa fa-check"></i><b>4.3.1.4</b> Overrepresented Reactome Pathways</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="phylogenetic-reconstruction.html"><a href="phylogenetic-reconstruction.html"><i class="fa fa-check"></i><b>5</b> Phylogenetic reconstruction</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="phylogenetic-reconstruction.html"><a href="phylogenetic-reconstruction.html#identify-quasi-single-copy-genes"><i class="fa fa-check"></i><b>5.1</b> Identify quasi single-copy genes</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="phylogenetic-reconstruction.html"><a href="phylogenetic-reconstruction.html#create-animo-acid-and-codon-alignments"><i class="fa fa-check"></i><b>5.1.1</b> Create animo acid and codon alignments</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="phylogenetic-reconstruction.html"><a href="phylogenetic-reconstruction.html#run-phylogenetic-reconstruction"><i class="fa fa-check"></i><b>5.2</b> Run phylogenetic reconstruction</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="variant-calling.html"><a href="variant-calling.html"><i class="fa fa-check"></i><b>6</b> Variant Calling</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="variant-calling.html"><a href="variant-calling.html#variant-calling-1"><i class="fa fa-check"></i><b>6.1</b> Variant Calling</a></li>
+<li class="chapter" data-level="6.2" data-path="variant-calling.html"><a href="variant-calling.html#heterozigous-positions"><i class="fa fa-check"></i><b>6.2</b> Heterozigous positions</a></li>
+<li class="chapter" data-level="6.3" data-path="variant-calling.html"><a href="variant-calling.html#loh"><i class="fa fa-check"></i><b>6.3</b> LOH</a></li>
+<li class="chapter" data-level="6.4" data-path="variant-calling.html"><a href="variant-calling.html#population-structure"><i class="fa fa-check"></i><b>6.4</b> Population Structure</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Vikings Project</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="genome-assembly-and-annotation" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Genome Assembly and Annotation<a href="genome-assembly-and-annotation.html#genome-assembly-and-annotation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>To determine the genes in Kveiks samples, we need to do a <em>de novo</em> assembly and then to run an <em>ab initio</em> prediction of genes (using <em>Saccharomyes</em> proteins and genes as guide). We will use SPAdes assembler, follower by Redundans pipeline to collapse redundant contigs.</p>
+<div id="genome-assembly" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Genome Assembly<a href="genome-assembly-and-annotation.html#genome-assembly" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb87"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb87-1"><a href="genome-assembly-and-annotation.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">## SPAdes assembly </span></span>
+<span id="cb87-2"><a href="genome-assembly-and-annotation.html#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span> <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb87-3"><a href="genome-assembly-and-annotation.html#cb87-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">python</span> ~/bin/SPAdes-3.13.0-Linux/bin/spades.py <span class="dt">\</span></span>
+<span id="cb87-4"><a href="genome-assembly-and-annotation.html#cb87-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">-1</span> ../00_trim_reads/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>.R1.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb87-5"><a href="genome-assembly-and-annotation.html#cb87-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">-2</span> ../00_trim_reads/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>.R2.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb87-6"><a href="genome-assembly-and-annotation.html#cb87-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">-o</span> <span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>_SPAdes <span class="dt">\</span></span>
+<span id="cb87-7"><a href="genome-assembly-and-annotation.html#cb87-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">--threads</span> 72 <span class="dt">\</span></span>
+<span id="cb87-8"><a href="genome-assembly-and-annotation.html#cb87-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">-k</span> 21,29,39,59,79,99,119,127</span>
+<span id="cb87-9"><a href="genome-assembly-and-annotation.html#cb87-9" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span> <span class="op">&lt;</span> ../sample.lst</span>
+<span id="cb87-10"><a href="genome-assembly-and-annotation.html#cb87-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-11"><a href="genome-assembly-and-annotation.html#cb87-11" aria-hidden="true" tabindex="-1"></a><span class="co">## redundans</span></span>
+<span id="cb87-12"><a href="genome-assembly-and-annotation.html#cb87-12" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> /home/andrea/03_KVEIK/:/mydata:rw <span class="at">-it</span> lpryszcz/redundan2</span>
+<span id="cb87-13"><a href="genome-assembly-and-annotation.html#cb87-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-14"><a href="genome-assembly-and-annotation.html#cb87-14" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span> <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb87-15"><a href="genome-assembly-and-annotation.html#cb87-15" aria-hidden="true" tabindex="-1"></a>    <span class="ex">/root/src/redundans/redundans.py</span> <span class="dt">\</span></span>
+<span id="cb87-16"><a href="genome-assembly-and-annotation.html#cb87-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">--verbose</span> <span class="dt">\</span></span>
+<span id="cb87-17"><a href="genome-assembly-and-annotation.html#cb87-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">--fastq</span> /mydata/00_trim_reads/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>.R1.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb87-18"><a href="genome-assembly-and-annotation.html#cb87-18" aria-hidden="true" tabindex="-1"></a>        /mydata/00_trim_reads/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>.R2.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb87-19"><a href="genome-assembly-and-annotation.html#cb87-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">--fasta</span> /mydata/03_assemblies/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>.SPAdes.fa <span class="dt">\</span></span>
+<span id="cb87-20"><a href="genome-assembly-and-annotation.html#cb87-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">--outdir</span> /mydata/04_redundans/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span> <span class="dt">\</span></span>
+<span id="cb87-21"><a href="genome-assembly-and-annotation.html#cb87-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">--threads</span> 72 <span class="dt">\</span></span>
+<span id="cb87-22"><a href="genome-assembly-and-annotation.html#cb87-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">--log</span> /mydata/04_redundans/<span class="st">&quot;</span><span class="va">${line}</span><span class="st">&quot;</span>.SPAdes.redundans.log</span>
+<span id="cb87-23"><a href="genome-assembly-and-annotation.html#cb87-23" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span> <span class="op">&lt;</span> mydata/sample.lst </span>
+<span id="cb87-24"><a href="genome-assembly-and-annotation.html#cb87-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-25"><a href="genome-assembly-and-annotation.html#cb87-25" aria-hidden="true" tabindex="-1"></a><span class="co">## Generate assembly stats</span></span>
+<span id="cb87-26"><a href="genome-assembly-and-annotation.html#cb87-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>redundans.fa<span class="kw">;</span> <span class="cf">do</span> </span>
+<span id="cb87-27"><a href="genome-assembly-and-annotation.html#cb87-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">perl</span> ~/scripts/Nstat.pl <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.Nstat<span class="kw">;</span></span>
+<span id="cb87-28"><a href="genome-assembly-and-annotation.html#cb87-28" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb87-29"><a href="genome-assembly-and-annotation.html#cb87-29" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Sample&quot;$&#39;</span><span class="dt">\t</span><span class="st">&#39;&quot;Total length (bp)&quot;$&#39;</span><span class="dt">\t</span><span class="st">&#39;&quot;# contigs&quot;$&#39;</span><span class="dt">\t</span><span class="st">&#39;&quot;longest (bp)&quot;$&#39;</span><span class="dt">\t</span><span class="st">&#39;&quot;N50 (bp)&quot;</span> <span class="dt">\</span></span>
+<span id="cb87-30"><a href="genome-assembly-and-annotation.html#cb87-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> Vikings.assembly.stats.txt<span class="kw">;</span></span>
+<span id="cb87-31"><a href="genome-assembly-and-annotation.html#cb87-31" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.Nstat<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb87-32"><a href="genome-assembly-and-annotation.html#cb87-32" aria-hidden="true" tabindex="-1"></a>    <span class="va">NAME</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .SPAdes.redundans.fa.Nstat<span class="va">)</span><span class="kw">;</span></span>
+<span id="cb87-33"><a href="genome-assembly-and-annotation.html#cb87-33" aria-hidden="true" tabindex="-1"></a>    <span class="va">LONGEST</span><span class="op">=</span><span class="va">$(</span><span class="fu">tail</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1 <span class="kw">|</span> <span class="fu">tr</span> <span class="st">&#39;:&#39;</span> <span class="st">&#39;\t&#39;</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1<span class="va">)</span><span class="kw">;</span></span>
+<span id="cb87-34"><a href="genome-assembly-and-annotation.html#cb87-34" aria-hidden="true" tabindex="-1"></a>    <span class="va">TOT_LEN</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">&quot;Total length&quot;</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/Total length of sequence://g&#39;</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb87-35"><a href="genome-assembly-and-annotation.html#cb87-35" aria-hidden="true" tabindex="-1"></a>    <span class="va">NCONT</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">&quot;Total number&quot;</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/Total number of sequences://g&#39;</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb87-36"><a href="genome-assembly-and-annotation.html#cb87-36" aria-hidden="true" tabindex="-1"></a>    <span class="va">N50</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">&quot;N50 stats:&quot;</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/.*sequences &gt;= //g&#39;</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb87-37"><a href="genome-assembly-and-annotation.html#cb87-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="va">$NAME</span><span class="st">$&#39;</span><span class="dt">\t</span><span class="st">&#39;</span><span class="va">$TOT_LEN</span><span class="st">$&#39;</span><span class="dt">\t</span><span class="st">&#39;</span><span class="va">$NCONT</span><span class="st">$&#39;</span><span class="dt">\t</span><span class="st">&#39;</span><span class="va">$LONGEST</span><span class="st">$&#39;</span><span class="dt">\t</span><span class="st">&#39;</span><span class="va">$N50</span><span class="kw">;</span> <span class="cf">done</span> <span class="kw">|</span><span class="dt">\</span></span>
+<span id="cb87-38"><a href="genome-assembly-and-annotation.html#cb87-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sed</span> <span class="st">&#39;s/ bp//g&#39;</span> <span class="op">&gt;&gt;</span> Vikings.assembly.stats.txt<span class="kw">;</span></span>
+<span id="cb87-39"><a href="genome-assembly-and-annotation.html#cb87-39" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span></code></pre></div>
+<div id="htmlwidget-5235296e097e92de33b0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5235296e097e92de33b0">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Genome Assembly Statistics<\/caption>","data":[["14R30","14R6","16R23","16R37","17P5","19R18","1R16","21P1","21R38","27R17","28P1","28P6","28R21","28R33","28R8","2R23","38R16","39R20","3R11","40R14","40R1","40R20","41R10","41R15","42R20","42R31","44R32","44R7","45P5","45R11","46R12","46R37","6R15","7R7","8R19","9R40","Granvin1","Hornindal1","Hornindal2","k7R25","Laerdal2","Muri","SortdalEbbe1","Voss1"],["12,414,423","12,298,670","11,582,806","11,736,494","12,617,870","12,678,102","12,277,498","12,619,711","11,572,760","12,382,460","11,529,812","11,538,139","11,505,145","11,553,531","11,532,904","12,727,977","12,143,606","11,641,798","11,548,489","11,685,486","11,704,488","12,744,802","11,540,301","11,573,148","11,703,681","11,591,540","12,693,136","12,215,896","11,627,693","11,628,113","11,704,521","11,636,081","12,950,275","12,607,735","12,422,210","12,360,883","15,983,330","12,928,993","12,899,850","16,359,314","11,889,233","17,101,719","12,443,720","12,968,222"],["3,362","3047","183","254","3,805","4,047","4,194","3,784","144","3,342","149","160","155","134","154","4,180","1,558","171","128","164","200","3,831","158","113","281","171","3,929","1,939","158","168","202","158","4,606","3,898","3,398","3,050","6,647","3,477","3,480","685","933","281","2,328","3,703"],["247,500","248,000","416,400","524,500","231,700","113,400","178,600","279,100","885,100","170,700","860,500","594,200","426,900","543,200","555,700","254,400","425,400","663,700","732,300","832,500","559,500","161,000","729,200","725,000","478,100","798,200","176,500","493,000","1,006,900","662,400","553,100","569,500","166,600","176,500","229,300","278,500","318,100","333,200","350,200","913,200","454,900","975,000","340,500","264,600"],["34,894","35,540","243,962","178,599","35,905","33,065","32,500","37,907","279,921","35,066","270,301","224,961","243,601","303,859","318,176","36,043","117,315","255,254","403,046","260,029","157,697","36,853","264,547","358,684","174,279","262,472","38,027","108,200","398,201","306,033","225,706","336,362","33,539","30,940","33,882","43,130","81,053","105,047","92,521","279,420","161,156","285,562","102,847","68,133"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Sample<\/th>\n      <th>Total length (bp)<\/th>\n      <th># contigs<\/th>\n      <th>longest (bp)<\/th>\n      <th>N50 (bp)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<p>Despite being more or less fragmented, all assembled genomes are in the range of <em>Saccharomyces</em> sizes. Notable exceptions are: Granvin1 (???), Muri and k7R25 (which are <em>S. cerevisiae</em>, _ X <em>S. eubayanus</em> X <em>S. uvarum</em> triple hybrids).</p>
+</div>
+<div id="genome-annotation" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Genome Annotation<a href="genome-assembly-and-annotation.html#genome-annotation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We will perform <em>ab initio</em> annotation of the assembled genomes with the MAKER pipeline. We will use <em>Saccharomyces</em> RepeatMasker to mask repetitive regions, <em>ab intio</em> gene models are predicted with SNAP and augustus with the corresponding <em>S. cerevisiae</em> HMM models, ORFs from S288C_reference_genome_R64-2-1_20150113 reference genome and 1011 <em>S. cerevisiae</em> genomes as ESTs evidences, proteins from S288C_reference_genome_R64-2-1_20150113 genome and the following yeast proteomes as proteins evidences.</p>
+<div id="htmlwidget-378835212b6d841441bc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-378835212b6d841441bc">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Yeast Reference Proteomes for Gene Annotation<\/caption>","data":[["Candida glabrata","Eremothecium cymbalariae","Eremothecium gossypii","Kazachstania africana","Kazachstania naganishii","Kluyveromyces lactis","Komagataella phaffii","Lachancea kluyveri","Lachancea thermotolerans","Naumovozyma castellii","Naumovozyma dairenensis","Saccharomyces bayanus","Saccharomyces cerevisiae","Saccharomyces kudrazevii","Saccharomyces mikatae","Saccharomyces paradoxus","Saccharomyces uvarum","Tetrapisispora blattae","Torulaspora delbrueckii","Zygosaccharomyces rouxii"],["Cglab","Ecymb","Egoss","Kafri","Knaga","Klact","Kphaf","Lkluy","Lther","Ncast","Ndair","Sbaya","Scere","Skudr","Smika","Spara","Suvar","Tblat","Tdelb","Zroux"],["PROT","PROT","PROT","PROT","PROT","PROT","PROT","GENdev","PROT","PROT","PROT","GENdev","PROT","PROT","GENdev","GENdev","GENdev","PROT","PROT","PROT"],["ASM254v2","ASM23536v1","ASM9102v4","CBS2517","ASM34898v1","ASM251v1","ASM2700v1","ASM14922v1","ASM14280v1","ASM23734v1","ASM22711v2","ASM16703v1","R64","NA","AABZ00000000.1","AABY00000000.1","ASM224264v1","ASM31591v1","ASM24337v1","ASM2636v1"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Species Name<\/th>\n      <th>Label<\/th>\n      <th>Proteome/Genome Derived<\/th>\n      <th>Accession Number<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb88"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb88-1"><a href="genome-assembly-and-annotation.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># run the MAKER pipeline</span></span>
+<span id="cb88-2"><a href="genome-assembly-and-annotation.html#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.redundans.fa<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb88-3"><a href="genome-assembly-and-annotation.html#cb88-3" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/maker</span> <span class="at">-genome</span> <span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb88-4"><a href="genome-assembly-and-annotation.html#cb88-4" aria-hidden="true" tabindex="-1"></a>        maker_bopts.ctl <span class="dt">\</span></span>
+<span id="cb88-5"><a href="genome-assembly-and-annotation.html#cb88-5" aria-hidden="true" tabindex="-1"></a>        maker_opts.ctl <span class="dt">\</span></span>
+<span id="cb88-6"><a href="genome-assembly-and-annotation.html#cb88-6" aria-hidden="true" tabindex="-1"></a>        maker_exe.ctl<span class="kw">;</span> </span>
+<span id="cb88-7"><a href="genome-assembly-and-annotation.html#cb88-7" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span> </span>
+<span id="cb88-8"><a href="genome-assembly-and-annotation.html#cb88-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-9"><a href="genome-assembly-and-annotation.html#cb88-9" aria-hidden="true" tabindex="-1"></a><span class="co"># summary of transcripts and proteins</span></span>
+<span id="cb88-10"><a href="genome-assembly-and-annotation.html#cb88-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> DIR <span class="kw">in</span> <span class="pp">*</span>.maker.output<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb88-11"><a href="genome-assembly-and-annotation.html#cb88-11" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/fasta_merge</span> <span class="at">-d</span> ./<span class="va">$DIR</span>/<span class="pp">*</span>master_datastore_index.log<span class="kw">;</span></span>
+<span id="cb88-12"><a href="genome-assembly-and-annotation.html#cb88-12" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/gff3_merge</span> <span class="at">-d</span> ./<span class="va">$DIR</span>/<span class="pp">*</span>master_datastore_index.log<span class="kw">;</span></span>
+<span id="cb88-13"><a href="genome-assembly-and-annotation.html#cb88-13" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb88-14"><a href="genome-assembly-and-annotation.html#cb88-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-15"><a href="genome-assembly-and-annotation.html#cb88-15" aria-hidden="true" tabindex="-1"></a><span class="co"># create gene IDs</span></span>
+<span id="cb88-16"><a href="genome-assembly-and-annotation.html#cb88-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.all.gff <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb88-17"><a href="genome-assembly-and-annotation.html#cb88-17" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/maker_map_ids</span> <span class="dt">\</span></span>
+<span id="cb88-18"><a href="genome-assembly-and-annotation.html#cb88-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">--prefix</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">&#39;s/\..*//g&#39;</span><span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb88-19"><a href="genome-assembly-and-annotation.html#cb88-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map<span class="kw">;</span></span>
+<span id="cb88-20"><a href="genome-assembly-and-annotation.html#cb88-20" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/map_gff_ids</span> <span class="dt">\</span></span>
+<span id="cb88-21"><a href="genome-assembly-and-annotation.html#cb88-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map <span class="dt">\</span></span>
+<span id="cb88-22"><a href="genome-assembly-and-annotation.html#cb88-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">$file</span><span class="kw">;</span></span>
+<span id="cb88-23"><a href="genome-assembly-and-annotation.html#cb88-23" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/map_fasta_ids</span> <span class="dt">\</span></span>
+<span id="cb88-24"><a href="genome-assembly-and-annotation.html#cb88-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map <span class="dt">\</span></span>
+<span id="cb88-25"><a href="genome-assembly-and-annotation.html#cb88-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.maker.transcripts.fasta<span class="kw">;</span></span>
+<span id="cb88-26"><a href="genome-assembly-and-annotation.html#cb88-26" aria-hidden="true" tabindex="-1"></a>    <span class="ex">~/bin/maker/bin/map_fasta_ids</span> <span class="dt">\</span></span>
+<span id="cb88-27"><a href="genome-assembly-and-annotation.html#cb88-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map <span class="dt">\</span></span>
+<span id="cb88-28"><a href="genome-assembly-and-annotation.html#cb88-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.maker.proteins.fasta<span class="kw">;</span></span>
+<span id="cb88-29"><a href="genome-assembly-and-annotation.html#cb88-29" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span></span>
+<span id="cb88-30"><a href="genome-assembly-and-annotation.html#cb88-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-31"><a href="genome-assembly-and-annotation.html#cb88-31" aria-hidden="true" tabindex="-1"></a><span class="co">## Generate annotation stats</span></span>
+<span id="cb88-32"><a href="genome-assembly-and-annotation.html#cb88-32" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;Sample&quot;$&#39;</span><span class="dt">\t</span><span class="st">&#39;&quot;# Transcripts&quot;$&#39;</span><span class="dt">\t</span><span class="st">&#39;&quot;# Proteins&quot;</span> <span class="op">&gt;</span> Vikings.annotation.stats.txt<span class="kw">;</span></span>
+<span id="cb88-33"><a href="genome-assembly-and-annotation.html#cb88-33" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb88-34"><a href="genome-assembly-and-annotation.html#cb88-34" aria-hidden="true" tabindex="-1"></a>    <span class="va">NAME</span><span class="op">=</span><span class="va">$line</span><span class="kw">;</span></span>
+<span id="cb88-35"><a href="genome-assembly-and-annotation.html#cb88-35" aria-hidden="true" tabindex="-1"></a>    <span class="va">TRANS</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">&quot;&gt;&quot;</span> <span class="va">$line</span>.SPAdes.redundans.all.maker.transcripts.fasta <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb88-36"><a href="genome-assembly-and-annotation.html#cb88-36" aria-hidden="true" tabindex="-1"></a>    <span class="va">PROT</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">&quot;&gt;&quot;</span> <span class="va">$line</span>.SPAdes.redundans.all.maker.proteins.fasta <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb88-37"><a href="genome-assembly-and-annotation.html#cb88-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="va">$NAME</span><span class="st">$&#39;</span><span class="dt">\t</span><span class="st">&#39;</span><span class="va">$TRANS</span><span class="st">$&#39;</span><span class="dt">\t</span><span class="st">&#39;</span><span class="va">$PROT</span> <span class="op">&gt;&gt;</span> Vikings.annotation.stats.txt<span class="kw">;</span></span>
+<span id="cb88-38"><a href="genome-assembly-and-annotation.html#cb88-38" aria-hidden="true" tabindex="-1"></a><span class="cf">done</span> <span class="op">&lt;</span> ../sample.lst</span></code></pre></div>
+<p>Below are the number of genes predicted for each <em>de novo</em> assembled farmhouse genome.</p>
+<div id="htmlwidget-a37f8174735d77092283" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-a37f8174735d77092283">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Farmhouse yeasts genes<\/caption>","data":[["14R30","14R6","16R23","16R37","17P5","19R18","1R16","21P1","21R38","27R17","28P1","28P6","28R21","28R33","28R8","2R23","38R16","39R20","3R11","40R14","40R1","40R20","41R10","41R15","42R20","42R31","44R32","44R7","45P5","45R11","46R12","46R37","6R15","7R7","8R19","9R40","Granvin1","Hornindal1","Hornindal2","k7R25","Laerdal2","Muri","SortdalEbbe1","Voss1"],["6,728","6,641","6,072","6,157","6,764","6,835","6,810","6,771","6,072","6,681","6,074","6,077","6,079","6,121","6,069","6,802","6,290","6,138","6,095","6,121","6,159","6,853","6,059","6,073","6,155","6,127","6,750","6,371","6,115","6,108","6,137","6,107","6,892","6,786","6,703","6,628","6,518","6,270","6,286","8,044","6,163","8,454","6,244","6,318"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Kveik strain<\/th>\n      <th>Number of predicted genes<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="identification-of-farmhouse-specific-gene-families" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Identification of Farmhouse-specific Gene Families<a href="genome-assembly-and-annotation.html#identification-of-farmhouse-specific-gene-families" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Do kveiks harbor kveik-specific gene families? To answer this question we build protein orthogroups using proteomes from Kveiks, 302 industrail strains (from Gallone et al. 2019) and reference proteomes for <em>S. cerevisiae</em>, <em>S. kudriavzevii</em>, <em>S. eubayanus</em>, <em>S. uvarum</em> using the Orthofinder pipeline. This approach resulted to be successful for clustering HGT, so hopefully we can identify Orthogroups specific for kveik strains.</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb89-1"><a href="genome-assembly-and-annotation.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create Gene Families</span></span>
+<span id="cb89-2"><a href="genome-assembly-and-annotation.html#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="ex">~/bin/OrthoFinder-2.3.3/orthofinder</span> <span class="at">-f</span> 00_aa_start/ <span class="dt">\</span></span>
+<span id="cb89-3"><a href="genome-assembly-and-annotation.html#cb89-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-t</span> 72 <span class="dt">\</span></span>
+<span id="cb89-4"><a href="genome-assembly-and-annotation.html#cb89-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">-M</span> msa <span class="dt">\</span></span>
+<span id="cb89-5"><a href="genome-assembly-and-annotation.html#cb89-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">-S</span> diamond <span class="dt">\</span></span>
+<span id="cb89-6"><a href="genome-assembly-and-annotation.html#cb89-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-A</span> mafft <span class="dt">\</span></span>
+<span id="cb89-7"><a href="genome-assembly-and-annotation.html#cb89-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">-T</span> iqtree <span class="dt">\</span></span>
+<span id="cb89-8"><a href="genome-assembly-and-annotation.html#cb89-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">-I</span> 2</span>
+<span id="cb89-9"><a href="genome-assembly-and-annotation.html#cb89-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb89-10"><a href="genome-assembly-and-annotation.html#cb89-10" aria-hidden="true" tabindex="-1"></a><span class="co"># filter for Orthogroups enriched for kveiks</span></span>
+<span id="cb89-11"><a href="genome-assembly-and-annotation.html#cb89-11" aria-hidden="true" tabindex="-1"></a><span class="ex">python3.8</span> Vikings.GeneFamiliesFilter.py <span class="dt">\</span></span>
+<span id="cb89-12"><a href="genome-assembly-and-annotation.html#cb89-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--in</span> Vikings.Orthogroups.GeneCount.tsv <span class="dt">\</span></span>
+<span id="cb89-13"><a href="genome-assembly-and-annotation.html#cb89-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> Vikings.Orthoclusters.counts.tab</span></code></pre></div>
+<p>We select Orthogroups with 10 genes or more (6,811 out of 13,508 groups), and we look for gene families specific for kveiks or enriched in kveiks.</p>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="genome-assembly-and-annotation.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get yeasts gene families</span></span>
+<span id="cb90-2"><a href="genome-assembly-and-annotation.html#cb90-2" aria-hidden="true" tabindex="-1"></a>Orthogroups <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="fu">paste</span>(mainDir, <span class="st">&quot;Vikings.Orthoclusters.counts.tab&quot;</span>, <span class="at">sep =</span> <span class="st">&quot;&quot;</span>), <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb90-3"><a href="genome-assembly-and-annotation.html#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Orthogroups) <span class="ot">=</span> Orthogroups[<span class="dv">1</span>, ]</span>
+<span id="cb90-4"><a href="genome-assembly-and-annotation.html#cb90-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Orthogroups) <span class="ot">=</span> Orthogroups<span class="sc">$</span>Orthogroups</span>
+<span id="cb90-5"><a href="genome-assembly-and-annotation.html#cb90-5" aria-hidden="true" tabindex="-1"></a>Orthogroups <span class="ot">=</span> Orthogroups[<span class="sc">-</span><span class="fu">which</span>(Orthogroups<span class="sc">$</span>Orthogroup <span class="sc">==</span> <span class="st">&quot;Orthogroups&quot;</span>), ]</span>
+<span id="cb90-6"><a href="genome-assembly-and-annotation.html#cb90-6" aria-hidden="true" tabindex="-1"></a>Orthogroups <span class="ot">=</span> Orthogroups[, <span class="sc">-</span><span class="fu">which</span>(<span class="fu">colnames</span>(Orthogroups) <span class="sc">==</span> <span class="st">&quot;Orthogroups&quot;</span>)]</span>
+<span id="cb90-7"><a href="genome-assembly-and-annotation.html#cb90-7" aria-hidden="true" tabindex="-1"></a>Orthogroups <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">mutate_all</span>(Orthogroups, <span class="cf">function</span>(x) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(x)))</span>
+<span id="cb90-8"><a href="genome-assembly-and-annotation.html#cb90-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-9"><a href="genome-assembly-and-annotation.html#cb90-9" aria-hidden="true" tabindex="-1"></a><span class="co"># drop columns if empty</span></span>
+<span id="cb90-10"><a href="genome-assembly-and-annotation.html#cb90-10" aria-hidden="true" tabindex="-1"></a>Orthogroups <span class="ot">=</span> Orthogroups[, <span class="fu">colSums</span>(Orthogroups <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb90-11"><a href="genome-assembly-and-annotation.html#cb90-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-12"><a href="genome-assembly-and-annotation.html#cb90-12" aria-hidden="true" tabindex="-1"></a><span class="co"># reorder columns</span></span>
+<span id="cb90-13"><a href="genome-assembly-and-annotation.html#cb90-13" aria-hidden="true" tabindex="-1"></a>kveiks <span class="ot">=</span> <span class="fu">c</span>(<span class="st">&quot;14R30&quot;</span>, <span class="st">&quot;14R6&quot;</span>, <span class="st">&quot;16R23&quot;</span>, <span class="st">&quot;16R37&quot;</span>, <span class="st">&quot;17P5&quot;</span>, <span class="st">&quot;19R18&quot;</span>, <span class="st">&quot;1R16&quot;</span>, <span class="st">&quot;21P1&quot;</span>, <span class="st">&quot;21R38&quot;</span>,</span>
+<span id="cb90-14"><a href="genome-assembly-and-annotation.html#cb90-14" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;27R17&quot;</span>, <span class="st">&quot;28P1&quot;</span>, <span class="st">&quot;28P6&quot;</span>, <span class="st">&quot;28R21&quot;</span>, <span class="st">&quot;28R33&quot;</span>, <span class="st">&quot;28R8&quot;</span>, <span class="st">&quot;2R23&quot;</span>, <span class="st">&quot;38R16&quot;</span>, <span class="st">&quot;39R20&quot;</span>, </span>
+<span id="cb90-15"><a href="genome-assembly-and-annotation.html#cb90-15" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;3R11&quot;</span>, <span class="st">&quot;40R14&quot;</span>, <span class="st">&quot;40R1&quot;</span>, <span class="st">&quot;40R20&quot;</span>, <span class="st">&quot;41R10&quot;</span>, <span class="st">&quot;41R15&quot;</span>, <span class="st">&quot;42R20&quot;</span>, <span class="st">&quot;42R31&quot;</span>, <span class="st">&quot;44R32&quot;</span>, <span class="st">&quot;44R7&quot;</span>, </span>
+<span id="cb90-16"><a href="genome-assembly-and-annotation.html#cb90-16" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;45P5&quot;</span>, <span class="st">&quot;45R11&quot;</span>, <span class="st">&quot;46R12&quot;</span>, <span class="st">&quot;46R37&quot;</span>, <span class="st">&quot;6R15&quot;</span>, <span class="st">&quot;7R7&quot;</span>, <span class="st">&quot;8R19&quot;</span>, <span class="st">&quot;9R40&quot;</span>, <span class="st">&quot;Granvin1&quot;</span>, </span>
+<span id="cb90-17"><a href="genome-assembly-and-annotation.html#cb90-17" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;Hornindal1&quot;</span>, <span class="st">&quot;Hornindal2&quot;</span>, <span class="st">&quot;k7R25&quot;</span>, <span class="st">&quot;Laerdal2&quot;</span>, <span class="st">&quot;Muri&quot;</span>, <span class="st">&quot;SortdalEbbe1&quot;</span>, <span class="st">&quot;Voss1&quot;</span>)</span>
+<span id="cb90-18"><a href="genome-assembly-and-annotation.html#cb90-18" aria-hidden="true" tabindex="-1"></a>Orthogroups_k <span class="ot">=</span> Orthogroups[, <span class="fu">which</span>(<span class="fu">colnames</span>(Orthogroups) <span class="sc">%in%</span> kveiks)]</span>
+<span id="cb90-19"><a href="genome-assembly-and-annotation.html#cb90-19" aria-hidden="true" tabindex="-1"></a>Orthogroups_nk <span class="ot">=</span> Orthogroups[, <span class="sc">-</span><span class="fu">which</span>(<span class="fu">colnames</span>(Orthogroups) <span class="sc">%in%</span> kveiks)]</span>
+<span id="cb90-20"><a href="genome-assembly-and-annotation.html#cb90-20" aria-hidden="true" tabindex="-1"></a>Orthogroups <span class="ot">=</span> <span class="fu">cbind</span>(Orthogroups_k, Orthogroups_nk)</span>
+<span id="cb90-21"><a href="genome-assembly-and-annotation.html#cb90-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb90-22"><a href="genome-assembly-and-annotation.html#cb90-22" aria-hidden="true" tabindex="-1"></a><span class="co"># plot heatmap</span></span>
+<span id="cb90-23"><a href="genome-assembly-and-annotation.html#cb90-23" aria-hidden="true" tabindex="-1"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">Heatmap</span>(Orthogroups,</span>
+<span id="cb90-24"><a href="genome-assembly-and-annotation.html#cb90-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cluster_rows =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb90-25"><a href="genome-assembly-and-annotation.html#cb90-25" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cluster_columns =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb90-26"><a href="genome-assembly-and-annotation.html#cb90-26" aria-hidden="true" tabindex="-1"></a>                        <span class="at">column_dend_reorder =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb90-27"><a href="genome-assembly-and-annotation.html#cb90-27" aria-hidden="true" tabindex="-1"></a>                        <span class="at">col =</span> <span class="fu">colorRamp2</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">3</span>, <span class="at">name =</span> <span class="st">&quot;RdBu&quot;</span>))),</span>
+<span id="cb90-28"><a href="genome-assembly-and-annotation.html#cb90-28" aria-hidden="true" tabindex="-1"></a>                        <span class="at">na_col =</span> <span class="st">&quot;grey75&quot;</span>,</span>
+<span id="cb90-29"><a href="genome-assembly-and-annotation.html#cb90-29" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_row_names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb90-30"><a href="genome-assembly-and-annotation.html#cb90-30" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_column_names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb90-31"><a href="genome-assembly-and-annotation.html#cb90-31" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_row_dend =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb90-32"><a href="genome-assembly-and-annotation.html#cb90-32" aria-hidden="true" tabindex="-1"></a>                        <span class="at">show_heatmap_legend =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb90-33"><a href="genome-assembly-and-annotation.html#cb90-33" aria-hidden="true" tabindex="-1"></a>                        <span class="at">row_title =</span> <span class="st">&quot;Orthogroups&quot;</span>,</span>
+<span id="cb90-34"><a href="genome-assembly-and-annotation.html#cb90-34" aria-hidden="true" tabindex="-1"></a>                        <span class="at">column_title_side =</span> <span class="st">&quot;bottom&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-109"></span>
+<img src="main_files/figure-html/unnamed-chunk-109-1.png" alt="Kveiks-specific gene families" width="672" />
+<p class="caption">
+Figure 3.1: Kveiks-specific gene families
+</p>
+</div>
+<p><strong>We could not identify no evidences for Farmhouse-specific Orthogroups.</strong></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="copy-number-variants.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="horizontal-gene-transfer.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/03-Genome-assembly.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

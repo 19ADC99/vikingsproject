@@ -1,0 +1,2105 @@
+# Copy Number Variants
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "ggplot2", "grid", "gridExtra", "magrittr", "RColorBrewer",
+                "org.Sc.sgd.db")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/Andrea/Desktop/kveiks/manuscript/plotting_data/"
+knitr::opts_knit$set(root.dir = mainDir)
+```
+
+
+To detect Copy Number Variants (CNVs) and major aneuploidies, we use the CNVnator pipeline. We use the bam files containing informations on aligned reads to the reference S288C genome, and we call CNVs based on changes of depth of mapped reads. The protocol we follow is:
+
+* For each sample, run CNVnator for 500 bp and 1,000 bp bins;
+* Retain only CNVs that are concordant for both bins;
+* Identify common CNVs pattern;
+* Identify genes affected by CNVs;
+* GO, KEGG and Reactome pathways enrichment
+
+## Call CNVs
+
+First, we call CNVs with CNVnator, using 500 bp and 1,000 bp bins. Then, for each samples, we retain only CNVs that have been called with both bins, and that had a p-value < 0.05.
+
+
+```{bash, eval = FALSE}
+# prepare reference genome
+while read line; do
+  if [[ ${line:0:1} == '>' ]]; then
+    outfile=${line#>}.fa;
+    echo $line > $outfile;
+  else
+    echo $line >> $outfile;
+  fi;
+done < Saccharomyces_RefGen.fa
+
+#run CNVnator from the docker image
+chmod 777 09_CNVs/
+for file in *.bam; do
+  NAME=$(basename $file .S288C.align.sort.md.r.bam);
+  docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+    cnvnator \
+    -root ./out."${NAME}".root \
+    -genome
+    ./00_refgen/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa \
+    -tree $file;
+  for BIN in 20 100 500 1000; do
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -root ./out."${NAME}".root \
+      -genome
+      ./00_refgen/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa \
+      -his $BIN -d ./;
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -root ./out."${NAME}".root \
+      -stat $BIN;
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -ngc \
+      -root ./out."${NAME}".root \
+      -partition $BIN;
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -ngc \
+      -root ./out."${NAME}".root \
+      -call $BIN > "${NAME}".CNV_"${BIN}"bin.tab;
+  done;
+done
+
+chmod 755 09_CNVs/
+# Filter CNVs and merge 500bp 1000bp windows
+while read line; do
+  python3.5 ~/CNVnator_merger.py \
+    --input_1 $line.CNV_500bin.tab \
+    --input_2 $line.CNV_1000bin.tab \
+    --sample $line > $line.CNVmerged.500-1000.tab;
+  done < ../sample.lst
+cat *merged.500-1000.tab > Vikings.plusadditional.CNVsmerged.all.tab
+
+```
+
+
+Then we plot the CNV that we have identified, and we compare them with the CNVs in the additional industrial yeasts from Table \@ref(tab:add_yeasts). To facilitate the visualization, duplications have been amplified up to 10X, while deletion have been reduced to 1X. Farmhouse yeasts have been clustered based on their geographical origin, in order from the top to the bottom:
+
+- North-West Norway;
+- South-West Norway;
+- Central-Eastern Norway;
+- Latvia;
+- Lithuania;
+- Russia.
+
+
+```{r, fig.cap="Copy Number Variants in farmhouse yeasts", fig.height=6, warning=FALSE, message=FALSE}
+# upload files
+V_CNVs_1000 = read.delim(paste(mainDir, "Vikings.CNVsmerged.all.mod.tab", sep = ""), header = FALSE)
+
+# reformat data
+V_CNVs_1000$V2 = factor(V_CNVs_1000$V2, levels = c("I", "II", "III", "IV", "V", "VI",
+                                                   "VII", "VIII", "IX", "X", "XI", "XII",
+                                                   "XIII", "XIV", "XV", "XVI", "Mito"))
+
+# group kveiks by geographical origin
+V_CNVs_1000$V1 = factor(V_CNVs_1000$V1, levels = c("41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1", "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+                                                   "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+                                                   "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+                                                   "42R20", "42R31", "45P5", "45R11", 
+                                                   "46R12", "46R37", "16R23", "16R37",
+                                                   "39R20", "40R14", "40R1", "40R20",
+                                                   "Granvin1", "Voss1"))
+
+# plot
+p = ggplot(V_CNVs_1000) +
+  geom_rect(aes(xmin = V3, xmax = V4, ymin = V5, ymax = V6, fill = V8), color="black", size = 0.001) +
+  scale_fill_gradient2(midpoint = 0, low = "#84ceff", mid = "white", high = "#ffb584",
+                       limits = c(0.1, 10), na.value = "grey75", trans = "log") +
+  facet_grid(V1~V2, scales = "free", space = "free_x") +
+  labs(title = "CNVs Distribution: 500-1,000 bp bin",
+       fill = "log10 ReadDepth") +
+  theme(plot.title = element_text(size = 28, hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "none",
+        panel.background = element_blank(),
+        panel.spacing.x = unit(0.05, "lines"),
+        panel.spacing.y = unit(0.05, "lines"),
+        panel.border = element_rect(colour = "black", fill = NA),
+        strip.background = element_rect(colour = "black", fill = "grey90"),
+        strip.text.x = element_text(size = 10),
+        strip.text.y = element_text(size = 14, angle = 0))
+
+# change facet colors
+g = ggplot_gtable(ggplot_build(p))
+stripr = which(grepl("strip-r", g$layout$name))
+fills = c("#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0",
+          "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#92C5DE", "#92C5DE",
+          "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE",
+          "#008470", "#008470", "#008470", "#008470", "#008470", "#008470", "#FFDA00", "#FFDA00",
+          "#FFDA00", "#FFDA00", "#FBA01D", "#FBA01D", "#FBA01D", "#FBA01D", "#A6611A", "#A6611A",
+          "#A6611A", "#A6611A", "grey75", "grey75")
+k = 1
+for (i in stripr) {
+  j = which(grepl("rect", g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill = fills[k]
+  k = k + 1
+}
+grid::grid.draw(g)
+```
+
+
+
+
+
+Let's now compare the CNVs identified in farmhouse yeasts with the ones identified in the selected industrial strains.
+
+
+```{r, fig.cap="Copy Number Variants in farmhouse yeasts VS industrial strains", fig.height=9, warning=FALSE, message=FALSE}
+# upload files
+V_CNVs_1000 = read.delim(paste(mainDir, "Vikings.plusadditional.CNVsmerged.all.mod.tab", sep = ""), header = FALSE)
+
+# reformat data
+V_CNVs_1000$V2 = factor(V_CNVs_1000$V2, levels = c("I", "II", "III", "IV", "V", "VI",
+                                                   "VII", "VIII", "IX", "X", "XI", "XII",
+                                                   "XIII", "XIV", "XV", "XVI", "Mito"))
+
+# group kveiks by geographical origin
+V_CNVs_1000$V1 = factor(V_CNVs_1000$V1, levels = c("41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1", "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+                                                   "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+                                                   "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+                                                   "42R20", "42R31", "45P5", "45R11", 
+                                                   "46R12", "46R37", "16R23", "16R37",
+                                                   "39R20", "40R14", "40R1", "40R20",
+                                                   "Granvin1", "Voss1",
+                                                   "X1002", "X1014", "X1018", "X1030", "X1129", "X5508",
+                                                   "X1005", "X1007", "X1118", "X1131", "X1148", "X7078-B",
+                                                   "X1046", "X4009", "X4037", "X4040", "X4042", "X4051"))
+
+# plot
+p = ggplot(V_CNVs_1000) +
+  geom_rect(aes(xmin = V3, xmax = V4, ymin = V5, ymax = V6, fill = V8), color="black", size = 0.001) +
+  scale_fill_gradient2(midpoint = 0, low = "#84ceff", mid = "white", high = "#ffb584",
+                       limits = c(0.1, 10), na.value = "grey75", trans = "log") +
+  facet_grid(V1~V2, scales = "free", space = "free_x") +
+  labs(title = "CNVs Distribution: 500-1,000 bp bin",
+       fill = "log10 ReadDepth") +
+  theme(plot.title = element_text(size = 28, hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "none",
+        panel.background = element_blank(),
+        panel.spacing.x = unit(0.05, "lines"),
+        panel.spacing.y = unit(0.05, "lines"),
+        panel.border = element_rect(colour = "black", fill = NA),
+        strip.background = element_rect(colour = "black", fill = "grey90"),
+        strip.text.x = element_text(size = 10),
+        strip.text.y = element_text(size = 14, angle = 0))
+
+# change facet colors
+g = ggplot_gtable(ggplot_build(p))
+stripr = which(grepl("strip-r", g$layout$name))
+fills = c("#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0",
+          "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#92C5DE", "#92C5DE",
+          "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE",
+          "#008470", "#008470", "#008470", "#008470", "#008470", "#008470", "#FFDA00", "#FFDA00",
+          "#FFDA00", "#FFDA00", "#FBA01D", "#FBA01D", "#FBA01D", "#FBA01D", "#A6611A", "#A6611A",
+          "#A6611A", "#A6611A", "grey75", "grey75", "#51CD34", "#51CD34", "#51CD34", "#51CD34",
+          "#51CD34", "#51CD34", "#2E97E6", "#2E97E6", "#2E97E6", "#2E97E6", "#2E97E6", "#2E97E6",
+          "#F2BA00", "#F2BA00", "#F2BA00", "#F2BA00", "#F2BA00", "#F2BA00", "#F2BA00", "#F2BA00")
+k = 1
+for (i in stripr) {
+  j = which(grepl("rect", g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill = fills[k]
+  k = k + 1
+}
+grid::grid.draw(g)
+```
+
+
+
+While there is no clear signature associated with kveiks geographic origin, it looks like there are common CNVs shared between farmhouse yeasts that are instead absent in industrial yeasts. Let's clearly identify them.
+
+There are the apparent trends:
+
+- 5 out of 69 CNVs are shared among all Kveiks
+- Granvin1, Hornindal1, Hornindal2, Voss1 have similar CNV fingerprint
+
+
+## Identify common CNVs in Farmhouse yeasts
+
+
+We have a bunch of CNVs called on 44 different kveiks Some CNVs that are called on the same position on multiple samples, maybe differs for few hundred base pairs. To identify the "average" conserved CNV, we use a custom python script that collapse this windows, a sort of _ad hoc_ bedtools merge for CNVs positions.
+
+
+```{bash, eval=FALSE}
+# generate overlapping windows
+for i in "\tI\t" "\tII\t" "\tIII\t" "\tIV\t" "\tV\t" "\tVI\t" "\tVII\t" \
+  "\tVIII\t" "\tIX\t" "\tX\t" "\tXI\t" "\tXII\t" "\tXIII\t" "\tXIV\t" \
+  "\tXV\t" "\tXVI\t" "\tMito\t"; do
+  grep -P "${i}" Vikings.CNVsmerged.all.tab \
+    | cut -f 2-4 \
+    | sort -u \
+    | sort -k2,2n;
+done > temp.bed;
+bedtools merge -i temp.bed > Vikings.CNVsmerged.all.bed;
+rm temp.bed;
+
+python3.8 Vikings.overlapCNVs.py --allCNVs Vikings.CNVsmerged.all.tab \
+  <!-- --bed Vikings.CNVsmerged.all.bed \ -->
+  > Vikings.CNVsmerged.all.matrix.tab
+```
+
+
+Let's check the CNVs distributions:
+
+
+```{r, echo=FALSE}
+# read table
+matrix.d = read.delim(paste(mainDir, "Vikings.CNVsmerged.all.matrix.tab", sep = ""), header = TRUE)
+colnames(matrix.d) = stringr::str_replace(colnames(matrix.d), "X", "")
+
+# print table
+DT::datatable(matrix.d, 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Farmhouse yeasts CNVs distribution", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+Let's select CNVs present in at least 90% (N=40) of the sequenced farmhouse yeasts, and plot them.
+
+
+```{r, echo=FALSE}
+# filter out CNVs that are shared by less than 75% of kveiks
+matrix.d75 = matrix.d[which(rowSums(!is.na(matrix.d)) >= round((ncol(matrix.d) - 3)*0.9, 0)), ]
+  
+# print table
+DT::datatable(matrix.d75, 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "CNVs present in at least 90% of farmhouse yeasts", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+There are 11 CNVs shared between 40 farmhouse yeasts or more.
+
+
+```{r, fig.cap="CNVs", fig.height=9, warning=FALSE, message=FALSE}
+# create CNV matrix for the heatmap
+matrix_heat = as.matrix(matrix.d75[, c(4:ncol(matrix.d75))])
+matrix_heat = ifelse(matrix_heat < 1, -1,
+                     ifelse(matrix_heat > 1, 1, matrix_heat))
+rownames(matrix_heat) = paste(paste(matrix.d75[, 1], matrix.d75[, 2], sep = ":"), matrix.d75[, 3], sep = "-")
+
+# create annotations
+kveiks_geo = data.frame(c("41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1", "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+                                                   "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+                                                   "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+                                                   "42R20", "42R31", "45P5", "45R11", 
+                                                   "46R12", "46R37", "16R23", "16R37",
+                                                   "39R20", "40R14", "40R1", "40R20",
+                                                   "Granvin1", "Voss1"),
+                        c("North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway",
+                                                   "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway",
+                                                   "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway",
+                                                   "Latvia", "Latvia", "Latvia", "Latvia", 
+                                                   "Lithuania", "Lithuania", "Lithuania", "Lithuania",
+                                                   "Russia", "Russia", "Russia", "Russia",
+                                                   "Other", "Other"))
+colnames(kveiks_geo) = c("kveik", "geo")
+rownames(kveiks_geo) = kveiks_geo$kveik
+
+ComplexHeatmap::Heatmap(matrix_heat,
+                        cluster_rows = FALSE,
+                        column_dend_reorder = TRUE,
+                        col = colorRamp2(c(-1, 0, 1), rev(brewer.pal(n = 3, name = "RdBu"))),
+                        na_col = "grey75",
+                        top_annotation = HeatmapAnnotation(Geographic_origin = as.matrix(kveiks_geo$geo),
+                                                           col = list(Geographic_origin = c("North-West Norway" = "#0571B0",
+                                                                                            "South-West Norway" = "#92C5DE",
+                                                                                            "Central-Eastern Norway" = "#008470",
+                                                                                            "Latvia" = "#FFDA00",
+                                                                                            "Lithuania" = "#FBA01D",
+                                                                                            "Russia" = "#A6611A",
+                                                                                            "Other" = "grey50"))),
+                        show_row_names = TRUE,
+                        show_column_names = TRUE,
+                        show_row_dend = FALSE,
+                        show_heatmap_legend = FALSE,
+                        row_title = "CNVs",
+                        column_title_side = "bottom")
+```
+
+
+There are 69 high confidence CNVs, of which 5 (4 deletions and 1 duplication) of them are shared among all Kveiks. Interestingly, the two deletions in chromosome I and the one in chromosome XV are duplications in the lineage "Granvin1, Hornindal1, Hornindal2, Voss1". Granvin1, Hornindal1, Hornindal2, Voss1 shares a unique fingerprint of 39 conserved CNVs scattered across 15 chromosomes.
+
+
+
+## CNV Functional Enrichment
+
+Let's see which genes (and corresponding functions) are interested by the CNVs that we identify in the farmhouse yeasts. We will run the following functional analyses:
+
+- over-represented GO terms;
+- enriched GO terms;
+- over-represented KEGG pathways;
+- enriched KEGG pathways;
+- over-represented Reactome pathways;
+- enriched Reactome pathwyas.
+
+
+```{r, warning=FALSE, message=FALSE}
+# retrieve S. cerevisiae genome annotation
+Scere_DB = biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL",
+                            dataset="scerevisiae_gene_ensembl")
+Scere_DB_table = biomaRt::getBM(attributes = c("ensembl_gene_id", "ensembl_peptide_id", "external_gene_name", "entrezgene_id", "description", "chromosome_name", "start_position", "end_position"),
+                                mart = Scere_DB)
+
+# build list of reference databases used for annotation steps
+ref_DB_list = c("org.Sc.sgd.db", "yeast", "scerevisiae")
+
+# create yeasts GO terms universe
+GO_universe = data.frame(matrix(nrow = nrow(Scere_DB_table), ncol = 2))
+names(GO_universe) = c("ENSEMBL", "EntrezID")
+GO_universe$ENSEMBL = Scere_DB_table$ensembl_gene_id
+# populate GO universe
+for(k in 1:nrow(GO_universe)){
+  # force to get only the first term if multiple are retrieved (sic!)
+  ENSEMBL = GO_universe[k, 1]
+  GO_universe[k, 2] = tryCatch(
+    Scere_DB_table[which(Scere_DB_table[, 1] == ENSEMBL),  c(4)][[1]],
+    error = function(e) { NA }
+  )
+}
+GO_universe = as.character(c(GO_universe[!is.na(GO_universe$EntrezID), ]$EntrezID))
+
+# drop mitochondria
+matrix_heat = matrix_heat[-which(rownames(matrix_heat) == "Mito:1-86000"), ]
+
+# retrieve genes by CNV
+CNV_genes_DB = list()
+for(i in 1:nrow(matrix_heat)){
+  # get CNVs cohordinates
+  chromosome = stringr::str_split(rownames(matrix_heat)[i], ":")[[1]][1]
+  positions = stringr::str_split(rownames(matrix_heat)[i], ":")[[1]][2]
+  start_position = stringr::str_split(positions, "-")[[1]][1]
+  end_position = stringr::str_split(positions, "-")[[1]][2]
+  
+  # get genes in CNV
+  CNV_genes_DB[[rownames(matrix_heat)[i]]] = biomaRt::getBM(attributes = c("ensembl_gene_id", "ensembl_peptide_id", "external_gene_name", "entrezgene_id", "description", "chromosome_name", "start_position", "end_position"),
+                                                    filters = c("chromosome_name", "start", "end"),
+                                                    values = list(chromosome = chromosome,
+                                                                  start = start_position,
+                                                                  end = end_position),
+                                                    mart = Scere_DB)
+}
+```
+
+
+### CNV - I:1-160,000
+
+Below are the genes interested by the CNV in chromosome I between positions 1 and 160,000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["I:1-160000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV I:1-160000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly over-represented GO Biological Process terms.
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes = CNV_genes_DB[["I:1-160000"]]$entrezgene_id[!is.na(CNV_genes_DB[["I:1-160000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+```
+
+
+
+### CNV - I:160,501-230,500
+
+Below are the genes interested by the CNV in I:160501-230500.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["I:160501-230500"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV I:160501-230500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+Let's run a set of over-represented and enrichment analyses.
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly over-represented GO Biological Process terms.
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes1 = CNV_genes_DB[["I:160501-230500"]]$entrezgene_id[!is.na(CNV_genes_DB[["I:160501-230500"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes1,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes1,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes1,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes1,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes1,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+```
+
+
+### CNV - III:1,001-317,000
+
+Below are the genes interested by the CNV in III:1001-317000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["III:1001-317000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV III:1001-317000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly over-represented GO Biological Process terms.
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes2 = CNV_genes_DB[["III:1001-317000"]]$entrezgene_id[!is.na(CNV_genes_DB[["III:1001-317000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes2,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes2,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes2,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes2,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes2,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+```
+
+
+### CNV - IV:1-18,500
+
+Below are the genes interested by the CNV in IV:1-18500.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["IV:1-18500"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV IV:1-18500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes3 = CNV_genes_DB[["IV:1-18500"]]$entrezgene_id[!is.na(CNV_genes_DB[["IV:1-18500"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes3,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented BP terms in CNV IV:1-18500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented BP terms in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV IV:1-18500 over-represented GO BP terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented BP terms in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV IV:1-18500 over-represented GO BP terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes3,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes3,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented MF terms in CNV IV:1-18500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented BP terms in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV IV:1-18500 over-represented GO MF terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented BP terms in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV IV:1-18500 over-represented GO MF terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes3,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+```{r, fig.cap="Dotplot of overrepresented KEGG pathways in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# over-represented KEGG dotplot
+p0 = enrichplot::dotplot(enriched_KEGG, showCategory = nrow(enriched_KEGG@result)) +
+    ggtitle("CNV IV:1-18500 over-represented KEGG pathways") +
+    scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+    guides(colour = guide_colorbar(reverse = TRUE)) +
+    theme(plot.title = element_text(size = 22, hjust = 0.5),
+          legend.position = "bottom",
+          strip.background = element_rect(fill = "grey85", colour = "black"),
+          strip.text = element_text(size = 12))
+print(p0)
+```
+
+```{r, fig.cap="Heatmap of overrepresented KEGG pathways in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# add gene symbols
+enriched_KEGG_tmp = enriched_KEGG
+enriched_KEGG_tmp@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(enriched_KEGG_tmp@gene)){
+  ENTREZ = enriched_KEGG_tmp@gene[k]
+  SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+  my_symbols[k] = SYMBOL
+}
+enriched_KEGG_tmp@gene = my_symbols
+for(k in 1:nrow(enriched_KEGG_tmp@result)){
+  my_vec = enriched_KEGG_tmp@result[k, "geneID"]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  enriched_KEGG_tmp@result[k, "geneID"] = my_vec
+}
+
+# prepare gene list to plot heatmaps
+geneList = runif(length(my_genes3), min = 1, max = 2)
+names(geneList) = my_genes3
+geneList = sort(geneList, decreasing = TRUE)
+
+# plot heatmap
+p1 = heatplot(enriched_KEGG_tmp, foldChange = geneList, showCategory = nrow(enriched_KEGG@result)) +
+  scale_fill_gradient2(name = "logFC", low = "#56B4E9", high = "#D55E00") +
+  ggtitle("CNV IV:1-18500 over-represented KEGG pathways") +
+  theme(plot.title = element_text(size = 16, hjust = 0.5))
+print(p1)
+```
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes3,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+
+# print table
+DT::datatable(enrichedPA@result[which(enrichedPA@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented Reactome pathways IV:1-18500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+### CNV - IV:527,001-540,000
+
+Below are the genes interested by the CNV in IV:527001-540000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["IV:527001-540000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV IV:527001-540000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes4 = CNV_genes_DB[["IV:527001-540000"]]$entrezgene_id[!is.na(CNV_genes_DB[["IV:527001-540000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes4,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented BP terms in CNV IV:527001-540000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+```{r, fig.cap="Dotplot of overrepresented BP terms in CNV IV:527001-540000", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV IV:527001-540000 over-represented GO MF terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented BP terms in CNV IV:527001-540000", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV IV:527001-540000 over-represented GO MF terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes4,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes4,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented MF terms in CNV IV:527001-540000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+```{r, fig.cap="Dotplot of overrepresented BP terms in CNV CNV IV:527001-540000", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV CNV IV:527001-540000 over-represented GO MF terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented BP terms in CNV CNV IV:527001-540000", fig.height=8, warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV CNV IV:527001-540000 over-represented GO MF terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes4,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes4,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+```
+
+
+
+### CNV - VI:4,001-270,500
+
+Below are the genes interested by the CNV in VI:4001-270500.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["VI:4001-270500"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV VI:4001-270500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly over-represented GO Biological Process terms.
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes5 = CNV_genes_DB[["VI:4001-270500"]]$entrezgene_id[!is.na(CNV_genes_DB[["VI:4001-270500"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes5,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes5,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes5,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes5,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes5,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+
+# print table
+DT::datatable(enrichedPA@result[which(enrichedPA@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented Reactome pathways VI:4001-270500", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+```{r, fig.cap="Dotplot of overrepresented Reactome pathways in CNV VI:4001-270500", fig.height=8, warning=FALSE, message=FALSE}
+# plot reactomePA dotplots
+p0 = enrichplot::dotplot(enrichedPA, showCategory = nrow(enrichedPA@result)) +
+        ggtitle("Overrepresented Reactome pathways in CNV VI:4001-270500") +
+        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+        guides(colour = guide_colorbar(reverse = TRUE)) +
+        theme(plot.title = element_text(size = 22, hjust = 0.5),
+              legend.position = "bottom",
+              strip.background = element_rect(fill = "grey85", colour = "black"),
+              strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Genes associated with overrepresented Reactome pathways in CNV VI:4001-270500", fig.height=8, warning=FALSE, message=FALSE}
+
+enrichedPA_tmp = enrichedPA
+enrichedPA_tmp@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(enrichedPA_tmp@gene)){
+  ENTREZ = enrichedPA_tmp@gene[k]
+  SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+  my_symbols[k] = SYMBOL
+}
+enrichedPA_tmp@gene = my_symbols
+for(k in 1:nrow(enrichedPA_tmp@result)){
+  my_vec = enrichedPA_tmp@result[k, "geneID"]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  enrichedPA_tmp@result[k, "geneID"] = my_vec
+}
+
+# plot heatmap
+p2 = heatplot(enrichedPA_tmp, showCategory = nrow(enrichedPA_tmp@result)) +
+  ggtitle("Overrepresented Reactome pathways in CNV VI:4001-270500") +
+  #scale_fill_gradient2(name = "", low = "darkblue", high = "darkblue")+
+  theme(plot.title = element_text(size = 16, hjust = 0.5), legend.position = c(100,100))
+print(p2)
+```
+
+
+### CNV - VIII:85,501-556,000
+
+Below are the genes interested by the CNV in VIII:85501-556000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["VIII:85501-556000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV VIII:85501-556000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly over-represented GO Biological Process terms.
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes6 = CNV_genes_DB[["VIII:85501-556000"]]$entrezgene_id[!is.na(CNV_genes_DB[["VIII:85501-556000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes6,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes6,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes6,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes6,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes6,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+```
+
+
+
+### CNV - XI:645,001-667,000
+
+Below are the genes interested by the CNV in XI:645001-667000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["XI:645001-667000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV XI:645001-667000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes7 = CNV_genes_DB[["XI:645001-667000"]]$entrezgene_id[!is.na(CNV_genes_DB[["XI:645001-667000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes7,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+                               
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented BP terms in CNV XI:645001-667000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented BP terms in CNV XI:645001-667000", warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV XI:645001-667000 over-represented GO MF terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented BP terms in CNV XI:645001-667000", warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV XI:645001-667000 over-represented GO BP terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes7,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented CC terms in CNV XI:645001-667000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented CC terms in CNV XI:645001-667000", warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV XI:645001-667000 over-represented GO CC terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented CC terms in CNV XI:645001-667000", warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV XI:645001-667000 over-represented GO CC terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes7,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented MF terms in CNV XI:645001-667000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented MF terms in CNV XI:645001-667000", warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV XI:645001-667000 over-represented GO MF terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes7,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes7,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+
+# print table
+DT::datatable(enrichedPA@result[which(enrichedPA@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented Reactome pathways XI:645001-667000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented Reactome pathways in CNV XI:645001-667000", fig.height=8, warning=FALSE, message=FALSE}
+# plot reactomePA dotplots
+p0 = enrichplot::dotplot(enrichedPA, showCategory = nrow(enrichedPA@result)) +
+        ggtitle("Overrepresented Reactome pathways in CNV XI:645001-667000") +
+        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+        guides(colour = guide_colorbar(reverse = TRUE)) +
+        theme(plot.title = element_text(size = 22, hjust = 0.5),
+              legend.position = "bottom",
+              strip.background = element_rect(fill = "grey85", colour = "black"),
+              strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+
+
+```{r, fig.cap="Genes associated with overrepresented Reactome pathways in CNV XI:645001-667000", fig.height=8, warning=FALSE, message=FALSE}
+
+enrichedPA_tmp = enrichedPA
+enrichedPA_tmp@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(enrichedPA_tmp@gene)){
+  ENTREZ = enrichedPA_tmp@gene[k]
+  SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+  my_symbols[k] = SYMBOL
+}
+enrichedPA_tmp@gene = my_symbols
+for(k in 1:nrow(enrichedPA_tmp@result)){
+  my_vec = enrichedPA_tmp@result[k, "geneID"]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  enrichedPA_tmp@result[k, "geneID"] = my_vec
+}
+
+# plot heatmap
+p2 = heatplot(enrichedPA_tmp, showCategory = nrow(enrichedPA_tmp@result)) +
+  ggtitle("Overrepresented Reactome pathways in CNV XI:645001-667000") +
+  #scale_fill_gradient2(name = "", low = "darkblue", high = "darkblue")+
+  theme(plot.title = element_text(size = 16, hjust = 0.5), legend.position = c(100,100))
+print(p2)
+```
+
+
+### CNV - XII:451,001-490,000
+
+Below are the genes interested by the CNV in XII:451001-490000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["XII:451001-490000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV XII:451001-490000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes8 = CNV_genes_DB[["XII:451001-490000"]]$entrezgene_id[!is.na(CNV_genes_DB[["XII:451001-490000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes8,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+                               
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented BP terms in CNV XII:451001-490000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+
+```{r, fig.cap="Dotplot of overrepresented BP terms in CNV XII:451001-490000", warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV XII:451001-490000 over-represented GO BP terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented BP terms in CNV XII:451001-490000", warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV XII:451001-490000 over-represented GO BP terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes8,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented CC terms in XII:451001-490000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes8,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+                               
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented MF terms in CNV XII:451001-490000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes8,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+```{r, fig.cap="Dotplot of overrepresented KEGG pathways in CNV XII:451001-490000", fig.height=8, warning=FALSE, message=FALSE}
+# over-represented KEGG dotplot
+p0 = enrichplot::dotplot(enriched_KEGG, showCategory = nrow(enriched_KEGG@result)) +
+    ggtitle("CNV XII:451001-490000 over-represented KEGG pathways") +
+    scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+    guides(colour = guide_colorbar(reverse = TRUE)) +
+    theme(plot.title = element_text(size = 22, hjust = 0.5),
+          legend.position = "bottom",
+          strip.background = element_rect(fill = "grey85", colour = "black"),
+          strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Heatmap of overrepresented KEGG pathways in CNV IV:1-18500", fig.height=8, warning=FALSE, message=FALSE}
+# add gene symbols
+enriched_KEGG_tmp = enriched_KEGG
+enriched_KEGG_tmp@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(enriched_KEGG_tmp@gene)){
+  ENTREZ = enriched_KEGG_tmp@gene[k]
+  SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+  my_symbols[k] = SYMBOL
+}
+enriched_KEGG_tmp@gene = my_symbols
+for(k in 1:nrow(enriched_KEGG_tmp@result)){
+  my_vec = enriched_KEGG_tmp@result[k, "geneID"]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  enriched_KEGG_tmp@result[k, "geneID"] = my_vec
+}
+
+# prepare gene list to plot heatmaps
+geneList = runif(length(my_genes3), min = 1, max = 2)
+names(geneList) = my_genes3
+geneList = sort(geneList, decreasing = TRUE)
+
+# plot heatmap
+p1 = heatplot(enriched_KEGG_tmp, foldChange = geneList, showCategory = nrow(enriched_KEGG@result)) +
+  scale_fill_gradient2(name = "logFC", low = "#56B4E9", high = "#D55E00") +
+  ggtitle("CNV XII:451001-490000 over-represented KEGG pathways") +
+  theme(plot.title = element_text(size = 16, hjust = 0.5))
+print(p1)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes8,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+```
+
+
+### CNV - XV:1-38,000
+
+Below are the genes interested by the CNV in XV:1-38000.
+
+```{r, echo=FALSE}
+# print table
+DT::datatable(CNV_genes_DB[["XV:1-38000"]], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Genes present in CNV XV:1-38000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+#### Over-represented / Enriched GO - BP terms
+
+No significantly over-represented GO Biological Process terms.
+No significantly enriched GO Biological Process terms.
+
+```{r, warning=FALSE, message=FALSE}
+my_genes9 = CNV_genes_DB[["XV:1-38000"]]$entrezgene_id[!is.na(CNV_genes_DB[["XV:1-38000"]]$entrezgene_id)]
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes9,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched GO - CC terms
+
+No significantly over-represented GO Cellular Compartment terms.
+No significantly enriched GO Cellular Compartment terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes9,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "CC",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+# print table
+DT::datatable(enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented CC terms in CNV XV:1-38000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+
+```{r, fig.cap="Dotplot of overrepresented CC terms in CNV XV:1-38000", warning=FALSE, message=FALSE}
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("CNV XV:1-38000 over-represented GO CC terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Network of overrepresented CC terms in CNV XV:1-38000", warning=FALSE, message=FALSE}
+# plot GO network
+p1 = goplot(enriched_GOs) +
+            scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+            labs(title = "CNV XV:1-38000 over-represented GO CC terms sets") +
+            theme(plot.title = element_text(size = 20, hjust = 0.5))
+print(p1)
+```
+
+
+
+
+#### Over-represented / Enriched GO - MF terms
+
+No significantly over-represented GO Molecular Function terms.
+No significantly enriched GO Molecular Function terms.
+
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = my_genes9,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched KEGG Pathways
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented KEGG
+enriched_KEGG = enrichKEGG(gene = my_genes9,
+                           keyType = "ncbi-geneid",
+                           organism = "sce",
+                           pvalueCutoff = 0.05)
+```
+
+
+#### Over-represented / Enriched Reactome Pathways
+
+No significantly over-represented Reactome pathways.
+No significantly enriched Reactome pathways.
+
+
+```{r, warning=FALSE, message=FALSE}
+# over-represented PA
+enrichedPA = ReactomePA::enrichPathway(gene = my_genes9,
+                                       pvalueCutoff = 0.05,
+                                       organism = ref_DB_list[[2]])
+                                       
+# print table
+DT::datatable(enrichedPA@result[which(enrichedPA@result$p.adjust <= 0.05), ], 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Overrepresented Reactome pathways XV:1-38000", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+```{r, fig.cap="Dotplot of overrepresented Reactome pathways in CNV XV:1-38000", fig.height=8, warning=FALSE, message=FALSE}
+# plot reactomePA dotplots
+p0 = enrichplot::dotplot(enrichedPA, showCategory = nrow(enrichedPA@result)) +
+        ggtitle("Overrepresented Reactome pathways in CNV XV:1-38000") +
+        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+        guides(colour = guide_colorbar(reverse = TRUE)) +
+        theme(plot.title = element_text(size = 22, hjust = 0.5),
+              legend.position = "bottom",
+              strip.background = element_rect(fill = "grey85", colour = "black"),
+              strip.text = element_text(size = 12))
+print(p0)
+```
+
+
+```{r, fig.cap="Genes associated with overrepresented Reactome pathways in CNV XV:1-38000", fig.height=8, warning=FALSE, message=FALSE}
+
+enrichedPA_tmp = enrichedPA
+enrichedPA_tmp@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(enrichedPA_tmp@gene)){
+  ENTREZ = enrichedPA_tmp@gene[k]
+  SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+  my_symbols[k] = SYMBOL
+}
+enrichedPA_tmp@gene = my_symbols
+for(k in 1:nrow(enrichedPA_tmp@result)){
+  my_vec = enrichedPA_tmp@result[k, "geneID"]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  enrichedPA_tmp@result[k, "geneID"] = my_vec
+}
+
+# plot heatmap
+p2 = heatplot(enrichedPA_tmp, showCategory = nrow(enrichedPA_tmp@result)) +
+  ggtitle("Overrepresented Reactome pathways in CNV XV:1-38000") +
+  #scale_fill_gradient2(name = "", low = "darkblue", high = "darkblue")+
+  theme(plot.title = element_text(size = 16, hjust = 0.5), legend.position = c(100,100))
+print(p2)
+```
+
+
+
+### Summary of enriched or depleted functions
+
+
+Let's compare all enrichment together
+
+
+#### Enriched GO terms
+
+```{r, fig.cap="GO BP terms shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+# retrieve genes
+gene_cluster = list()
+for(i in 1:length(CNV_genes_DB)){
+  gene_cluster[[names(CNV_genes_DB)[[i]]]] = as.character(CNV_genes_DB[[i]]$entrezgene_id[!is.na(CNV_genes_DB[[i]]$entrezgene_id)])
+}
+
+BP = compareCluster(geneCluster = gene_cluster, fun = "enrichGO", pvalueCutoff = 0.05,
+                     OrgDb = ref_DB_list[[1]], ont = "BP")
+BP@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(BP@geneClusters)){
+  for(i in 1:length(BP@geneClusters[[k]])){
+    ENTREZ = BP@geneClusters[[k]][[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_symbols[i] = SYMBOL
+  }
+  BP@geneClusters[[k]] = my_symbols
+}
+for(k in 1:length(BP@compareClusterResult$geneID)){
+  my_vec = BP@compareClusterResult$geneID[[k]]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  BP@compareClusterResult$geneID[[k]] = my_vec
+}
+
+
+enrichplot::dotplot(BP, includeAll = TRUE) +
+        ggtitle("enriched BP GO terms across CNVs") +
+        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+        guides(colour = guide_colorbar(reverse = TRUE)) +
+        theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+
+```{r, fig.cap="GO BP terms network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+cnetplot(BP) +
+  ggtitle("enriched BP GO terms across CNVs") +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5))
+```
+
+
+
+```{r, fig.cap="GO CC terms shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+CC = compareCluster(geneCluster = gene_cluster, fun = "enrichGO", pvalueCutoff = 0.05,
+                     OrgDb = ref_DB_list[[1]], ont = "CC")
+
+CC@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(CC@geneClusters)){
+  for(i in 1:length(CC@geneClusters[[k]])){
+    ENTREZ = CC@geneClusters[[k]][[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_symbols[i] = SYMBOL
+  }
+  CC@geneClusters[[k]] = my_symbols
+}
+for(k in 1:length(CC@compareClusterResult$geneID)){
+  my_vec = CC@compareClusterResult$geneID[[k]]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  CC@compareClusterResult$geneID[[k]] = my_vec
+}
+
+enrichplot::dotplot(CC, includeAll = TRUE) +
+        ggtitle("enriched CC GO terms across CNVs") +
+        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+        guides(colour = guide_colorbar(reverse = TRUE)) +
+        theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+
+```{r, fig.cap="GO CC terms network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+cnetplot(CC) +
+  ggtitle("enriched CC GO terms across CNVs") +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5))
+```
+
+
+
+
+```{r, fig.cap="GO MF terms shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+MF = compareCluster(geneCluster = gene_cluster, fun = "enrichGO", pvalueCutoff = 0.05,
+                     OrgDb = ref_DB_list[[1]], ont = "MF")
+
+MF@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(MF@geneClusters)){
+  for(i in 1:length(MF@geneClusters[[k]])){
+    ENTREZ = MF@geneClusters[[k]][[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_symbols[i] = SYMBOL
+  }
+  MF@geneClusters[[k]] = my_symbols
+}
+for(k in 1:length(MF@compareClusterResult$geneID)){
+  my_vec = MF@compareClusterResult$geneID[[k]]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  MF@compareClusterResult$geneID[[k]] = my_vec
+}
+
+enrichplot::dotplot(MF, includeAll = TRUE) +
+        ggtitle("enriched MF GO terms across CNVs") +
+        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+        guides(colour = guide_colorbar(reverse = TRUE)) +
+        theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+
+```{r, fig.cap="GO MF terms network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+cnetplot(MF) +
+  ggtitle("enriched MF GO terms across CNVs") +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5))
+```
+
+
+
+#### Enriched KEGG pathways
+
+
+```{r, fig.cap="KEGG pathways shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+KEGG = compareCluster(geneCluster = gene_cluster, fun = "enrichKEGG", pvalueCutoff = 0.05, organism = "sce")
+
+```
+
+
+
+#### Enriched Reactome pathways
+
+
+```{r, fig.cap="Reactome pathways shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+PA = compareCluster(geneCluster = gene_cluster, fun = "enrichPathway", pvalueCutoff = 0.05,
+                   organism = ref_DB_list[[2]])
+
+PA@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(PA@geneClusters)){
+  for(i in 1:length(PA@geneClusters[[k]])){
+    ENTREZ = PA@geneClusters[[k]][[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_symbols[i] = SYMBOL
+  }
+  PA@geneClusters[[k]] = my_symbols
+}
+for(k in 1:length(PA@compareClusterResult$geneID)){
+  my_vec = PA@compareClusterResult$geneID[[k]]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  PA@compareClusterResult$geneID[[k]] = my_vec
+}
+
+enrichplot::dotplot(PA) +
+      ggtitle("enriched reactomePA across CNVs") +
+      scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+      guides(colour = guide_colorbar(reverse = TRUE)) +
+      theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+```
+
+
+```{r, fig.cap="Reactome pathways  network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
+cnetplot(PA) +
+  ggtitle("Reactome pathways  across CNVs") +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5))
+```
+
+
+
+
+
+
+
+
