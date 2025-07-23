@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>2&nbsp; Genome Assembly and Annotation – Farmhouse ale cultures preserve brewing’s lost yeast diversity</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./p01-01-qc-and-genome-composition.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/dt-ext-fixedcolumns-1.13.6/css/fixedColumns.dataTables.min.css" rel="stylesheet">
+<script src="site_libs/dt-ext-fixedcolumns-1.13.6/js/dataTables.fixedColumns.min.js"></script>
+<link href="site_libs/dt-ext-fixedheader-1.13.6/css/fixedHeader.dataTables.min.css" rel="stylesheet">
+<script src="site_libs/dt-ext-fixedheader-1.13.6/js/dataTables.fixedHeader.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<script src="site_libs/dt-plugin-ellipsis-1.13.6/source.min.js"></script>
+<style>
+#quarto-sidebar .sidebar-item-text {
+  font-weight: bold;
+}
+#quarto-sidebar .chapter-number {
+  font-weight: normal
+}
+#quarto-sidebar .chapter-title {
+  font-weight: normal
+}
+#.nav-tabs .nav-link.active {
+  background-color: rgba(239, 236, 255, 0.5);
+}
+</style>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Farmhouse ale cultures preserve brewing’s lost yeast diversity</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p01-01-qc-and-genome-composition.html">Part 1: Bioinformatics analyses</a></li><li class="breadcrumb-item"><a href="./p01-02-genome-assembly-and-annotation.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Genome Assembly and Annotation</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Abstract</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 1: Bioinformatics analyses</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p01-01-qc-and-genome-composition.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">QC and Genome Composition assessment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p01-02-genome-assembly-and-annotation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Genome Assembly and Annotation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Part 2: Publications figures</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#on-this-page" id="toc-on-this-page" class="nav-link active" data-scroll-target="#on-this-page"><span class="header-section-number">2.1</span> On this page</a></li>
+  <li><a href="#de-novo-assembly" id="toc-de-novo-assembly" class="nav-link" data-scroll-target="#de-novo-assembly"><span class="header-section-number">2.2</span> De novo assembly</a></li>
+  <li><a href="#genome-annotation" id="toc-genome-annotation" class="nav-link" data-scroll-target="#genome-annotation"><span class="header-section-number">2.3</span> Genome Annotation</a>
+  <ul>
+  <li><a href="#gene-models-annotation" id="toc-gene-models-annotation" class="nav-link" data-scroll-target="#gene-models-annotation"><span class="header-section-number">2.3.1</span> Gene Models Annotation</a></li>
+  <li><a href="#identification-of-farmhouse-specific-gene-families" id="toc-identification-of-farmhouse-specific-gene-families" class="nav-link" data-scroll-target="#identification-of-farmhouse-specific-gene-families"><span class="header-section-number">2.3.2</span> Identification of Farmhouse-specific Gene Families</a></li>
+  <li><a href="#horizontal-gene-transfer" id="toc-horizontal-gene-transfer" class="nav-link" data-scroll-target="#horizontal-gene-transfer"><span class="header-section-number">2.3.3</span> Horizontal Gene Transfer</a>
+  <ul class="collapse">
+  <li><a href="#taxonomic-annotation-of-predicted-genes" id="toc-taxonomic-annotation-of-predicted-genes" class="nav-link" data-scroll-target="#taxonomic-annotation-of-predicted-genes"><span class="header-section-number">2.3.3.1</span> Taxonomic annotation of predicted genes</a></li>
+  <li><a href="#evidence-for-bacterial-hgt" id="toc-evidence-for-bacterial-hgt" class="nav-link" data-scroll-target="#evidence-for-bacterial-hgt"><span class="header-section-number">2.3.3.2</span> Evidence for bacterial HGT</a></li>
+  <li><a href="#evidence-for-hgt-from-ascomycota" id="toc-evidence-for-hgt-from-ascomycota" class="nav-link" data-scroll-target="#evidence-for-hgt-from-ascomycota"><span class="header-section-number">2.3.3.3</span> Evidence for HGT from Ascomycota</a></li>
+  <li><a href="#zygosaccharomyces-parabailli-transferred-operon" id="toc-zygosaccharomyces-parabailli-transferred-operon" class="nav-link" data-scroll-target="#zygosaccharomyces-parabailli-transferred-operon"><span class="header-section-number">2.3.3.4</span> <em>Zygosaccharomyces parabailli</em> transferred operon</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#sec-lesson-learnt-feature-selection" id="toc-sec-lesson-learnt-feature-selection" class="nav-link" data-scroll-target="#sec-lesson-learnt-feature-selection"><span class="header-section-number">2.4</span> Lessons Learnt</a></li>
+  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">2.5</span> Session Information</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p01-01-qc-and-genome-composition.html">Part 1: Bioinformatics analyses</a></li><li class="breadcrumb-item"><a href="./p01-02-genome-assembly-and-annotation.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Genome Assembly and Annotation</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Genome Assembly and Annotation</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<style type="text/css">
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+</style>
+</div>
+<section id="on-this-page" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="on-this-page"><span class="header-section-number">2.1</span> On this page</h2>
+<p>Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: <a href="#sec-lesson-learnt-feature-selection" class="quarto-xref"><span>Section 2.4</span></a>.</p>
+<ul>
+<li>Here</li>
+</ul>
+</section>
+<section id="de-novo-assembly" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="de-novo-assembly"><span class="header-section-number">2.2</span> De novo assembly</h2>
+<p>To determine the genes in Kveiks samples, we need to do a <em>de novo</em> assembly and then to run an <em>ab initio</em> prediction of genes (using <em>Saccharomyces</em> proteins and genes as guide). We will use SPAdes assembler, follower by Redundans pipeline to collapse redundant contigs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co">## SPAdes assembly </span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span> <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a>    <span class="ex">python</span> ~/bin/SPAdes-3.13.0-Linux/bin/spades.py <span class="dt">\</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a>        <span class="at">-1</span> ../00_trim_reads/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span>.R1.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>        <span class="at">-2</span> ../00_trim_reads/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span>.R2.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>        <span class="at">-o</span> <span class="st">"</span><span class="va">${line}</span><span class="st">"</span>_SPAdes <span class="dt">\</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>        <span class="at">--threads</span> 72 <span class="dt">\</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>        <span class="at">-k</span> 21,29,39,59,79,99,119,127</span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="cf">done</span> <span class="op">&lt;</span> ../sample.lst</span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">## redundans</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="ex">docker</span> run <span class="at">-v</span> /home/andrea/03_KVEIK/:/mydata:rw <span class="at">-it</span> lpryszcz/redundan2</span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span> <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>    <span class="ex">/root/src/redundans/redundans.py</span> <span class="dt">\</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>        <span class="at">--verbose</span> <span class="dt">\</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a>        <span class="at">--fastq</span> /mydata/00_trim_reads/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span>.R1.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>        /mydata/00_trim_reads/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span>.R2.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>        <span class="at">--fasta</span> /mydata/03_assemblies/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span>.SPAdes.fa <span class="dt">\</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>        <span class="at">--outdir</span> /mydata/04_redundans/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>        <span class="at">--threads</span> 72 <span class="dt">\</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>        <span class="at">--log</span> /mydata/04_redundans/<span class="st">"</span><span class="va">${line}</span><span class="st">"</span>.SPAdes.redundans.log</span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="cf">done</span> <span class="op">&lt;</span> mydata/sample.lst </span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co">## Generate assembly stats</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>redundans.fa<span class="kw">;</span> <span class="cf">do</span> </span>
+<span id="cb1-28"><a href="#cb1-28"></a>    <span class="fu">perl</span> ~/scripts/Nstat.pl <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.Nstat<span class="kw">;</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="cf">done</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="bu">echo</span> <span class="st">"Sample"$'</span><span class="dt">\t</span><span class="st">'"Total length (bp)"$'</span><span class="dt">\t</span><span class="st">'"# contigs"$'</span><span class="dt">\t</span><span class="st">'"longest (bp)"$'</span><span class="dt">\t</span><span class="st">'"N50 (bp)"</span> <span class="op">&gt;</span> Vikings.assembly.stats.txt<span class="kw">;</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>    </span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.Nstat<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>    <span class="va">NAME</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .SPAdes.redundans.fa.Nstat<span class="va">)</span><span class="kw">;</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>    <span class="va">LONGEST</span><span class="op">=</span><span class="va">$(</span><span class="fu">tail</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1 <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\t'</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1<span class="va">)</span><span class="kw">;</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>    <span class="va">TOT_LEN</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">"Total length"</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/Total length of sequence://g'</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb1-37"><a href="#cb1-37"></a>    <span class="va">NCONT</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">"Total number"</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/Total number of sequences://g'</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a>    <span class="va">N50</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">"N50 stats:"</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/.*sequences &gt;= //g'</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a>    <span class="bu">echo</span> <span class="va">$NAME</span><span class="st">$'</span><span class="dt">\t</span><span class="st">'</span><span class="va">$TOT_LEN</span><span class="st">$'</span><span class="dt">\t</span><span class="st">'</span><span class="va">$NCONT</span><span class="st">$'</span><span class="dt">\t</span><span class="st">'</span><span class="va">$LONGEST</span><span class="st">$'</span><span class="dt">\t</span><span class="st">'</span><span class="va">$N50</span><span class="kw">;</span> <span class="cf">done</span> <span class="kw">|</span><span class="dt">\</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>        <span class="fu">sed</span> <span class="st">'s/ bp//g'</span> <span class="op">&gt;&gt;</span> Vikings.assembly.stats.txt<span class="kw">;</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-e86a11dfa3a2f69b366e" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-e86a11dfa3a2f69b366e">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 1: Genome Assembly Statistics.<\/caption>","data":[["14R30","14R6","16R23","16R37","17P5","19R18","1R16","21P1","21R38","27R17","28P1","28P6","28R21","28R33","28R8","2R23","38R16","39R20","3R11","40R14","40R1","40R20","41R10","41R15","42R20","42R31","44R32","44R7","45P5","45R11","46R12","46R37","6R15","7R7","8R19","9R40","Granvin1","Hornindal1","Hornindal2","k7R25","Laerdal2","Muri","SortdalEbbe1","Voss1"],["12,414,423","12,298,670","11,582,806","11,736,494","12,617,870","12,678,102","12,277,498","12,619,711","11,572,760","12,382,460","11,529,812","11,538,139","11,505,145","11,553,531","11,532,904","12,727,977","12,143,606","11,641,798","11,548,489","11,685,486","11,704,488","12,744,802","11,540,301","11,573,148","11,703,681","11,591,540","12,693,136","12,215,896","11,627,693","11,628,113","11,704,521","11,636,081","12,950,275","12,607,735","12,422,210","12,360,883","15,983,330","12,928,993","12,899,850","16,359,314","11,889,233","17,101,719","12,443,720","12,968,222"],["3,362","3047","183","254","3,805","4,047","4,194","3,784","144","3,342","149","160","155","134","154","4,180","1,558","171","128","164","200","3,831","158","113","281","171","3,929","1,939","158","168","202","158","4,606","3,898","3,398","3,050","6,647","3,477","3,480","685","933","281","2,328","3,703"],["247,500","248,000","416,400","524,500","231,700","113,400","178,600","279,100","885,100","170,700","860,500","594,200","426,900","543,200","555,700","254,400","425,400","663,700","732,300","832,500","559,500","161,000","729,200","725,000","478,100","798,200","176,500","493,000","1,006,900","662,400","553,100","569,500","166,600","176,500","229,300","278,500","318,100","333,200","350,200","913,200","454,900","975,000","340,500","264,600"],["34,894","35,540","243,962","178,599","35,905","33,065","32,500","37,907","279,921","35,066","270,301","224,961","243,601","303,859","318,176","36,043","117,315","255,254","403,046","260,029","157,697","36,853","264,547","358,684","174,279","262,472","38,027","108,200","398,201","306,033","225,706","336,362","33,539","30,940","33,882","43,130","81,053","105,047","92,521","279,420","161,156","285,562","102,847","68,133"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Sample<\/th>\n      <th>Total length (bp)<\/th>\n      <th># contigs<\/th>\n      <th>longest (bp)<\/th>\n      <th>N50 (bp)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"name":"Sample","targets":0},{"name":"Total length (bp)","targets":1},{"name":"# contigs","targets":2},{"name":"longest (bp)","targets":3},{"name":"N50 (bp)","targets":4}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Despite being more or less fragmented, all assembled genomes are in the range of <em>Saccharomyces</em> sizes. Notable exceptions are: Granvin1 (???), Muri and k7R25 (which are <em>S. cerevisiae</em>, _ X <em>S. eubayanus</em> X <em>S. uvarum</em> triple hybrids).</p>
+</section>
+<section id="genome-annotation" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="genome-annotation"><span class="header-section-number">2.3</span> Genome Annotation</h2>
+<p>We will perform <em>ab initio</em> annotation of the assembled genomes with the MAKER pipeline. We will use <em>Saccharomyces</em> RepeatMasker to mask repetitive regions, <em>ab intio</em> gene models are predicted with SNAP and augustus with the corresponding <em>S. cerevisiae</em> HMM models, ORFs from S288C_reference_genome_R64-2-1_20150113 reference genome and 1011 <em>S. cerevisiae</em> genomes as ESTs evidences, proteins from S288C_reference_genome_R64-2-1_20150113 genome and the following yeast proteomes as proteins evidences.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-292bfefa7e7a33eb7380" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-292bfefa7e7a33eb7380">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 2: Yeast Reference Proteomes for Gene Annotation.<\/caption>","data":[["Candida glabrata","Eremothecium cymbalariae","Eremothecium gossypii","Kazachstania africana","Kazachstania naganishii","Kluyveromyces lactis","Komagataella phaffii","Lachancea kluyveri","Lachancea thermotolerans","Naumovozyma castellii","Naumovozyma dairenensis","Saccharomyces bayanus","Saccharomyces cerevisiae","Saccharomyces kudrazevii","Saccharomyces mikatae","Saccharomyces paradoxus","Saccharomyces uvarum","Tetrapisispora blattae","Torulaspora delbrueckii","Zygosaccharomyces rouxii"],["Cglab","Ecymb","Egoss","Kafri","Knaga","Klact","Kphaf","Lkluy","Lther","Ncast","Ndair","Sbaya","Scere","Skudr","Smika","Spara","Suvar","Tblat","Tdelb","Zroux"],["PROT","PROT","PROT","PROT","PROT","PROT","PROT","GENdev","PROT","PROT","PROT","GENdev","PROT","PROT","GENdev","GENdev","GENdev","PROT","PROT","PROT"],["ASM254v2","ASM23536v1","ASM9102v4","CBS2517","ASM34898v1","ASM251v1","ASM2700v1","ASM14922v1","ASM14280v1","ASM23734v1","ASM22711v2","ASM16703v1","R64","NA","AABZ00000000.1","AABY00000000.1","ASM224264v1","ASM31591v1","ASM24337v1","ASM2636v1"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Species Name<\/th>\n      <th>Label<\/th>\n      <th>Proteome/Genome Derived<\/th>\n      <th>Accession Number<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"name":"Species Name","targets":0},{"name":"Label","targets":1},{"name":"Proteome/Genome Derived","targets":2},{"name":"Accession Number","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<section id="gene-models-annotation" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="gene-models-annotation"><span class="header-section-number">2.3.1</span> Gene Models Annotation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># run the MAKER pipeline</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.redundans.fa<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>    <span class="ex">~/bin/maker/bin/maker</span> <span class="at">-genome</span> <span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>        maker_bopts.ctl <span class="dt">\</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>        maker_opts.ctl <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>        maker_exe.ctl<span class="kw">;</span> </span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="cf">done</span> </span>
+<span id="cb2-8"><a href="#cb2-8"></a></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="co"># summary of transcripts and proteins</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="cf">for</span> DIR <span class="kw">in</span> <span class="pp">*</span>.maker.output<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="ex">~/bin/maker/bin/fasta_merge</span> <span class="at">-d</span> ./<span class="va">$DIR</span>/<span class="pp">*</span>master_datastore_index.log<span class="kw">;</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    <span class="ex">~/bin/maker/bin/gff3_merge</span> <span class="at">-d</span> ./<span class="va">$DIR</span>/<span class="pp">*</span>master_datastore_index.log<span class="kw">;</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="cf">done</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="co"># create gene IDs</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.all.gff <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="ex">~/bin/maker/bin/maker_map_ids</span> <span class="dt">\</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>        <span class="at">--prefix</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/\..*//g'</span><span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>        <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map<span class="kw">;</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>    <span class="ex">~/bin/maker/bin/map_gff_ids</span> <span class="dt">\</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map <span class="dt">\</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a>        <span class="va">$file</span><span class="kw">;</span></span>
+<span id="cb2-23"><a href="#cb2-23"></a>    <span class="ex">~/bin/maker/bin/map_fasta_ids</span> <span class="dt">\</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map <span class="dt">\</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.maker.transcripts.fasta<span class="kw">;</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a>    <span class="ex">~/bin/maker/bin/map_fasta_ids</span> <span class="dt">\</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.id.map <span class="dt">\</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a>        <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.maker.proteins.fasta<span class="kw">;</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a><span class="cf">done</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co">## Generate annotation stats</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="bu">echo</span> <span class="st">"Sample"$'</span><span class="dt">\t</span><span class="st">'"# Transcripts"$'</span><span class="dt">\t</span><span class="st">'"# Proteins"</span> <span class="op">&gt;</span> Vikings.annotation.stats.txt<span class="kw">;</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a>    <span class="va">NAME</span><span class="op">=</span><span class="va">$line</span><span class="kw">;</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a>    <span class="va">TRANS</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">"&gt;"</span> <span class="va">$line</span>.SPAdes.redundans.all.maker.transcripts.fasta <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a>    <span class="va">PROT</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">"&gt;"</span> <span class="va">$line</span>.SPAdes.redundans.all.maker.proteins.fasta <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span><span class="kw">;</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a>    <span class="bu">echo</span> <span class="va">$NAME</span><span class="st">$'</span><span class="dt">\t</span><span class="st">'</span><span class="va">$TRANS</span><span class="st">$'</span><span class="dt">\t</span><span class="st">'</span><span class="va">$PROT</span> <span class="op">&gt;&gt;</span> Vikings.annotation.stats.txt<span class="kw">;</span></span>
+<span id="cb2-38"><a href="#cb2-38"></a><span class="cf">done</span> <span class="op">&lt;</span> ../sample.lst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Below are the number of genes predicted for each <em>de novo</em> assembled farmhouse genome.</p>
+<div class="cell" data-max.height="100px">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5e7eecf38502375334b0" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5e7eecf38502375334b0">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 3: Farmhouse yeasts genes.<\/caption>","data":[["14R30","14R6","16R23","16R37","17P5","19R18","1R16","21P1","21R38","27R17","28P1","28P6","28R21","28R33","28R8","2R23","38R16","39R20","3R11","40R14","40R1","40R20","41R10","41R15","42R20","42R31","44R32","44R7","45P5","45R11","46R12","46R37","6R15","7R7","8R19","9R40","Granvin1","Hornindal1","Hornindal2","k7R25","Laerdal2","Muri","SortdalEbbe1","Voss1"],["6,728","6,641","6,072","6,157","6,764","6,835","6,810","6,771","6,072","6,681","6,074","6,077","6,079","6,121","6,069","6,802","6,290","6,138","6,095","6,121","6,159","6,853","6,059","6,073","6,155","6,127","6,750","6,371","6,115","6,108","6,137","6,107","6,892","6,786","6,703","6,628","6,518","6,270","6,286","8,044","6,163","8,454","6,244","6,318"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Kveik strain<\/th>\n      <th>Number of predicted genes<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"name":"Kveik strain","targets":0},{"name":"Number of predicted genes","targets":1}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="identification-of-farmhouse-specific-gene-families" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="identification-of-farmhouse-specific-gene-families"><span class="header-section-number">2.3.2</span> Identification of Farmhouse-specific Gene Families</h3>
+<p>Do kveiks harbor kveik-specific gene families? To answer this question we build protein orthogroups using proteomes from Kveiks, 302 industrail strains (from Gallone et al.&nbsp;2019) and reference proteomes for <em>S. cerevisiae</em>, <em>S. kudriavzevii</em>, <em>S. eubayanus</em>, <em>S. uvarum</em> using the Orthofinder pipeline. This approach resulted to be successful for clustering HGT, so hopefully we can identify Orthogroups specific for kveik strains.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># create Gene Families</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">~/bin/OrthoFinder-2.3.3/orthofinder</span> <span class="at">-f</span> 00_aa_start/ <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">-t</span> 72 <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">-M</span> msa <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">-S</span> diamond <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">-A</span> mafft <span class="dt">\</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">-T</span> iqtree <span class="dt">\</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="at">-I</span> 2</span>
+<span id="cb3-9"><a href="#cb3-9"></a>  </span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># filter for Orthogroups enriched for kveiks</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="ex">python3.8</span> Vikings.GeneFamiliesFilter.py <span class="dt">\</span></span>
+<span id="cb3-12"><a href="#cb3-12"></a>  <span class="at">--in</span> Vikings.Orthogroups.GeneCount.tsv <span class="dt">\</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>  <span class="op">&gt;</span> Vikings.Orthoclusters.counts.tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We select Orthogroups with 10 genes or more (6,811 out of 13,508 groups), and we look for gene families specific for kveiks or enriched in kveiks.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># get yeasts gene families</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>Orthogroups <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"data/p01-02/Vikings.Orthoclusters.counts.tab"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="fu">colnames</span>(Orthogroups) <span class="ot">=</span> Orthogroups[<span class="dv">1</span>, ]</span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="fu">rownames</span>(Orthogroups) <span class="ot">=</span> Orthogroups<span class="sc">$</span>Orthogroups</span>
+<span id="cb4-5"><a href="#cb4-5"></a>Orthogroups <span class="ot">=</span> Orthogroups[<span class="sc">-</span><span class="fu">which</span>(Orthogroups<span class="sc">$</span>Orthogroup <span class="sc">==</span> <span class="st">"Orthogroups"</span>), ]</span>
+<span id="cb4-6"><a href="#cb4-6"></a>Orthogroups <span class="ot">=</span> Orthogroups[, <span class="sc">-</span><span class="fu">which</span>(<span class="fu">colnames</span>(Orthogroups) <span class="sc">==</span> <span class="st">"Orthogroups"</span>)]</span>
+<span id="cb4-7"><a href="#cb4-7"></a>Orthogroups <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">mutate_all</span>(Orthogroups, <span class="cf">function</span>(x) <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(x)))</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co"># drop columns if empty</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a>Orthogroups <span class="ot">=</span> Orthogroups[, <span class="fu">colSums</span>(Orthogroups <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">&gt;</span> <span class="dv">0</span>]</span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co"># reorder columns</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a>kveiks <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"14R30"</span>, <span class="st">"14R6"</span>, <span class="st">"16R23"</span>, <span class="st">"16R37"</span>, <span class="st">"17P5"</span>, <span class="st">"19R18"</span>, <span class="st">"1R16"</span>, <span class="st">"21P1"</span>, <span class="st">"21R38"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14"></a>           <span class="st">"27R17"</span>, <span class="st">"28P1"</span>, <span class="st">"28P6"</span>, <span class="st">"28R21"</span>, <span class="st">"28R33"</span>, <span class="st">"28R8"</span>, <span class="st">"2R23"</span>, <span class="st">"38R16"</span>, <span class="st">"39R20"</span>, </span>
+<span id="cb4-15"><a href="#cb4-15"></a>           <span class="st">"3R11"</span>, <span class="st">"40R14"</span>, <span class="st">"40R1"</span>, <span class="st">"40R20"</span>, <span class="st">"41R10"</span>, <span class="st">"41R15"</span>, <span class="st">"42R20"</span>, <span class="st">"42R31"</span>, <span class="st">"44R32"</span>, <span class="st">"44R7"</span>, </span>
+<span id="cb4-16"><a href="#cb4-16"></a>           <span class="st">"45P5"</span>, <span class="st">"45R11"</span>, <span class="st">"46R12"</span>, <span class="st">"46R37"</span>, <span class="st">"6R15"</span>, <span class="st">"7R7"</span>, <span class="st">"8R19"</span>, <span class="st">"9R40"</span>, <span class="st">"Granvin1"</span>, </span>
+<span id="cb4-17"><a href="#cb4-17"></a>           <span class="st">"Hornindal1"</span>, <span class="st">"Hornindal2"</span>, <span class="st">"k7R25"</span>, <span class="st">"Laerdal2"</span>, <span class="st">"Muri"</span>, <span class="st">"SortdalEbbe1"</span>, <span class="st">"Voss1"</span>)</span>
+<span id="cb4-18"><a href="#cb4-18"></a>Orthogroups_k <span class="ot">=</span> Orthogroups[, <span class="fu">which</span>(<span class="fu">colnames</span>(Orthogroups) <span class="sc">%in%</span> kveiks)]</span>
+<span id="cb4-19"><a href="#cb4-19"></a>Orthogroups_nk <span class="ot">=</span> Orthogroups[, <span class="sc">-</span><span class="fu">which</span>(<span class="fu">colnames</span>(Orthogroups) <span class="sc">%in%</span> kveiks)]</span>
+<span id="cb4-20"><a href="#cb4-20"></a>Orthogroups <span class="ot">=</span> <span class="fu">cbind</span>(Orthogroups_k, Orthogroups_nk)</span>
+<span id="cb4-21"><a href="#cb4-21"></a></span>
+<span id="cb4-22"><a href="#cb4-22"></a><span class="co"># plot heatmap</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a>ComplexHeatmap<span class="sc">::</span><span class="fu">Heatmap</span>(<span class="fu">t</span>(Orthogroups),</span>
+<span id="cb4-24"><a href="#cb4-24"></a>                        <span class="at">cluster_rows =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-25"><a href="#cb4-25"></a>                        <span class="at">cluster_columns =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-26"><a href="#cb4-26"></a>                        <span class="at">column_dend_reorder =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-27"><a href="#cb4-27"></a>                        <span class="at">col =</span> <span class="fu">colorRamp2</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="fu">rev</span>(<span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">3</span>, <span class="at">name =</span> <span class="st">"RdBu"</span>))),</span>
+<span id="cb4-28"><a href="#cb4-28"></a>                        <span class="at">na_col =</span> <span class="st">"grey75"</span>,</span>
+<span id="cb4-29"><a href="#cb4-29"></a>                        <span class="at">show_row_names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-30"><a href="#cb4-30"></a>                        <span class="at">show_column_names =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-31"><a href="#cb4-31"></a>                        <span class="at">show_row_dend =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-32"><a href="#cb4-32"></a>                        <span class="at">show_heatmap_legend =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb4-33"><a href="#cb4-33"></a>                        <span class="at">row_title =</span> <span class="st">"Orthogroups"</span>,</span>
+<span id="cb4-34"><a href="#cb4-34"></a>                        <span class="at">column_title_side =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-02-genome-assembly-and-annotation_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 1: Kveiks-specific gene families.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>We could not identify any obvious evidences for Farmhouse-specific Orthogroups.</strong></p>
+</section>
+<section id="horizontal-gene-transfer" class="level3" data-number="2.3.3">
+<h3 data-number="2.3.3" class="anchored" data-anchor-id="horizontal-gene-transfer"><span class="header-section-number">2.3.3</span> Horizontal Gene Transfer</h3>
+<p>To identify genuine Bacterial (or Fungal) Horizontal Gene Transfer, we apply the following protocol:</p>
+<ul>
+<li>sequence similarity search against non-redundant proteins database, including taxonomic annotations</li>
+<li>identify protein coding genes with best hits (top 5) to Bacterial proteins</li>
+<li>select assembled contigs where putative bacterial genes are</li>
+<li>discard short contigs with only one bacterial hit (Noise)</li>
+<li>if putative bacterial gene flanked by Eukaryotic genes, manual sequence similarity search to confirm a <em>bona fide</em> hit</li>
+</ul>
+<p>To have internal controls in this (and in the following analyses), we will add the ones of 18 <em>S. cerevisiae</em> industrial strains as well.</p>
+<section id="taxonomic-annotation-of-predicted-genes" class="level4" data-number="2.3.3.1">
+<h4 data-number="2.3.3.1" class="anchored" data-anchor-id="taxonomic-annotation-of-predicted-genes"><span class="header-section-number">2.3.3.1</span> Taxonomic annotation of predicted genes</h4>
+<p>For each predicted protein-coding gene, we can make a sequence similarity search against the non-redundant protein database at NCBI (nr). To assign the taxonomy id of the nr BLAST hit, we need the <code>prot.accession2taxid.gz</code> and <code>nodes.dmp</code> files provided by NCBI taxonomy. This can help us identify horizontal gene transfer and traces of contamination in the library prep of yeast samples.</p>
+<p>For each sample, first we do a blast search using DIAMOND, and then we associate to the protein_id of the top 5 best hits to the corresponding taxonomy the python library ete and customs scripts. BLAST is run against nr, excluding <em>Saccharomyces cerevisiae</em>, so that we can judge if the protein was present in other yeasts, or if it is indeed of bacterial origin.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># BLAST search</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.all.maker.proteins.fasta<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="ex">~/bin/DIAMOND/diamond</span> blastp <span class="dt">\</span></span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="at">--query</span> <span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">--db</span> ~/taxonomy/nr <span class="dt">\</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="at">--taxonmap</span> ~/taxonomy/prot.accession2taxid.gz <span class="dt">\</span></span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="at">--taxonnodes</span> ~/taxonomy/nodes.dmp <span class="dt">\</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="at">--threads</span> 70 <span class="dt">\</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="at">--sensitive</span> <span class="dt">\</span></span>
+<span id="cb5-10"><a href="#cb5-10"></a>    <span class="at">--max-target-seqs</span> 5 <span class="dt">\</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="at">--outfmt</span> 6 qseqid sseqid pident length mismatch gapopen qstart qend</span>
+<span id="cb5-12"><a href="#cb5-12"></a>    <span class="ex">sstart</span> send evalue bitscore staxids <span class="op">&gt;</span> <span class="va">$file</span>.diamond</span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="cf">done</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a></span>
+<span id="cb5-15"><a href="#cb5-15"></a><span class="co"># BLAST to taxid</span></span>
+<span id="cb5-16"><a href="#cb5-16"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.diamond<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb5-17"><a href="#cb5-17"></a>  <span class="ex">~/anaconda_ete/bin/python3.6</span> Vikings.tax.topath.py <span class="at">--input</span> <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.tax</span>
+<span id="cb5-18"><a href="#cb5-18"></a><span class="cf">done</span></span>
+<span id="cb5-19"><a href="#cb5-19"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.tax <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb5-20"><a href="#cb5-20"></a>  <span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span> <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb5-21"><a href="#cb5-21"></a>    <span class="fu">grep</span> <span class="va">$line</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1,5<span class="kw">;</span></span>
+<span id="cb5-22"><a href="#cb5-22"></a>    <span class="bu">echo</span><span class="kw">;</span></span>
+<span id="cb5-23"><a href="#cb5-23"></a>  <span class="cf">done</span> <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">grep</span> Bacteria <span class="va">$file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1 <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">$file</span>.bact</span>
+<span id="cb5-24"><a href="#cb5-24"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we have the full taxonomic annotation of the five best hits for each of the protein coding genes we annotated on the kveiks.</p>
+</section>
+<section id="evidence-for-bacterial-hgt" class="level4" data-number="2.3.3.2">
+<h4 data-number="2.3.3.2" class="anchored" data-anchor-id="evidence-for-bacterial-hgt"><span class="header-section-number">2.3.3.2</span> Evidence for bacterial HGT</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># filter annot.gff files</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.gff <span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">grep</span> CDS <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .gff<span class="va">)</span>.CDSonly.gff<span class="kw">;</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">gzip</span> <span class="va">$file</span><span class="kw">;</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="cf">done</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a><span class="co"># identify putative bacterial genes and the assembled contigs harbouring them</span></span>
+<span id="cb6-8"><a href="#cb6-8"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.tax<span class="kw">;</span> <span class="cf">do</span> <span class="fu">cut</span> <span class="at">-f</span> 1,5 <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.all<span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb6-9"><a href="#cb6-9"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.all<span class="kw">;</span> <span class="cf">do</span> <span class="fu">grep</span> Bact <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .all<span class="va">)</span>.bact<span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb6-10"><a href="#cb6-10"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.bact<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb6-11"><a href="#cb6-11"></a>  <span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb6-12"><a href="#cb6-12"></a>    <span class="cf">if</span> <span class="kw">[[</span> <span class="va">$line</span> <span class="ot">=</span> <span class="st">""</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a>      <span class="cf">continue</span><span class="kw">;</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>    <span class="cf">else</span></span>
+<span id="cb6-15"><a href="#cb6-15"></a>      <span class="va">GENE</span><span class="op">=</span><span class="va">$(</span><span class="bu">echo</span> <span class="va">$line</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d</span> <span class="st">" "</span> <span class="at">-f</span> 1 <span class="va">)</span><span class="kw">;</span></span>
+<span id="cb6-16"><a href="#cb6-16"></a>      <span class="va">CHR</span><span class="op">=</span><span class="va">$(</span><span class="fu">grep</span> <span class="st">"</span><span class="va">${GENE}</span><span class="st">"</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .maker.proteins.fasta.diamond.tax.bact<span class="va">)</span>.CDSonly.gff <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">)</span><span class="kw">;</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>      <span class="fu">grep</span> <span class="st">"</span><span class="va">${CHR}</span><span class="st">"</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .bact<span class="va">)</span>.all <span class="dt">\</span></span>
+<span id="cb6-18"><a href="#cb6-18"></a>        <span class="kw">|</span> <span class="fu">uniq</span> <span class="dt">\</span></span>
+<span id="cb6-19"><a href="#cb6-19"></a>        <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-C5</span> <span class="st">"</span><span class="va">${GENE}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb6-20"><a href="#cb6-20"></a>        <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">"</span><span class="va">${GENE}</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb6-21"><a href="#cb6-21"></a>        <span class="op">&gt;&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .maker.proteins.fasta.diamond.tax.bact<span class="va">)</span>.<span class="st">"</span><span class="va">${GENE}</span><span class="st">"</span>.tmp<span class="kw">;</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a>    <span class="cf">fi</span><span class="kw">;</span></span>
+<span id="cb6-23"><a href="#cb6-23"></a>  <span class="cf">done</span> <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span><span class="op">)</span><span class="kw">;</span></span>
+<span id="cb6-24"><a href="#cb6-24"></a><span class="cf">done</span></span>
+<span id="cb6-25"><a href="#cb6-25"></a></span>
+<span id="cb6-26"><a href="#cb6-26"></a><span class="co"># pull the putative bacterial contigs</span></span>
+<span id="cb6-27"><a href="#cb6-27"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.bact<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb6-28"><a href="#cb6-28"></a>  <span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">$file</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span> <span class="op">&gt;</span> <span class="va">$file</span>.lst<span class="kw">;</span></span>
+<span id="cb6-29"><a href="#cb6-29"></a>  <span class="fu">perl</span> ~/scripts/SelectList_Fasta.pl <span class="dt">\</span></span>
+<span id="cb6-30"><a href="#cb6-30"></a>    <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .diamond.tax.bact<span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb6-31"><a href="#cb6-31"></a>    <span class="va">$file</span>.lst <span class="dt">\</span></span>
+<span id="cb6-32"><a href="#cb6-32"></a>    <span class="op">&gt;</span> <span class="va">$file</span>.fa<span class="kw">;</span></span>
+<span id="cb6-33"><a href="#cb6-33"></a><span class="cf">done</span></span>
+<span id="cb6-34"><a href="#cb6-34"></a></span>
+<span id="cb6-35"><a href="#cb6-35"></a><span class="co"># check if putative bacterial transcripts are flanked by Euk genes</span></span>
+<span id="cb6-36"><a href="#cb6-36"></a><span class="ex">python3.6</span> Vikings.check_eukbact_contigs.1.py <span class="at">--input</span> ../samples.lst</span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>HGT.table<span class="kw">;</span> <span class="cf">do</span> <span class="fu">uniq</span> <span class="va">$file</span> <span class="op">&gt;</span> temp<span class="kw">;</span> <span class="fu">mv</span> temp <span class="va">$file</span> <span class="kw">;</span> <span class="cf">done</span></span>
+<span id="cb6-38"><a href="#cb6-38"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>HGT.table<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb6-39"><a href="#cb6-39"></a>  <span class="ex">python3</span> ../Vikings.Bactmatch.py <span class="at">--input</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> 2 <span class="op">&gt;</span> temp<span class="kw">;</span></span>
+<span id="cb6-40"><a href="#cb6-40"></a>  <span class="fu">cp</span> temp temp2<span class="kw">;</span></span>
+<span id="cb6-41"><a href="#cb6-41"></a>  <span class="fu">paste</span> temp temp2 <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/\t/\|\&gt;/g'</span> <span class="op">&gt;</span> <span class="va">$file</span>.lst<span class="kw">;</span></span>
+<span id="cb6-42"><a href="#cb6-42"></a>  <span class="fu">rm</span> temp temp2<span class="kw">;</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a><span class="cf">done</span></span>
+<span id="cb6-44"><a href="#cb6-44"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>HGT.table.lst<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb6-45"><a href="#cb6-45"></a>  <span class="fu">perl</span> ~/scripts/SelectList_Fasta.pl <span class="dt">\</span></span>
+<span id="cb6-46"><a href="#cb6-46"></a>    <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .HGT.table.lst<span class="va">)</span>.bact.fa <span class="dt">\</span></span>
+<span id="cb6-47"><a href="#cb6-47"></a>    <span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb6-48"><a href="#cb6-48"></a>    <span class="op">&gt;</span> <span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .lst<span class="va">)</span>.fa<span class="kw">;</span></span>
+<span id="cb6-49"><a href="#cb6-49"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>THERE ARE NO EVIDENCES FOR SIGNIFICANT BACTERIAL HORIZONTAL GENE TRANSFER.</strong></p>
+</section>
+<section id="evidence-for-hgt-from-ascomycota" class="level4" data-number="2.3.3.3">
+<h4 data-number="2.3.3.3" class="anchored" data-anchor-id="evidence-for-hgt-from-ascomycota"><span class="header-section-number">2.3.3.3</span> Evidence for HGT from Ascomycota</h4>
+<p>We can check the presence of fungal non-Saccharomyces genes and operons starting from the DIAMOND blast results we have.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Select non Saccharomyces genes</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co"># filter for genes with no top hits to Saccharomyces</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>tax<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">grep</span> Ascomycota <span class="va">$file</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> Saccharomyces <span class="op">&gt;</span> <span class="va">$file</span>.Asco<span class="kw">;</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>    <span class="fu">grep</span> <span class="va">$line</span> <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.Asco.all<span class="kw">;</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>    <span class="cf">if</span> <span class="kw">[[</span> <span class="va">$(</span><span class="fu">grep</span> <span class="va">$line</span> <span class="va">$file</span> <span class="kw">|</span> <span class="fu">grep</span> Saccharomyces<span class="va">)</span> <span class="kw">]];</span> <span class="cf">then</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>      <span class="cf">continue</span><span class="kw">;</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="cf">else</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>      <span class="bu">echo</span> <span class="va">$line</span><span class="kw">;</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>    <span class="cf">fi</span><span class="kw">;</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>  <span class="cf">done</span> <span class="op">&lt;</span> <span class="op">&lt;(</span><span class="fu">cut</span> <span class="at">-f</span> 1 <span class="va">$file</span>.Asco <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span><span class="op">)</span> <span class="op">&gt;</span> <span class="va">$file</span>.Asco.candidates<span class="kw">;</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a><span class="cf">done</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a></span>
+<span id="cb7-15"><a href="#cb7-15"></a><span class="co"># retrieve fasta sequences</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>candidates<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a><span class="fu">perl</span> ~/scripts/SelectList_Fasta.pl <span class="dt">\</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>  ../../11_domestication/00_prot_DB/<span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a>  <span class="ex">.diamond.tax.Asco.candidates</span><span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>  <span class="va">$file</span> <span class="op">&gt;</span> <span class="va">$file</span>.fa<span class="kw">;</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a><span class="cf">done</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a></span>
+<span id="cb7-23"><a href="#cb7-23"></a><span class="co"># generate table stats</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a><span class="cf">for</span> i <span class="kw">in</span> 2 3<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a>  <span class="fu">wc</span> <span class="at">-l</span> <span class="pp">*</span>candidates <span class="dt">\</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">"s/.SPAdes.*//g"</span> <span class="dt">\</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">"s/.aa.*//g"</span> <span class="dt">\</span></span>
+<span id="cb7-28"><a href="#cb7-28"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">"s/.contigs.*//g"</span> <span class="dt">\</span></span>
+<span id="cb7-29"><a href="#cb7-29"></a>    <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> total <span class="dt">\</span></span>
+<span id="cb7-30"><a href="#cb7-30"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">"s/  / /g"</span> <span class="dt">\</span></span>
+<span id="cb7-31"><a href="#cb7-31"></a>    <span class="kw">|</span> <span class="fu">sed</span> <span class="st">"s/  / /g"</span> <span class="dt">\</span></span>
+<span id="cb7-32"><a href="#cb7-32"></a>    <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f</span> <span class="va">$i</span> <span class="at">-d</span> <span class="st">" "</span> <span class="dt">\</span></span>
+<span id="cb7-33"><a href="#cb7-33"></a>    <span class="op">&gt;</span> temp.<span class="va">$i</span><span class="kw">;</span></span>
+<span id="cb7-34"><a href="#cb7-34"></a><span class="cf">done</span><span class="kw">;</span></span>
+<span id="cb7-35"><a href="#cb7-35"></a></span>
+<span id="cb7-36"><a href="#cb7-36"></a><span class="fu">paste</span> temp.3 temp.2 <span class="op">&gt;</span> Vikings.Asco.HGT.stats<span class="kw">;</span></span>
+<span id="cb7-37"><a href="#cb7-37"></a></span>
+<span id="cb7-38"><a href="#cb7-38"></a><span class="co"># clean up</span></span>
+<span id="cb7-39"><a href="#cb7-39"></a><span class="fu">rm</span> temp.2 temp.3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-b2ad372491e063bbfc24" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-b2ad372491e063bbfc24">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 4: Farmhouse yeasts Ascomycota HGT genes.<\/caption>","data":[["14R30","14R6","16R23","16R37","17P5","19R18","1R16","21P1","21R38","27R17","28P1","28P6","28R21","28R33","28R8","2R23","38R16","39R20","3R11","40R14","40R1","40R20","41R10","41R15","42R20","42R31","44R32","44R7","45P5","45R11","46R12","46R37","6R15","7R7","8R19","9R40","Granvin1","Hornindal1","Hornindal2","k7R25","Laerdal2","Muri","SortdalEbbe1","Voss1"],["76","74","4","22","92","90","92","106","4","73","4","6","4","4","5","90","56","8","4","5","4","96","4","6","5","13","90","76","14","13","16","11","109","81","57","58","4","5","4","21","5","15","6","5"],["North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","North-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","South-West Norway","Central-Eastern Norway","Central-Eastern Norway","Central-Eastern Norway","Central-Eastern Norway","Central-Eastern Norway","Central-Eastern Norway","Latvia","Latvia","Latvia","Latvia","Lithuania","Lithuania","Lithuania","Lithuania","Russia","Russia","Russia","Russia","Other","Other"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Strains<\/th>\n      <th>Putative Ascomicota HGT<\/th>\n      <th>Geographical origin<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"name":"Strains","targets":0},{"name":"Putative Ascomicota HGT","targets":1},{"name":"Geographical origin","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Kveik strains seems to have a significant higher number of Ascomycetes genes than the other industrial strains analysed. Are there additional proteins shared between all the kveiks (or by some kveiks with same geographical origin?). We can group these proteins in gene families and see if we see a common pattern. If not, we can BLAST back the proteins and see which specific genes have been acquired.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># group candidates in gene families</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="ex">~/bin/OrthoFinder-2.3.3/orthofinder</span> <span class="at">-f</span> ./ <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="at">-t</span> 20 <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="at">-M</span> msa <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="at">-S</span> diamond <span class="dt">\</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="at">-A</span> mafft <span class="dt">\</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="at">-T</span> iqtree <span class="dt">\</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="at">-I</span> 2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>From OrthoFinder output we can identify 49 orthogroups containing four genes or more. We visualize them as heatmap, anc we can see that kveiks strains have a higher number of common additional orthogroups that are absent from S288C and industrial strains. Interestingly, the distribution pattern does not seem to overlap with the geographical isolation of the kveik culture.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># import table</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a>heatfile <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"data/p01-02/Vikings.Asco.HGT.heatmap.tab"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>heatfile<span class="sc">$</span>V2 <span class="ot">=</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(heatfile<span class="sc">$</span>V2, <span class="st">"x"</span>, <span class="st">"X"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>heatfile <span class="ot">=</span> heatfile[<span class="fu">which</span>(heatfile<span class="sc">$</span>V2 <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="st">"Voss1"</span>, <span class="st">"SortdalEbbe1"</span>, <span class="st">"Muri"</span>, <span class="st">"Laerdal2"</span>, <span class="st">"k7R25"</span>, <span class="st">"Hornindal2"</span>, <span class="st">"Hornindal1"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="st">"Granvin1"</span>, <span class="st">"9R40"</span>, <span class="st">"8R19"</span>, <span class="st">"7R7"</span>, <span class="st">"6R15"</span>, <span class="st">"46R37"</span>, <span class="st">"46R12"</span>, <span class="st">"45R11"</span>, <span class="st">"45P5"</span>, <span class="st">"44R7"</span>, <span class="st">"44R32"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="st">"42R31"</span>, <span class="st">"42R20"</span>, <span class="st">"41R15"</span>, <span class="st">"41R10"</span>, <span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"3R11"</span>, <span class="st">"39R20"</span>, <span class="st">"38R16"</span>, <span class="st">"2R23"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8"></a>  <span class="st">"28R8"</span>, <span class="st">"28R33"</span>, <span class="st">"28R21"</span>, <span class="st">"28P6"</span>, <span class="st">"28P1"</span>, <span class="st">"27R17"</span>, <span class="st">"21R38"</span>, <span class="st">"21P1"</span>, <span class="st">"1R16"</span>, <span class="st">"19R18"</span>, <span class="st">"17P5"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9"></a>  <span class="st">"16R37"</span>, <span class="st">"16R23"</span>, <span class="st">"14R6"</span>, <span class="st">"14R30"</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>)), ]</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co"># relevel</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a>heatfile<span class="sc">$</span>V2 <span class="ot">=</span> <span class="fu">factor</span>(</span>
+<span id="cb9-14"><a href="#cb9-14"></a>  heatfile<span class="sc">$</span>V2,</span>
+<span id="cb9-15"><a href="#cb9-15"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"41R10"</span>, <span class="st">"21R38"</span>, <span class="st">"9R40"</span>, <span class="st">"17P5"</span>, <span class="st">"SortdalEbbe1"</span>, <span class="st">"3R11"</span>, <span class="st">"21P1"</span>, <span class="st">"41R15"</span>, <span class="st">"Hornindal1"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16"></a>             <span class="st">"Hornindal2"</span>, <span class="st">"1R16"</span>, <span class="st">"2R23"</span>, <span class="st">"8R19"</span>, <span class="st">"Muri"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17"></a>             <span class="st">"k7R25"</span>, <span class="st">"38R16"</span>, <span class="st">"44R32"</span>, <span class="st">"19R18"</span>, <span class="st">"44R7"</span>, <span class="st">"6R15"</span>, <span class="st">"Laerdal2"</span>, <span class="st">"7R7"</span>, <span class="st">"14R6"</span>, <span class="st">"14R30"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18"></a>             <span class="st">"27R17"</span>, <span class="st">"28P1"</span>, <span class="st">"28P6"</span>, <span class="st">"28R21"</span>, <span class="st">"28R33"</span>, <span class="st">"28R8"</span>,</span>
+<span id="cb9-19"><a href="#cb9-19"></a>             <span class="st">"42R20"</span>, <span class="st">"42R31"</span>, <span class="st">"45P5"</span>, <span class="st">"45R11"</span>, </span>
+<span id="cb9-20"><a href="#cb9-20"></a>             <span class="st">"46R12"</span>, <span class="st">"46R37"</span>, <span class="st">"16R23"</span>, <span class="st">"16R37"</span>,</span>
+<span id="cb9-21"><a href="#cb9-21"></a>             <span class="st">"39R20"</span>, <span class="st">"40R14"</span>, <span class="st">"40R1"</span>, <span class="st">"40R20"</span>,</span>
+<span id="cb9-22"><a href="#cb9-22"></a>             <span class="st">"Granvin1"</span>, <span class="st">"Voss1"</span>)</span>
+<span id="cb9-23"><a href="#cb9-23"></a>)</span>
+<span id="cb9-24"><a href="#cb9-24"></a></span>
+<span id="cb9-25"><a href="#cb9-25"></a><span class="co"># set color labels</span></span>
+<span id="cb9-26"><a href="#cb9-26"></a>col_label <span class="ot">=</span> fills <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>,</span>
+<span id="cb9-27"><a href="#cb9-27"></a>                      <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>,</span>
+<span id="cb9-28"><a href="#cb9-28"></a>                      <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>,</span>
+<span id="cb9-29"><a href="#cb9-29"></a>                      <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#FFDA00"</span>, <span class="st">"#FFDA00"</span>,</span>
+<span id="cb9-30"><a href="#cb9-30"></a>                      <span class="st">"#FFDA00"</span>, <span class="st">"#FFDA00"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#A6611A"</span>, <span class="st">"#A6611A"</span>,</span>
+<span id="cb9-31"><a href="#cb9-31"></a>                      <span class="st">"#A6611A"</span>, <span class="st">"#A6611A"</span>, <span class="st">"grey75"</span>, <span class="st">"grey75"</span>)</span>
+<span id="cb9-32"><a href="#cb9-32"></a></span>
+<span id="cb9-33"><a href="#cb9-33"></a></span>
+<span id="cb9-34"><a href="#cb9-34"></a><span class="co"># prepare heatmap</span></span>
+<span id="cb9-35"><a href="#cb9-35"></a><span class="fu">ggplot</span>(heatfile) <span class="sc">+</span></span>
+<span id="cb9-36"><a href="#cb9-36"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">x =</span> V1, <span class="at">y =</span> V2, <span class="at">fill =</span> V3), <span class="at">color =</span> <span class="st">"grey75"</span>) <span class="sc">+</span></span>
+<span id="cb9-37"><a href="#cb9-37"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">na.value =</span> <span class="st">"white"</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>),</span>
+<span id="cb9-38"><a href="#cb9-38"></a>                       <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"white"</span>, <span class="st">"steelblue"</span>, <span class="st">"steelblue"</span>),</span>
+<span id="cb9-39"><a href="#cb9-39"></a>                       <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb9-40"><a href="#cb9-40"></a>  <span class="fu">coord_cartesian</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb9-41"><a href="#cb9-41"></a>  <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">"Gene presence"</span>,</span>
+<span id="cb9-42"><a href="#cb9-42"></a>       <span class="at">y =</span> <span class="st">"Strain"</span>,</span>
+<span id="cb9-43"><a href="#cb9-43"></a>       <span class="at">x =</span> <span class="st">"Orthologous groups"</span>) <span class="sc">+</span></span>
+<span id="cb9-44"><a href="#cb9-44"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb9-45"><a href="#cb9-45"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="fl">0.95</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb9-46"><a href="#cb9-46"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">colour =</span> col_label),</span>
+<span id="cb9-47"><a href="#cb9-47"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb9-48"><a href="#cb9-48"></a>        <span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">size =</span> <span class="fl">0.75</span>)) <span class="sc">+</span></span>
+<span id="cb9-49"><a href="#cb9-49"></a>  <span class="fu">annotate</span>(<span class="at">xmin =</span> <span class="fl">25.5</span>, <span class="at">xmax =</span> <span class="fl">32.5</span>, </span>
+<span id="cb9-50"><a href="#cb9-50"></a>           <span class="at">ymin =</span> <span class="sc">-</span><span class="cn">Inf</span>, <span class="at">ymax =</span> <span class="cn">Inf</span>, </span>
+<span id="cb9-51"><a href="#cb9-51"></a>           <span class="at">geom =</span> <span class="st">"rect"</span>, <span class="at">alpha =</span> <span class="dv">0</span>,</span>
+<span id="cb9-52"><a href="#cb9-52"></a>           <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-02-genome-assembly-and-annotation_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 2: Ascomycota HTG orthogroup candidates.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Very well. Now, what are the gene families that are transferred to kveiks strains? Are they genuine HGT, or it is just artifacts from heuristic sequence similarity search? Let’s do manual BLAST to NCBI for the Orthogroups and see what pops up.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-92188a37e9200c8e7111" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-92188a37e9200c8e7111">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 5: Inferred Ascomycota HGT taxonomic origin.<\/caption>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49"],[" OG0000000"," OG0000001"," OG0000002"," OG0000003"," OG0000004"," OG0000005"," OG0000006"," OG0000007"," OG0000008"," OG0000009"," OG0000010"," OG0000011"," OG0000012"," OG0000013"," OG0000014"," OG0000015"," OG0000016"," OG0000017"," OG0000018"," OG0000019"," OG0000020"," OG0000021"," OG0000022"," OG0000023"," OG0000024"," OG0000025"," OG0000026"," OG0000027"," OG0000028"," OG0000029"," OG0000030"," OG0000031"," OG0000032"," OG0000033"," OG0000034"," OG0000035"," OG0000036"," OG0000037"," OG0000038"," OG0000039"," OG0000040"," OG0000041"," OG0000042"," OG0000043"," OG0000044"," OG0000045"," OG0000046"," OG0000047"," OG0000048"],[65,66,27,24,11,14,12,12,11,11,9,7,9,8,8,7,6,7,6,6,6,6,4,5,5,5,5,5,5,5,5,5,5,5,5,5,4,4,4,4,3,3,4,4,4,4,3,2,4],[42,44,26,24,11,14,12,12,10,11,9,7,8,8,8,7,6,7,0,6,6,6,4,5,5,5,5,5,5,5,5,5,3,5,5,5,3,4,4,4,3,3,3,4,4,4,3,2,2],[" Saccharomyces cerevisiae S288C "," Saccharomyces cerevisiae S288C "," Lachancea fermentati "," Zygosaccharomyces parabailii "," Saccharomyces cerevisiae "," Ogataea polymorpha "," Zygosaccharomyces rouxii "," Zygosaccharomyces bailii "," Cyberlindnera fabianii "," Pichia kluyveri"," Torulaspora globosa"," Pichia membranifaciens NRRL Y-2026 "," Torulaspora delbrueckii"," Zygosaccharomyces mellis "," Ascoidea rubescens DSM 1968"," Zygosaccharomyces parabailii "," Pichia kudriavzevii"," Hanseniaspora opuntiae "," Fusarium fujikuroi IMI 58289 "," Wickerhamomyces ciferrii "," Pichia kudriavzevii"," Torulaspora delbrueckii"," Hanseniaspora uvarum "," Clostridioides difficile E13 "," Zygosaccharomyces rouxii "," Zygosaccharomyces parabailii "," Zygosaccharomyces bailii "," Zygosaccharomyces parabailii "," Zygosaccharomyces parabailii "," Zygosaccharomyces parabailii "," Zygosaccharomyces parabailii "," Zygosaccharomyces parabailii "," Saccharomyces cerevisiae "," Lachancea dasiensis CBS 10888"," Hanseniaspora opuntiae "," Zygosaccharomyces mellis "," Arthrobacter sp. D2"," Candida glabrata "," Hanseniaspora uvarum "," Ogataea polymorpha "," Hanseniaspora opuntiae "," Pichia kudriavzevii"," Torulaspora delbrueckii"," Pichia kudriavzevii"," Wickerhamomyces ciferrii "," Hanseniaspora opuntiae "," Pichia kudriavzevii"," Saccharomyces cerevisiae S288C "," Saccharomyces pastorianus"],[" NP_009564.1"," NP_958835.1"," LAFE_0D03730g1_1 "," AQZ19161.1 "," QHB10313.1 "," OBA13862.1 "," GAV56453.1 "," SJM88859.1 "," ONH67477.1 "," YP_008474941.1 "," YP_009155512.1 "," XP_019019891.1 "," XP_003680115.1 "," YP_009444439.1 "," XP_020048931.1 "," AQZ19154.1 "," KGK38279.1 "," OEJ82333.1 "," XP_023432404.1 "," XP_011272878.1 "," KGK32584.1 "," XP_003683079.1 "," YP_492538.1"," CCL04234.1 "," XP_002494962.1 "," AQZ10051.1 "," SJM87673.1 "," AQZ11057.1 "," AQZ11058.1 "," AQZ10055.1 "," AQZ10056.1 "," AQZ11061.1 "," GES71912.1 "," CCW77441.1 "," OEJ91258.1 "," YP_009444434.1 "," WP_139128006.1 "," KTA94980.1 "," YP_492540.1"," OBA13864.1 "," OEJ90243.1 "," ONH75445.1 "," XP_003683063.1 "," OUT24502.1 "," XP_011271539.1 "," OEJ81528.1 "," XP_029322066.1 "," NP_009564.1"," QID83980.1 "],[" histone H3"," H(+)-transporting V0 sector ATPase subunit e"," Uncharacterized protein"," ATP9"," hypothetical protein SCEN_L02180"," A0A1B7SBK2"," hypothetical protein ZYGR_0DO00100"," uncharacterized protein ZBIST_5059"," Cell wall mannoprotein PIR1"," cytochrome c oxidase subunit 2"," hypothetical protein"," hypothetical protein PICMEDRAFT_28466"," hypothetical protein TDEL_0C00150"," apocytochrome b"," Pkinase-domain-containing protein, partial"," AI1"," hypothetical protein JL09_g2629"," Ras-related protein Rab-1A"," UBI4-Ubiquitin"," Riboflavin transporter"," hypothetical protein JL09_g6809, partial"," hypothetical protein TDEL_0G05010"," ATP synthase F0 subunit 6"," KLLA0D17952p (fragment)"," uncharacterized protein ZYRO0A13992g"," MNL1 (YHR204W)"," probable serine/threonine-protein kinase SCH9 (YHR205W)"," SKN7 (YHR206W) and HMS2 (YJR147W)"," related to Potential protein lysine methyltransferase SET5 (YHR207C)"," FMP10 (YER182W)"," related to 5-formyltetrahydrofolate cyclo-ligase FAU1 (YER183C)"," branched-chain amino acid aminotransferase BAT2 (YJR148W) and BAT1 (YHR208W)"," hypothetical protein SCEPF1_0115000100"," putative mitochondrial ribosomal protein VAR1"," Glutaredoxin-2, mitochondrial"," YP_009444434.1"," histone H3, partial"," cytochrome c oxidase subunit 1"," apocytochrome b"," hypothetical protein OGAPODRAFT_52257, partial"," NADPH-dependent alpha-keto amide reductase"," Potassium-activated aldehyde dehydrogenase, mitochondrial"," hypothetical protein TDEL_0G04850"," hypothetical protein CAS74_000890"," Carboxymethylenebutenolidase"," NADPH-dependent methylglyoxal reductase GRE2"," uncharacterized protein C5L36_0C05200"," histone H3"," hypothetical protein GRS66_006470"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Orthogroups<\/th>\n      <th># strains<\/th>\n      <th># kveiks<\/th>\n      <th>Best hit to<\/th>\n      <th>Accession<\/th>\n      <th>Annotation<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"className":"dt-right","targets":[2,3]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"Orthogroups","targets":1},{"name":"# strains","targets":2},{"name":"# kveiks","targets":3},{"name":"Best hit to","targets":4},{"name":"Accession","targets":5},{"name":"Annotation","targets":6}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>We can clearly identify two operons (OG0000024-OG0000031) that were transferred from <em>Zygosaccharomzces parabailli</em> to kveik strains 16R37, 42R31, 45P5, 45R11 and 46R37.</p>
+<p>These strains come all from a small geographic area (Latvia [42R31, 45P5, 45R11] and Lithuania [16R37, 46R37]), suggesting a common origin of the HGT event that then spread. Interestingly, other isolates from the same culture (i.e.: 16R23, 42R20, 46R12) do not present such a HGT, supporting the idea of heterogeneous kvieks cultures.</p>
+</section>
+<section id="zygosaccharomyces-parabailli-transferred-operon" class="level4" data-number="2.3.3.4">
+<h4 data-number="2.3.3.4" class="anchored" data-anchor-id="zygosaccharomyces-parabailli-transferred-operon"><span class="header-section-number">2.3.3.4</span> <em>Zygosaccharomyces parabailli</em> transferred operon</h4>
+<p>The transferred operons code for the genes: YNR058W, YHR204W, YHR205W, YHR206W, YHR207C, YHR208W, YER182W, YER183C.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-5b028e426f23ef2b3adc" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5b028e426f23ef2b3adc">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 6: HGT Zygosaccharomzces parabailli operon.<\/caption>","data":[["1","2","3","4","5","6","7","8"],["YNR058W","YHR204W","YHR205W","YHR206W","YHR207C","YHR208W","YER182W","YER183C"],[855795,856611,856612,856613,856614,856615,856931,856932],["BIO3","MNL1","SCH9","SKN7","SET5","BAT1","FMP10","FAU1"],["7,8-diamino-pelargonic acid aminotransferase (DAPA); catalyzes the second step in the biotin biosynthesis pathway; BIO3 is in a cluster of 3 genes (BIO3, BIO4, and BIO5) that mediate biotin synthesis; BIO3 and BIO4 were acquired by horizontal gene transfer (HGT) from bacteria [Source:SGD;Acc:S000005341]","Alpha-1,2-specific exomannosidase of the endoplasmic reticulum; involved in glycan trimming of both folded and misfolded glycoproteins; complexes with Pdi1p, and trims a mannose from Man8GlcNac2 glycans to generate Man7GlcNac2, an oligosaccharide signal on glycoproteins destined for ER-associated protein degradation; requires Pdi1p for stability and substrate recognition; human homolog EDEM1 can complement yeast null mutant [Source:SGD;Acc:S000001247]","AGC family protein kinase; functional ortholog of mammalian S6 kinase; phosphorylated by Tor1p and required for TORC1-mediated regulation of ribosome biogenesis, translation initiation, and entry into G0 phase; involved in transactivation of osmostress-responsive genes; regulates G1 progression, cAPK activity and nitrogen activation of the FGM pathway; integrates nutrient signals and stress signals from sphingolipids to regulate lifespan [Source:SGD;Acc:S000001248]","Nuclear response regulator and transcription factor; physically interacts with the Tup1-Cyc8 complex and recruits Tup1p to its targets; part of a branched two-component signaling system; required for optimal induction of heat-shock genes in response to oxidative stress; involved in osmoregulation; relocalizes to the cytosol in response to hypoxia; SKN7 has a paralog, HMS2, that arose from the whole genome duplication [Source:SGD;Acc:S000001249]","Methyltransferase involved in methylation of histone H4 Lys5, -8, -12; S-adenosylmethionine-dependent; zinc-finger protein, contains one canonical and two unusual fingers in unusual arrangements; deletion enhances replication of positive-strand RNA virus [Source:SGD;Acc:S000001250]","Mitochondrial branched-chain amino acid (BCAA) aminotransferase; preferentially involved in BCAA biosynthesis; homolog of murine ECA39; highly expressed during logarithmic phase and repressed during stationary phase; BAT1 has a paralog, BAT2, that arose from the whole genome duplication [Source:SGD;Acc:S000001251]","Putative protein of unknown function; the authentic, non-tagged protein is detected in highly purified mitochondria in high-throughput studies [Source:SGD;Acc:S000000984]","5,10-methenyltetrahydrofolate synthetase; involved in folic acid biosynthesis [Source:SGD;Acc:S000000985]"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ENSEMBL<\/th>\n      <th>ENTREZ<\/th>\n      <th>SYMBOL<\/th>\n      <th>Description<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":"_all","render":"$.fn.dataTable.render.ellipsis( 30, false )"},{"className":"dt-right","targets":2},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ENSEMBL","targets":1},{"name":"ENTREZ","targets":2},{"name":"SYMBOL","targets":3},{"name":"Description","targets":4}],"overflow":"hidden","whiteSpace":"nowrap","scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render"],"jsHooks":[]}</script>
+</div>
+</div>
+<section id="overrepresented-go-bp-terms" class="level5" data-number="2.3.3.4.1">
+<h5 data-number="2.3.3.4.1" class="anchored" data-anchor-id="overrepresented-go-bp-terms"><span class="header-section-number">2.3.3.4.1</span> Overrepresented GO BP terms</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="do">### run over-represented analysis</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>enriched_GOs <span class="ot">=</span> <span class="fu">enrichGO</span>(<span class="at">gene =</span> HGT_genes<span class="sc">$</span>ENTREZ,</span>
+<span id="cb10-3"><a href="#cb10-3"></a>                               <span class="at">universe =</span> GO_universe,</span>
+<span id="cb10-4"><a href="#cb10-4"></a>                               <span class="at">OrgDb =</span> ref_DB_list[[<span class="dv">1</span>]],</span>
+<span id="cb10-5"><a href="#cb10-5"></a>                               <span class="at">ont =</span> <span class="st">"BP"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6"></a>                               <span class="at">pAdjustMethod =</span> <span class="st">"BH"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>                               <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb10-8"><a href="#cb10-8"></a>                               <span class="at">qvalueCutoff =</span> <span class="fl">0.05</span>)</span>
+<span id="cb10-9"><a href="#cb10-9"></a></span>
+<span id="cb10-10"><a href="#cb10-10"></a>my_table <span class="ot">=</span> enriched_GOs<span class="sc">@</span>result[<span class="fu">which</span>(enriched_GOs<span class="sc">@</span>result<span class="sc">$</span>p.adjust <span class="sc">&lt;=</span> <span class="fl">0.05</span>), ]</span>
+<span id="cb10-11"><a href="#cb10-11"></a>my_table <span class="ot">=</span> my_table <span class="sc">%&gt;%</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb10-13"><a href="#cb10-13"></a>    <span class="at">pvalue =</span> base<span class="sc">::</span><span class="fu">signif</span>(pvalue, <span class="at">digits =</span> <span class="dv">3</span>),</span>
+<span id="cb10-14"><a href="#cb10-14"></a>    <span class="at">p.adjust =</span> base<span class="sc">::</span><span class="fu">signif</span>(p.adjust, <span class="at">digits =</span> <span class="dv">3</span>),</span>
+<span id="cb10-15"><a href="#cb10-15"></a>    <span class="at">qvalue =</span> base<span class="sc">::</span><span class="fu">signif</span>(qvalue, <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb10-16"><a href="#cb10-16"></a>  )</span>
+<span id="cb10-17"><a href="#cb10-17"></a></span>
+<span id="cb10-18"><a href="#cb10-18"></a><span class="co"># print table</span></span>
+<span id="cb10-19"><a href="#cb10-19"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(</span>
+<span id="cb10-20"><a href="#cb10-20"></a>  my_table,</span>
+<span id="cb10-21"><a href="#cb10-21"></a>  <span class="at">extensions =</span> <span class="fu">c</span>(<span class="st">"FixedColumns"</span>, <span class="st">"FixedHeader"</span>),</span>
+<span id="cb10-22"><a href="#cb10-22"></a>  <span class="at">caption =</span> <span class="st">"Table 7: Overrepresented BP terms in Zygosaccharomyces parabailli transferred operon."</span>, </span>
+<span id="cb10-23"><a href="#cb10-23"></a>  <span class="at">plugins =</span> <span class="st">"ellipsis"</span>,</span>
+<span id="cb10-24"><a href="#cb10-24"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb10-25"><a href="#cb10-25"></a>    <span class="at">columnDefs =</span> <span class="fu">list</span>(<span class="fu">list</span>(</span>
+<span id="cb10-26"><a href="#cb10-26"></a>      <span class="at">targets =</span> <span class="st">"_all"</span>,</span>
+<span id="cb10-27"><a href="#cb10-27"></a>      <span class="at">render =</span> <span class="fu">JS</span>(<span class="st">"$.fn.dataTable.render.ellipsis( 30, false )"</span>)</span>
+<span id="cb10-28"><a href="#cb10-28"></a>    )),</span>
+<span id="cb10-29"><a href="#cb10-29"></a>    <span class="at">overflow =</span> <span class="st">"hidden"</span>,</span>
+<span id="cb10-30"><a href="#cb10-30"></a>    <span class="at">whiteSpace =</span> <span class="st">"nowrap"</span>,</span>
+<span id="cb10-31"><a href="#cb10-31"></a>    <span class="at">scrollX =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-32"><a href="#cb10-32"></a>    <span class="at">paging =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-33"><a href="#cb10-33"></a>    <span class="at">fixedHeader =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-34"><a href="#cb10-34"></a>    <span class="at">pageLength =</span> <span class="dv">10</span></span>
+<span id="cb10-35"><a href="#cb10-35"></a>  )</span>
+<span id="cb10-36"><a href="#cb10-36"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-d914c8d65318b9afb9ae" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-d914c8d65318b9afb9ae">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 7: Overrepresented BP terms in Zygosaccharomyces parabailli transferred operon.<\/caption>","data":[["GO:0043619","GO:0044272","GO:0006790","GO:0008361","GO:0043618","GO:0043620","GO:0000096","GO:0032535","GO:0090066","GO:0006986","GO:0080134"],["GO:0043619","GO:0044272","GO:0006790","GO:0008361","GO:0043618","GO:0043620","GO:0000096","GO:0032535","GO:0090066","GO:0006986","GO:0080134"],["regulation of transcription from RNA polymerase II promoter in response to oxidative stress","sulfur compound biosynthetic process","sulfur compound metabolic process","regulation of cell size","regulation of transcription from RNA polymerase II promoter in response to stress","regulation of DNA-templated transcription in response to stress","sulfur amino acid metabolic process","regulation of cellular component size","regulation of anatomical structure size","response to unfolded protein","regulation of response to stress"],["2/8","3/8","3/8","2/8","2/8","2/8","2/8","2/8","2/8","2/8","2/8"],["10/5733","75/5733","122/5733","28/5733","43/5733","43/5733","49/5733","49/5733","49/5733","54/5733","59/5733"],[7.63e-05,0.000115,0.000487,0.000633,0.0015,0.0015,0.00194,0.00194,0.00194,0.00235,0.0028],[0.00942,0.00942,0.0259,0.0259,0.0353,0.0353,0.0353,0.0353,0.0353,0.0386,0.0418],[0.00605,0.00605,0.0166,0.0166,0.0227,0.0227,0.0227,0.0227,0.0227,0.0248,0.0268],["856612/856613","855795/856612/856615","855795/856612/856615","856612/856613","856612/856613","856612/856613","856612/856615","856612/856613","856612/856613","856611/856613","856612/856613"],[2,3,3,2,2,2,2,2,2,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ID<\/th>\n      <th>Description<\/th>\n      <th>GeneRatio<\/th>\n      <th>BgRatio<\/th>\n      <th>pvalue<\/th>\n      <th>p.adjust<\/th>\n      <th>qvalue<\/th>\n      <th>geneID<\/th>\n      <th>Count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":"_all","render":"$.fn.dataTable.render.ellipsis( 30, false )"},{"className":"dt-right","targets":[5,6,7,9]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ID","targets":1},{"name":"Description","targets":2},{"name":"GeneRatio","targets":3},{"name":"BgRatio","targets":4},{"name":"pvalue","targets":5},{"name":"p.adjust","targets":6},{"name":"qvalue","targets":7},{"name":"geneID","targets":8},{"name":"Count","targets":9}],"overflow":"hidden","whiteSpace":"nowrap","scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render"],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># plot GO dotplot</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>p0 <span class="ot">=</span> enrichplot<span class="sc">::</span><span class="fu">dotplot</span>(enriched_GOs, <span class="at">showCategory =</span> <span class="fu">nrow</span>(enriched_GOs<span class="sc">@</span>result)) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">scale_colour_gradientn</span>(<span class="at">colours =</span> <span class="fu">rev</span>(<span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">7</span>, <span class="st">"Reds"</span>))(<span class="dv">37</span>))) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_colorbar</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">22</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb11-6"><a href="#cb11-6"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7"></a>        <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"grey85"</span>, <span class="at">colour =</span> <span class="st">"black"</span>),</span>
+<span id="cb11-8"><a href="#cb11-8"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span>
+<span id="cb11-9"><a href="#cb11-9"></a></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="fu">print</span>(p0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-02-genome-assembly-and-annotation_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 3: Dotplot of overrepresented BP terms in Zygosaccharomzces parabailli transferred operon.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="overrepresented-go-mf-terms" class="level5" data-number="2.3.3.4.2">
+<h5 data-number="2.3.3.4.2" class="anchored" data-anchor-id="overrepresented-go-mf-terms"><span class="header-section-number">2.3.3.4.2</span> Overrepresented GO MF terms</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="do">### run over-represented analysis</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>enriched_GOs <span class="ot">=</span> <span class="fu">enrichGO</span>(<span class="at">gene =</span> HGT_genes<span class="sc">$</span>ENTREZ,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>                               <span class="at">universe =</span> GO_universe,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>                               <span class="at">OrgDb =</span> ref_DB_list[[<span class="dv">1</span>]],</span>
+<span id="cb12-5"><a href="#cb12-5"></a>                               <span class="at">ont =</span> <span class="st">"MF"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>                               <span class="at">pAdjustMethod =</span> <span class="st">"BH"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>                               <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb12-8"><a href="#cb12-8"></a>                               <span class="at">qvalueCutoff =</span> <span class="fl">0.05</span>)</span>
+<span id="cb12-9"><a href="#cb12-9"></a></span>
+<span id="cb12-10"><a href="#cb12-10"></a>my_table <span class="ot">=</span> enriched_GOs<span class="sc">@</span>result[<span class="fu">which</span>(enriched_GOs<span class="sc">@</span>result<span class="sc">$</span>p.adjust <span class="sc">&lt;=</span> <span class="fl">0.05</span>), ]</span>
+<span id="cb12-11"><a href="#cb12-11"></a>my_table <span class="ot">=</span> my_table <span class="sc">%&gt;%</span></span>
+<span id="cb12-12"><a href="#cb12-12"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
+<span id="cb12-13"><a href="#cb12-13"></a>    <span class="at">pvalue =</span> base<span class="sc">::</span><span class="fu">signif</span>(pvalue, <span class="at">digits =</span> <span class="dv">3</span>),</span>
+<span id="cb12-14"><a href="#cb12-14"></a>    <span class="at">p.adjust =</span> base<span class="sc">::</span><span class="fu">signif</span>(p.adjust, <span class="at">digits =</span> <span class="dv">3</span>),</span>
+<span id="cb12-15"><a href="#cb12-15"></a>    <span class="at">qvalue =</span> base<span class="sc">::</span><span class="fu">signif</span>(qvalue, <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb12-16"><a href="#cb12-16"></a>  )</span>
+<span id="cb12-17"><a href="#cb12-17"></a></span>
+<span id="cb12-18"><a href="#cb12-18"></a><span class="co"># print table</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(</span>
+<span id="cb12-20"><a href="#cb12-20"></a>  my_table,</span>
+<span id="cb12-21"><a href="#cb12-21"></a>  <span class="at">extensions =</span> <span class="fu">c</span>(<span class="st">"FixedColumns"</span>, <span class="st">"FixedHeader"</span>),</span>
+<span id="cb12-22"><a href="#cb12-22"></a>  <span class="at">caption =</span> <span class="st">"Table 8: Overrepresented MF terms in Zygosaccharomyces parabailli transferred operon."</span>, </span>
+<span id="cb12-23"><a href="#cb12-23"></a>  <span class="at">plugins =</span> <span class="st">"ellipsis"</span>,</span>
+<span id="cb12-24"><a href="#cb12-24"></a>  <span class="at">options =</span> <span class="fu">list</span>(</span>
+<span id="cb12-25"><a href="#cb12-25"></a>    <span class="at">columnDefs =</span> <span class="fu">list</span>(<span class="fu">list</span>(</span>
+<span id="cb12-26"><a href="#cb12-26"></a>      <span class="at">targets =</span> <span class="st">"_all"</span>,</span>
+<span id="cb12-27"><a href="#cb12-27"></a>      <span class="at">render =</span> <span class="fu">JS</span>(<span class="st">"$.fn.dataTable.render.ellipsis( 30, false )"</span>)</span>
+<span id="cb12-28"><a href="#cb12-28"></a>    )),</span>
+<span id="cb12-29"><a href="#cb12-29"></a>    <span class="at">overflow =</span> <span class="st">"hidden"</span>,</span>
+<span id="cb12-30"><a href="#cb12-30"></a>    <span class="at">whiteSpace =</span> <span class="st">"nowrap"</span>,</span>
+<span id="cb12-31"><a href="#cb12-31"></a>    <span class="at">scrollX =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-32"><a href="#cb12-32"></a>    <span class="at">paging =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb12-33"><a href="#cb12-33"></a>    <span class="at">fixedHeader =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb12-34"><a href="#cb12-34"></a>    <span class="at">pageLength =</span> <span class="dv">10</span></span>
+<span id="cb12-35"><a href="#cb12-35"></a>  )</span>
+<span id="cb12-36"><a href="#cb12-36"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-eaa8b6da35c1aa53ec85" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-eaa8b6da35c1aa53ec85">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 8: Overrepresented MF terms in Zygosaccharomyces parabailli transferred operon.<\/caption>","data":[["GO:0008483","GO:0016769","GO:0016879"],["GO:0008483","GO:0016769","GO:0016879"],["transaminase activity","transferase activity, transferring nitrogenous groups","ligase activity, forming carbon-nitrogen bonds"],["2/8","2/8","2/8"],["22/5706","22/5706","42/5706"],[0.000392,0.000392,0.00144],[0.00588,0.00588,0.0144],[0.00474,0.00474,0.0116],["855795/856615","855795/856615","855795/856932"],[2,2,2]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>ID<\/th>\n      <th>Description<\/th>\n      <th>GeneRatio<\/th>\n      <th>BgRatio<\/th>\n      <th>pvalue<\/th>\n      <th>p.adjust<\/th>\n      <th>qvalue<\/th>\n      <th>geneID<\/th>\n      <th>Count<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":"_all","render":"$.fn.dataTable.render.ellipsis( 30, false )"},{"className":"dt-right","targets":[5,6,7,9]},{"orderable":false,"targets":0},{"name":" ","targets":0},{"name":"ID","targets":1},{"name":"Description","targets":2},{"name":"GeneRatio","targets":3},{"name":"BgRatio","targets":4},{"name":"pvalue","targets":5},{"name":"p.adjust","targets":6},{"name":"qvalue","targets":7},{"name":"geneID","targets":8},{"name":"Count","targets":9}],"overflow":"hidden","whiteSpace":"nowrap","scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render"],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># plot GO dotplot</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>p0 <span class="ot">=</span> enrichplot<span class="sc">::</span><span class="fu">dotplot</span>(enriched_GOs, <span class="at">showCategory =</span> <span class="fu">nrow</span>(enriched_GOs<span class="sc">@</span>result)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="fu">ggtitle</span>(<span class="st">"Zygosaccharomzces parabailli transferred operon over-represented GO MF terms sets"</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>  <span class="fu">scale_colour_gradientn</span>(<span class="at">colours =</span> <span class="fu">rev</span>(<span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">7</span>, <span class="st">"Reds"</span>))(<span class="dv">37</span>))) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="fu">guide_colorbar</span>(<span class="at">reverse =</span> <span class="cn">TRUE</span>)) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">22</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb13-7"><a href="#cb13-7"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb13-8"><a href="#cb13-8"></a>        <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"grey85"</span>, <span class="at">colour =</span> <span class="st">"black"</span>),</span>
+<span id="cb13-9"><a href="#cb13-9"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">12</span>))</span>
+<span id="cb13-10"><a href="#cb13-10"></a></span>
+<span id="cb13-11"><a href="#cb13-11"></a><span class="fu">print</span>(p0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-02-genome-assembly-and-annotation_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 4: Dotplot of overrepresented MF terms in Zygosaccharomzces parabailli transferred operon.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="sec-lesson-learnt-feature-selection" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="sec-lesson-learnt-feature-selection"><span class="header-section-number">2.4</span> Lessons Learnt</h2>
+<p>Based on the we have learnt:</p>
+<ul>
+<li>Fr</li>
+</ul>
+</section>
+<section id="session-information" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="session-information"><span class="header-section-number">2.5</span> Session Information</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: openSUSE Tumbleweed
+
+Matrix products: default
+BLAS/LAPACK: /home/andrea/miniforge3/envs/moai/lib/libmkl_rt.so.2;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=it_IT.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Europe/Brussels
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats4    grid      stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] org.Sc.sgd.db_3.18.0   AnnotationDbi_1.64.1   IRanges_2.36.0        
+ [4] S4Vectors_0.40.2       Biobase_2.62.0         BiocGenerics_0.48.1   
+ [7] RColorBrewer_1.1-3     magrittr_2.0.3         gridExtra_2.3         
+[10] ggplot2_3.5.1          DT_0.33                ComplexHeatmap_2.18.0 
+[13] clusterProfiler_4.10.1 circlize_0.4.16       
+
+loaded via a namespace (and not attached):
+  [1] jsonlite_1.8.9          shape_1.4.6.1           magick_2.8.5           
+  [4] farver_2.1.2            rmarkdown_2.29          GlobalOptions_0.1.2    
+  [7] fs_1.6.5                zlibbioc_1.48.2         vctrs_0.6.5            
+ [10] Cairo_1.6-2             memoise_2.0.1           RCurl_1.98-1.16        
+ [13] ggtree_3.10.1           htmltools_0.5.8.1       progress_1.2.3         
+ [16] curl_6.4.0              gridGraphics_0.5-1      sass_0.4.9             
+ [19] bslib_0.8.0             htmlwidgets_1.6.4       plyr_1.8.9             
+ [22] cachem_1.1.0            igraph_2.1.4            lifecycle_1.0.4        
+ [25] iterators_1.0.14        pkgconfig_2.0.3         Matrix_1.6-5           
+ [28] R6_2.5.1                fastmap_1.2.0           gson_0.1.0             
+ [31] GenomeInfoDbData_1.2.11 clue_0.3-66             digest_0.6.37          
+ [34] aplot_0.2.4             enrichplot_1.22.0       colorspace_2.1-1       
+ [37] patchwork_1.3.0         crosstalk_1.2.1         RSQLite_2.3.9          
+ [40] labeling_0.4.3          filelock_1.0.3          httr_1.4.7             
+ [43] polyclip_1.10-7         compiler_4.3.2          bit64_4.6.0-1          
+ [46] withr_3.0.2             doParallel_1.0.17       BiocParallel_1.36.0    
+ [49] viridis_0.6.5           DBI_1.2.3               ggforce_0.4.2          
+ [52] biomaRt_2.58.2          MASS_7.3-60.0.1         rappdirs_0.3.3         
+ [55] rjson_0.2.23            HDO.db_0.99.1           tools_4.3.2            
+ [58] ape_5.8-1               scatterpie_0.2.4        glue_1.8.0             
+ [61] nlme_3.1-167            GOSemSim_2.28.1         shadowtext_0.1.4       
+ [64] cluster_2.1.8           reshape2_1.4.4          fgsea_1.28.0           
+ [67] generics_0.1.3          gtable_0.3.6            tidyr_1.3.1            
+ [70] data.table_1.16.4       hms_1.1.3               xml2_1.3.6             
+ [73] tidygraph_1.3.1         XVector_0.42.0          ggrepel_0.9.6          
+ [76] foreach_1.5.2           pillar_1.10.1           stringr_1.5.1          
+ [79] yulab.utils_0.2.0       splines_4.3.2           dplyr_1.1.4            
+ [82] tweenr_2.0.3            BiocFileCache_2.10.2    treeio_1.26.0          
+ [85] lattice_0.22-6          bit_4.5.0.1             tidyselect_1.2.1       
+ [88] GO.db_3.18.0            Biostrings_2.70.3       knitr_1.49             
+ [91] xfun_0.50               graphlayouts_1.2.2      matrixStats_1.5.0      
+ [94] stringi_1.8.4           lazyeval_0.2.2          ggfun_0.1.8            
+ [97] yaml_2.3.10             evaluate_1.0.3          codetools_0.2-20       
+[100] ggraph_2.2.1            tibble_3.2.1            qvalue_2.34.0          
+[103] ggplotify_0.1.2         cli_3.6.3               jquerylib_0.1.4        
+[106] munsell_0.5.1           Rcpp_1.0.14             GenomeInfoDb_1.38.8    
+[109] dbplyr_2.5.0            png_0.1-8               XML_3.99-0.18          
+[112] parallel_4.3.2          blob_1.2.4              prettyunits_1.2.0      
+[115] DOSE_3.28.2             bitops_1.0-9            viridisLite_0.4.2      
+[118] tidytree_0.4.6          scales_1.3.0            purrr_1.0.2            
+[121] crayon_1.5.3            GetoptLong_1.0.5        rlang_1.1.5            
+[124] cowplot_1.1.3           fastmatch_1.1-6         KEGGREST_1.42.0        </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script data-goatcounter="https://19adc99.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./p01-01-qc-and-genome-composition.html" class="pagination-link" aria-label="QC and Genome Composition assessment">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">QC and Genome Composition assessment</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+ Copyright © 2025 Andrea Del Cortona.
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://quarto.org/">
+<p>This page is built with ❤️ and <em>Quarto</em>.</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/19ADC99">
+      <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+    </a>
+  </li>  
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/andrea-del-cortona-86a75474/">
+      <i class="bi bi-linkedin" role="img" aria-label="Lindekin">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

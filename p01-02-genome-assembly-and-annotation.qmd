@@ -1,0 +1,847 @@
+# Genome Assembly and Annotation
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggplot2", "grid", "gridExtra", "magrittr",
+                 "RColorBrewer", "org.Sc.sgd.db")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+
+# retrieve S. cerevisiae genome annotation
+Scere_DB = biomaRt::useMart(
+  biomart = "ENSEMBL_MART_ENSEMBL",
+  dataset = "scerevisiae_gene_ensembl"
+)
+Scere_DB_table = biomaRt::getBM(
+  attributes = c("ensembl_gene_id", "ensembl_peptide_id", "external_gene_name", "entrezgene_id",
+                 "description", "chromosome_name", "start_position", "end_position"),
+  mart = Scere_DB
+)
+
+# build list of reference databases used for annotation steps
+ref_DB_list = c("org.Sc.sgd.db", "yeast", "scerevisiae")
+
+# create yeasts GO terms universe
+GO_universe = data.frame(matrix(nrow = nrow(Scere_DB_table), ncol = 2))
+names(GO_universe) = c("ENSEMBL", "EntrezID")
+GO_universe$ENSEMBL = Scere_DB_table$ensembl_gene_id
+# populate GO universe
+for(k in 1:nrow(GO_universe)){
+  # force to get only the first term if multiple are retrieved (sic!)
+  ENSEMBL = GO_universe[k, 1]
+  GO_universe[k, 2] = tryCatch(
+    Scere_DB_table[which(Scere_DB_table[, 1] == ENSEMBL),  c(4)][[1]],
+    error = function(e) { NA }
+  )
+}
+GO_universe = as.character(c(GO_universe[!is.na(GO_universe$EntrezID), ]$EntrezID))
+
+```
+
+
+## On this page
+
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+
+* Here
+
+
+## De novo assembly
+
+To determine the genes in Kveiks samples, we need to do a _de novo_ assembly and then to run an _ab initio_ prediction of genes (using _Saccharomyces_ proteins and genes as guide). We will use SPAdes assembler, follower by Redundans pipeline to collapse redundant contigs.
+
+
+
+```{bash, eval=FALSE}
+
+## SPAdes assembly 
+while read line ; do
+	python ~/bin/SPAdes-3.13.0-Linux/bin/spades.py \
+		-1 ../00_trim_reads/"${line}".R1.tr.fq.gz \
+		-2 ../00_trim_reads/"${line}".R2.tr.fq.gz \
+		-o "${line}"_SPAdes \
+		--threads 72 \
+		-k 21,29,39,59,79,99,119,127
+done < ../sample.lst
+
+## redundans
+docker run -v /home/andrea/03_KVEIK/:/mydata:rw -it lpryszcz/redundan2
+
+while read line ; do
+	/root/src/redundans/redundans.py \
+		--verbose \
+		--fastq /mydata/00_trim_reads/"${line}".R1.tr.fq.gz \
+		/mydata/00_trim_reads/"${line}".R2.tr.fq.gz \
+		--fasta /mydata/03_assemblies/"${line}".SPAdes.fa \
+		--outdir /mydata/04_redundans/"${line}" \
+		--threads 72 \
+		--log /mydata/04_redundans/"${line}".SPAdes.redundans.log
+done < mydata/sample.lst 
+
+## Generate assembly stats
+for file in *redundans.fa; do 
+	perl ~/scripts/Nstat.pl $file > $file.Nstat;
+done
+
+echo "Sample"$'\t'"Total length (bp)"$'\t'"# contigs"$'\t'"longest (bp)"$'\t'"N50 (bp)" > Vikings.assembly.stats.txt;
+	
+for file in *.Nstat; do
+	NAME=$(basename $file .SPAdes.redundans.fa.Nstat);
+	LONGEST=$(tail $file | head -n 1 | tr ':' '\t' | cut -f 1);
+	TOT_LEN=$(grep "Total length" $file | sed 's/Total length of sequence://g');
+	NCONT=$(grep "Total number" $file | sed 's/Total number of sequences://g');
+	N50=$(grep "N50 stats:" $file | sed 's/.*sequences >= //g');
+	echo $NAME$'\t'$TOT_LEN$'\t'$NCONT$'\t'$LONGEST$'\t'$N50; done |\
+    	sed 's/ bp//g' >> Vikings.assembly.stats.txt;
+done
+```
+
+
+
+```{r, echo=FALSE}
+matrix.d = cbind(
+  c("14R30", "14R6", "16R23", "16R37", "17P5", "19R18", "1R16", "21P1", "21R38",
+    "27R17", "28P1", "28P6", "28R21", "28R33", "28R8", "2R23", "38R16", "39R20",
+    "3R11", "40R14", "40R1", "40R20", "41R10", "41R15", "42R20", "42R31", "44R32", "44R7",
+    "45P5", "45R11", "46R12", "46R37", "6R15", "7R7", "8R19", "9R40", "Granvin1",
+    "Hornindal1", "Hornindal2", "k7R25", "Laerdal2", "Muri", "SortdalEbbe1", "Voss1"),
+  c("12,414,423", "12,298,670", "11,582,806", "11,736,494", "12,617,870", "12,678,102", "12,277,498", "12,619,711",
+    "11,572,760", "12,382,460", "11,529,812", "11,538,139", "11,505,145", "11,553,531", "11,532,904", "12,727,977",
+    "12,143,606", "11,641,798", "11,548,489", "11,685,486", "11,704,488", "12,744,802", "11,540,301", "11,573,148",
+    "11,703,681", "11,591,540", "12,693,136", "12,215,896", "11,627,693", "11,628,113", "11,704,521", "11,636,081",
+    "12,950,275", "12,607,735", "12,422,210", "12,360,883", "15,983,330", "12,928,993", "12,899,850", "16,359,314",
+    "11,889,233", "17,101,719", "12,443,720", "12,968,222"),
+   c("3,362", "3047", "183", "254", "3,805", "4,047", "4,194", "3,784", 
+     "144", "3,342", "149", "160", "155", "134", "154", "4,180", 
+     "1,558", "171", "128", "164", "200", "3,831", "158", "113", 
+     "281", "171", "3,929", "1,939", "158", "168", "202", "158", 
+     "4,606", "3,898", "3,398", "3,050", "6,647", "3,477", "3,480", "685", 
+     "933", "281", "2,328", "3,703"),
+   c("247,500", "248,000", "416,400", "524,500", "231,700", "113,400", "178,600", "279,100", 
+     "885,100", "170,700", "860,500", "594,200", "426,900", "543,200", "555,700", "254,400", 
+     "425,400", "663,700", "732,300", "832,500", "559,500", "161,000", "729,200", "725,000", 
+     "478,100", "798,200", "176,500", "493,000", "1,006,900", "662,400", "553,100", "569,500", 
+     "166,600", "176,500", "229,300", "278,500", "318,100", "333,200", "350,200", "913,200", 
+     "454,900", "975,000", "340,500", "264,600"),
+   c("34,894", "35,540", "243,962", "178,599", "35,905", "33,065", "32,500", "37,907", 
+     "279,921", "35,066", "270,301", "224,961", "243,601", "303,859", "318,176", "36,043", 
+     "117,315", "255,254", "403,046", "260,029", "157,697", "36,853", "264,547", "358,684", 
+     "174,279", "262,472", "38,027", "108,200", "398,201", "306,033", "225,706", "336,362", 
+     "33,539", "30,940", "33,882", "43,130", "81,053", "105,047", "92,521", "279,420", 
+     "161,156", "285,562", "102,847", "68,133")
+)
+colnames(matrix.d) = c("Sample", "Total length (bp)", "# contigs", "longest (bp)", "N50 (bp)")
+
+# print table
+DT::datatable(
+  matrix.d,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 1: Genome Assembly Statistics.", 
+  options = list(
+    scrollX = TRUE, paging = TRUE, fixedHeader = FALSE, pageLength = 10
+  )
+)
+
+```
+
+
+Despite being more or less fragmented, all assembled genomes are in the range of _Saccharomyces_ sizes. Notable exceptions are: Granvin1 (???), Muri and k7R25 (which are _S. cerevisiae_, _ X _S. eubayanus_ X _S. uvarum_ triple hybrids).
+
+
+## Genome Annotation
+
+We will perform _ab initio_ annotation of the assembled genomes with the MAKER pipeline. We will use _Saccharomyces_ RepeatMasker to mask repetitive regions, _ab intio_ gene models are predicted with SNAP and augustus with the corresponding _S. cerevisiae_ HMM models, ORFs from S288C_reference_genome_R64-2-1_20150113 reference genome and 1011 _S. cerevisiae_ genomes as ESTs evidences, proteins from S288C_reference_genome_R64-2-1_20150113 genome and the following yeast proteomes as proteins evidences.
+
+```{r, echo=FALSE}
+matrix.d = cbind(
+  c("Candida glabrata", "Eremothecium cymbalariae", "Eremothecium gossypii",  "Kazachstania africana",
+    "Kazachstania naganishii", "Kluyveromyces lactis", "Komagataella phaffii", "Lachancea kluyveri",
+    "Lachancea thermotolerans", "Naumovozyma castellii", "Naumovozyma dairenensis", "Saccharomyces bayanus", 
+    "Saccharomyces cerevisiae", "Saccharomyces kudrazevii", "Saccharomyces mikatae", "Saccharomyces paradoxus",
+    "Saccharomyces uvarum", "Tetrapisispora blattae", "Torulaspora delbrueckii", "Zygosaccharomyces rouxii"),
+  c("Cglab", "Ecymb", "Egoss", "Kafri", "Knaga", "Klact", "Kphaf", "Lkluy", "Lther", "Ncast",
+    "Ndair", "Sbaya", "Scere", "Skudr", "Smika", "Spara", "Suvar", "Tblat", "Tdelb", "Zroux"),
+  c("PROT", "PROT", "PROT", "PROT", "PROT", "PROT", "PROT", "GENdev", "PROT", "PROT",
+    "PROT", "GENdev", "PROT", "PROT", "GENdev", "GENdev", "GENdev", "PROT", "PROT", "PROT"),
+  c("ASM254v2", "ASM23536v1", "ASM9102v4", "CBS2517", "ASM34898v1", "ASM251v1", "ASM2700v1",
+    "ASM14922v1", "ASM14280v1", "ASM23734v1", "ASM22711v2", "ASM16703v1", "R64", "NA",
+    "AABZ00000000.1", "AABY00000000.1", "ASM224264v1", "ASM31591v1", "ASM24337v1", "ASM2636v1" ))
+colnames(matrix.d) = c("Species Name", "Label", "Proteome/Genome Derived", "Accession Number")
+
+# print table
+DT::datatable(
+  matrix.d,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 2: Yeast Reference Proteomes for Gene Annotation.", 
+  options = list(
+    scrollX = TRUE, paging = TRUE, fixedHeader = FALSE, pageLength = 10
+  )
+)
+
+```
+
+
+### Gene Models Annotation
+
+```{bash, eval=FALSE}
+# run the MAKER pipeline
+for file in *.redundans.fa; do
+	~/bin/maker/bin/maker -genome $file \
+		maker_bopts.ctl \
+		maker_opts.ctl \
+		maker_exe.ctl; 
+done 
+
+# summary of transcripts and proteins
+for DIR in *.maker.output; do
+	~/bin/maker/bin/fasta_merge -d ./$DIR/*master_datastore_index.log;
+	~/bin/maker/bin/gff3_merge -d ./$DIR/*master_datastore_index.log;
+done
+
+# create gene IDs
+for file in *.all.gff ; do
+	~/bin/maker/bin/maker_map_ids \
+		--prefix $(basename $file | sed 's/\..*//g') \
+		$file > $(basename $file .gff).id.map;
+	~/bin/maker/bin/map_gff_ids \
+		$(basename $file .gff).id.map \
+		$file;
+	~/bin/maker/bin/map_fasta_ids \
+		$(basename $file .gff).id.map \
+		$(basename $file .gff).maker.transcripts.fasta;
+	~/bin/maker/bin/map_fasta_ids \
+		$(basename $file .gff).id.map \
+		$(basename $file .gff).maker.proteins.fasta;
+done
+
+## Generate annotation stats
+echo "Sample"$'\t'"# Transcripts"$'\t'"# Proteins" > Vikings.annotation.stats.txt;
+while read line; do
+	NAME=$line;
+	TRANS=$(grep ">" $line.SPAdes.redundans.all.maker.transcripts.fasta | wc -l);
+	PROT=$(grep ">" $line.SPAdes.redundans.all.maker.proteins.fasta | wc -l);
+	echo $NAME$'\t'$TRANS$'\t'$PROT >> Vikings.annotation.stats.txt;
+done < ../sample.lst
+
+```
+
+
+Below are the number of genes predicted for each _de novo_ assembled farmhouse genome.
+
+
+```{r, max.height='100px', echo=FALSE}
+matrix.d = cbind(
+  c("14R30", "14R6", "16R23", "16R37", "17P5", "19R18", "1R16", "21P1", "21R38",
+    "27R17", "28P1", "28P6", "28R21", "28R33", "28R8", "2R23", "38R16", "39R20", 
+    "3R11", "40R14", "40R1", "40R20", "41R10", "41R15", "42R20", "42R31", "44R32", "44R7", 
+    "45P5", "45R11", "46R12", "46R37", "6R15", "7R7", "8R19", "9R40", "Granvin1", 
+    "Hornindal1", "Hornindal2", "k7R25", "Laerdal2", "Muri", "SortdalEbbe1", "Voss1"),
+  c("6,728", "6,641", "6,072", "6,157", "6,764", "6,835", "6,810", "6,771", "6,072", "6,681", "6,074",
+    "6,077", "6,079", "6,121", "6,069", "6,802", "6,290", "6,138", "6,095", "6,121", "6,159", "6,853",
+    "6,059", "6,073", "6,155", "6,127", "6,750", "6,371", "6,115", "6,108", "6,137", "6,107", "6,892",
+    "6,786", "6,703", "6,628", "6,518", "6,270", "6,286", "8,044", "6,163", "8,454", "6,244", "6,318")
+)
+colnames(matrix.d) = c("Kveik strain", "Number of predicted genes")
+
+# print table
+DT::datatable(
+  matrix.d,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 3: Farmhouse yeasts genes.", 
+  options = list(
+    scrollX = TRUE, paging = TRUE, fixedHeader = FALSE, pageLength = 10
+  )
+)
+
+```
+
+
+
+### Identification of Farmhouse-specific Gene Families
+
+Do kveiks harbor kveik-specific gene families? To answer this question we build protein orthogroups using proteomes from Kveiks, 302 industrail strains (from Gallone et al. 2019) and reference proteomes for _S. cerevisiae_, _S. kudriavzevii_, _S. eubayanus_, _S. uvarum_ using the Orthofinder pipeline. This approach resulted to be successful for clustering HGT, so hopefully we can identify Orthogroups specific for kveik strains.
+
+
+```{bash, eval=FALSE}
+# create Gene Families
+~/bin/OrthoFinder-2.3.3/orthofinder -f 00_aa_start/ \
+  -t 72 \
+  -M msa \
+  -S diamond \
+  -A mafft \
+  -T iqtree \
+  -I 2
+  
+# filter for Orthogroups enriched for kveiks
+python3.8 Vikings.GeneFamiliesFilter.py \
+  --in Vikings.Orthogroups.GeneCount.tsv \
+  > Vikings.Orthoclusters.counts.tab
+```
+
+
+We select Orthogroups with 10 genes or more (6,811 out of 13,508 groups), and we look for gene families specific for kveiks or enriched in kveiks.
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 12
+#| fig.cap: '[Figure 1: Kveiks-specific gene families.]{style="color: steelblue;"}'
+
+# get yeasts gene families
+Orthogroups = read.delim("data/p01-02/Vikings.Orthoclusters.counts.tab", header = FALSE)
+colnames(Orthogroups) = Orthogroups[1, ]
+rownames(Orthogroups) = Orthogroups$Orthogroups
+Orthogroups = Orthogroups[-which(Orthogroups$Orthogroup == "Orthogroups"), ]
+Orthogroups = Orthogroups[, -which(colnames(Orthogroups) == "Orthogroups")]
+Orthogroups = dplyr::mutate_all(Orthogroups, function(x) as.numeric(as.character(x)))
+
+# drop columns if empty
+Orthogroups = Orthogroups[, colSums(Orthogroups != 0) > 0]
+
+# reorder columns
+kveiks = c("14R30", "14R6", "16R23", "16R37", "17P5", "19R18", "1R16", "21P1", "21R38",
+           "27R17", "28P1", "28P6", "28R21", "28R33", "28R8", "2R23", "38R16", "39R20", 
+           "3R11", "40R14", "40R1", "40R20", "41R10", "41R15", "42R20", "42R31", "44R32", "44R7", 
+           "45P5", "45R11", "46R12", "46R37", "6R15", "7R7", "8R19", "9R40", "Granvin1", 
+           "Hornindal1", "Hornindal2", "k7R25", "Laerdal2", "Muri", "SortdalEbbe1", "Voss1")
+Orthogroups_k = Orthogroups[, which(colnames(Orthogroups) %in% kveiks)]
+Orthogroups_nk = Orthogroups[, -which(colnames(Orthogroups) %in% kveiks)]
+Orthogroups = cbind(Orthogroups_k, Orthogroups_nk)
+
+# plot heatmap
+ComplexHeatmap::Heatmap(t(Orthogroups),
+                        cluster_rows = FALSE,
+                        cluster_columns = TRUE,
+                        column_dend_reorder = TRUE,
+                        col = colorRamp2(c(-1, 0, 1), rev(brewer.pal(n = 3, name = "RdBu"))),
+                        na_col = "grey75",
+                        show_row_names = TRUE,
+                        show_column_names = FALSE,
+                        show_row_dend = TRUE,
+                        show_heatmap_legend = FALSE,
+                        row_title = "Orthogroups",
+                        column_title_side = "bottom")
+```
+
+
+**We could not identify any obvious evidences for Farmhouse-specific Orthogroups.**
+
+
+### Horizontal Gene Transfer
+
+To identify genuine Bacterial (or Fungal) Horizontal Gene Transfer, we apply the following protocol:
+
+- sequence similarity search against non-redundant proteins database, including taxonomic annotations
+- identify protein coding genes with best hits (top 5) to Bacterial proteins
+- select assembled contigs where putative bacterial genes are
+- discard short contigs with only one bacterial hit (Noise)
+- if putative bacterial gene flanked by Eukaryotic genes, manual sequence similarity search to confirm a _bona fide_ hit
+
+To have internal controls in this (and in the following analyses), we will add the ones of 18 _S. cerevisiae_ industrial strains as well.
+
+
+#### Taxonomic annotation of predicted genes
+
+For each predicted protein-coding gene, we can make a sequence similarity search against the non-redundant protein database at NCBI (nr). To assign the taxonomy id of the nr BLAST hit, we need the ```prot.accession2taxid.gz``` and ```nodes.dmp``` files provided by NCBI taxonomy. This can help us identify horizontal gene transfer and traces of contamination in the library prep of yeast samples.
+
+For each sample, first we do a blast search using DIAMOND, and then we associate to the protein_id of the top 5 best hits to the corresponding taxonomy the python library ete and customs scripts. BLAST is run against nr, excluding _Saccharomyces cerevisiae_, so that we can judge if the protein was present in other yeasts, or if it is indeed of bacterial origin.
+
+
+```{bash, eval=FALSE}
+# BLAST search
+for file in *.all.maker.proteins.fasta; do
+  ~/bin/DIAMOND/diamond blastp \
+    --query $file \
+    --db ~/taxonomy/nr \
+    --taxonmap ~/taxonomy/prot.accession2taxid.gz \
+    --taxonnodes ~/taxonomy/nodes.dmp \
+    --threads 70 \
+    --sensitive \
+    --max-target-seqs 5 \
+    --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend
+    sstart send evalue bitscore staxids > $file.diamond
+done
+
+# BLAST to taxid
+for file in *.diamond; do
+  ~/anaconda_ete/bin/python3.6 Vikings.tax.topath.py --input $file > $file.tax
+done
+for file in *.tax ; do
+  while read line ; do
+    grep $line $file | cut -f 1,5;
+    echo;
+  done < <(grep Bacteria $file | cut -f 1 | sort -u) > $file.bact
+done
+```
+
+
+Now we have the full taxonomic annotation of the five best hits for each of the protein coding genes we annotated on the kveiks.
+
+
+#### Evidence for bacterial HGT
+
+```{bash, eval=FALSE}
+# filter annot.gff files
+for file in *.gff ; do
+  grep CDS $file > $(basename $file .gff).CDSonly.gff;
+  gzip $file;
+done
+
+# identify putative bacterial genes and the assembled contigs harbouring them
+for file in *.tax; do cut -f 1,5 $file > $file.all; done
+for file in *.all; do grep Bact $file > $(basename $file .all).bact; done
+for file in *.bact; do
+  while read line; do
+    if [[ $line = "" ]]; then
+      continue;
+    else
+      GENE=$(echo $line | cut -d " " -f 1 );
+      CHR=$(grep "${GENE}" $(basename $file .maker.proteins.fasta.diamond.tax.bact).CDSonly.gff | cut -f 1 );
+      grep "${CHR}" $(basename $file .bact).all \
+        | uniq \
+        | grep -C5 "${GENE}" \
+        | grep -v "${GENE}" \
+        >> $(basename $file .maker.proteins.fasta.diamond.tax.bact)."${GENE}".tmp;
+    fi;
+  done < <(cut -f 1 $file | sort -u);
+done
+
+# pull the putative bacterial contigs
+for file in *.bact; do
+  cut -f 1 $file | sort -u > $file.lst;
+  perl ~/scripts/SelectList_Fasta.pl \
+    $(basename $file .diamond.tax.bact) \
+    $file.lst \
+    > $file.fa;
+done
+
+# check if putative bacterial transcripts are flanked by Euk genes
+python3.6 Vikings.check_eukbact_contigs.1.py --input ../samples.lst
+for file in *HGT.table; do uniq $file > temp; mv temp $file ; done
+for file in *HGT.table; do
+  python3 ../Vikings.Bactmatch.py --input $file | cut -f 2 > temp;
+  cp temp temp2;
+  paste temp temp2 | sed 's/\t/\|\>/g' > $file.lst;
+  rm temp temp2;
+done
+for file in *HGT.table.lst; do
+  perl ~/scripts/SelectList_Fasta.pl \
+    $(basename $file .HGT.table.lst).bact.fa \
+    $file \
+    > $(basename $file .lst).fa;
+done
+
+```
+
+**THERE ARE NO EVIDENCES FOR SIGNIFICANT BACTERIAL HORIZONTAL GENE TRANSFER.**
+
+
+#### Evidence for HGT from Ascomycota
+
+We can check the presence of fungal non-Saccharomyces genes and operons starting from the DIAMOND blast results we have.
+
+
+```{bash, eval=FALSE}
+# Select non Saccharomyces genes
+# filter for genes with no top hits to Saccharomyces
+for file in *tax; do
+  grep Ascomycota $file | grep -v Saccharomyces > $file.Asco;
+  while read line; do
+    grep $line $file > $file.Asco.all;
+    if [[ $(grep $line $file | grep Saccharomyces) ]]; then
+      continue;
+    else
+      echo $line;
+    fi;
+  done < <(cut -f 1 $file.Asco | sort -u) > $file.Asco.candidates;
+done
+
+# retrieve fasta sequences
+for file in *candidates; do
+perl ~/scripts/SelectList_Fasta.pl \
+  ../../11_domestication/00_prot_DB/$(basename $file
+  .diamond.tax.Asco.candidates) \
+  $file > $file.fa;
+done
+
+# generate table stats
+for i in 2 3; do
+  wc -l *candidates \
+    | sed "s/.SPAdes.*//g" \
+    | sed "s/.aa.*//g" \
+    | sed "s/.contigs.*//g" \
+    | grep -v total \
+    | sed "s/  / /g" \
+    | sed "s/  / /g" \
+    | cut -f $i -d " " \
+    > temp.$i;
+done;
+
+paste temp.3 temp.2 > Vikings.Asco.HGT.stats;
+
+# clean up
+rm temp.2 temp.3
+```
+
+
+
+```{r, echo=FALSE}
+matrix.d = cbind(
+  c("14R30", "14R6", "16R23", "16R37", "17P5", "19R18", "1R16", "21P1", "21R38",
+    "27R17", "28P1", "28P6", "28R21", "28R33", "28R8", "2R23", "38R16", "39R20", 
+    "3R11", "40R14", "40R1", "40R20", "41R10", "41R15", "42R20", "42R31", "44R32", "44R7", 
+    "45P5", "45R11", "46R12", "46R37", "6R15", "7R7", "8R19", "9R40", "Granvin1", 
+    "Hornindal1", "Hornindal2", "k7R25", "Laerdal2", "Muri", "SortdalEbbe1", "Voss1"),
+  c("76", "74", "4", "22", "92", "90", "92", "106", "4", "73", "4", "6", "4", "4", "5",
+    "90", "56", "8", "4", "5", "4", "96", "4", "6", "5", "13", "90", "76", "14", "13",
+    "16", "11", "109", "81", "57", "58", "4", "5", "4", "21", "5", "15", "6", "5"),
+  c("North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway",
+    "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway",
+    "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "South-West Norway",
+    "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway",
+    "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "Central-Eastern Norway",
+    "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway",
+    "Central-Eastern Norway", "Latvia", "Latvia", "Latvia", "Latvia", "Lithuania", "Lithuania", "Lithuania",
+    "Lithuania", "Russia", "Russia", "Russia", "Russia", "Other", "Other")
+)
+colnames(matrix.d) = c("Strains", "Putative Ascomicota HGT", "Geographical origin")
+
+# print table
+DT::datatable(
+  matrix.d,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 4: Farmhouse yeasts Ascomycota HGT genes.", 
+  options = list(
+    scrollX = TRUE, paging = TRUE, fixedHeader = FALSE, pageLength = 10
+  )
+)
+
+```
+
+
+Kveik strains seems to have a significant higher number of Ascomycetes genes than the other industrial strains analysed. Are there additional proteins shared between all the kveiks (or by some kveiks with same geographical origin?). We can group these proteins in gene families and see if we see a common pattern. If not, we can BLAST back the proteins and see which specific genes have been acquired.
+
+
+```{bash, eval=FALSE}
+# group candidates in gene families
+~/bin/OrthoFinder-2.3.3/orthofinder -f ./ \
+  -t 20 \
+  -M msa \
+  -S diamond \
+  -A mafft \
+  -T iqtree \
+  -I 2
+```
+
+
+From OrthoFinder output we can identify 49 orthogroups containing four genes or more. We visualize them as heatmap, anc we can see that kveiks strains have a higher number of common additional orthogroups that are absent from S288C and industrial strains. Interestingly, the distribution pattern does not seem to overlap with the geographical isolation of the kveik culture.
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 10
+#| fig.cap: '[Figure 2: Ascomycota HTG orthogroup candidates.]{style="color: steelblue;"}'
+
+# import table
+heatfile = read.delim("data/p01-02/Vikings.Asco.HGT.heatmap.tab", header = FALSE)
+heatfile$V2 = stringr::str_replace_all(heatfile$V2, "x", "X")
+heatfile = heatfile[which(heatfile$V2 %in% c(
+  "Voss1", "SortdalEbbe1", "Muri", "Laerdal2", "k7R25", "Hornindal2", "Hornindal1",
+  "Granvin1", "9R40", "8R19", "7R7", "6R15", "46R37", "46R12", "45R11", "45P5", "44R7", "44R32",
+  "42R31", "42R20", "41R15", "41R10", "40R20", "40R1", "40R14", "3R11", "39R20", "38R16", "2R23",
+  "28R8", "28R33", "28R21", "28P6", "28P1", "27R17", "21R38", "21P1", "1R16", "19R18", "17P5",
+  "16R37", "16R23", "14R6", "14R30"
+)), ]
+
+# relevel
+heatfile$V2 = factor(
+  heatfile$V2,
+  levels = c("41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1",
+             "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+             "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+             "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+             "42R20", "42R31", "45P5", "45R11", 
+             "46R12", "46R37", "16R23", "16R37",
+             "39R20", "40R14", "40R1", "40R20",
+             "Granvin1", "Voss1")
+)
+
+# set color labels
+col_label = fills = c("#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0",
+                      "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#92C5DE", "#92C5DE",
+                      "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE",
+                      "#008470", "#008470", "#008470", "#008470", "#008470", "#008470", "#FFDA00", "#FFDA00",
+                      "#FFDA00", "#FFDA00", "#FBA01D", "#FBA01D", "#FBA01D", "#FBA01D", "#A6611A", "#A6611A",
+                      "#A6611A", "#A6611A", "grey75", "grey75")
+
+
+# prepare heatmap
+ggplot(heatfile) +
+  geom_tile(aes(x = V1, y = V2, fill = V3), color = "grey75") +
+  scale_fill_gradientn(na.value = "white", limits = c(0, 2),
+                       colours = c("white", "steelblue", "steelblue"),
+                       breaks = c(0, 1, 2)) +
+  coord_cartesian(expand = FALSE) +
+  labs(fill = "Gene presence",
+       y = "Strain",
+       x = "Orthologous groups") +
+  theme(axis.title = element_text(size = 16),
+        axis.text.x = element_text(angle = 90, hjust = 0.95, vjust = 0.5),
+        axis.text.y = element_text(size = 16, colour = col_label),
+        legend.position = "none",
+        panel.border = element_rect(colour = "black", fill = NA, size = 0.75)) +
+  annotate(xmin = 25.5, xmax = 32.5, 
+           ymin = -Inf, ymax = Inf, 
+           geom = "rect", alpha = 0,
+           colour = "red", linewidth = 1.5)
+```
+
+
+
+Very well. Now, what are the gene families that are transferred to kveiks strains? Are they genuine HGT, or it is just artifacts from heuristic sequence similarity search? Let's do manual BLAST to NCBI for the Orthogroups and see what pops up.
+
+
+```{r, echo=FALSE}
+# read best hits table
+matrix.d = read.delim("data/p01-02/Vikings.Asco.HGT.besthits.tab", header = FALSE)
+colnames(matrix.d) = c("Orthogroups", "# strains", "# kveiks", "Best hit to", "Accession", "Annotation")
+
+# print table
+DT::datatable(
+  matrix.d,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 5: Inferred Ascomycota HGT taxonomic origin.", 
+  options = list(
+    scrollX = TRUE, paging = TRUE, fixedHeader = FALSE, pageLength = 10
+  )
+)
+
+```
+
+
+
+We can clearly identify two operons (OG0000024-OG0000031) that were transferred from _Zygosaccharomzces parabailli_ to kveik strains 16R37, 42R31, 45P5, 45R11 and 46R37.
+
+These strains come all from a small geographic area (Latvia [42R31, 45P5, 45R11] and Lithuania [16R37, 46R37]), suggesting a common origin of the HGT event that then spread. Interestingly, other isolates from the same culture (i.e.: 16R23, 42R20, 46R12) do not present such a HGT, supporting the idea of heterogeneous kvieks cultures.
+
+
+
+#### _Zygosaccharomyces parabailli_ transferred operon
+
+The transferred operons code for the genes: YNR058W, YHR204W, YHR205W, YHR206W, YHR207C, YHR208W, YER182W, YER183C.
+
+
+```{r, echo=FALSE}
+# annotate HGT genes
+HGT_genes = data.frame("ENSEMBL" = c("YNR058W", "YHR204W", "YHR205W", "YHR206W", "YHR207C", "YHR208W", "YER182W", "YER183C"),
+                       "ENTREZ" = rep(NA, 8), "SYMBOL" = rep(NA, 8), "Description" = rep(NA, 8))
+for(k in 1:nrow(HGT_genes)){
+  ENSEMBL = HGT_genes$ENSEMBL[[k]]
+  ENTREZ = Scere_DB_table[which(Scere_DB_table$ensembl_gene_id == ENSEMBL), ]$entrezgene_id
+  SYMBOL = Scere_DB_table[which(Scere_DB_table$ensembl_gene_id == ENSEMBL), ]$external_gene_name
+  Description = Scere_DB_table[which(Scere_DB_table$ensembl_gene_id == ENSEMBL), ]$description
+  HGT_genes[k, "ENTREZ"] = ENTREZ
+  HGT_genes[k, "SYMBOL"] = SYMBOL
+  HGT_genes[k, "Description"] = Description
+}
+
+# print table
+DT::datatable(
+  HGT_genes,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 6: HGT Zygosaccharomzces parabailli operon.", 
+  plugins = "ellipsis",
+  options = list(
+    columnDefs = list(list(
+      targets = "_all",
+      render = JS("$.fn.dataTable.render.ellipsis( 30, false )")
+    )),
+    overflow = "hidden",
+    whiteSpace = "nowrap",
+    scrollX = TRUE,
+    paging = TRUE,
+    fixedHeader = FALSE,
+    pageLength = 10
+  )
+)
+
+```
+
+
+##### Overrepresented GO BP terms
+
+```{r, warning=FALSE, message=FALSE}
+
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = HGT_genes$ENTREZ,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "BP",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+my_table = enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ]
+my_table = my_table %>%
+  dplyr::mutate(
+    pvalue = base::signif(pvalue, digits = 3),
+    p.adjust = base::signif(p.adjust, digits = 3),
+    qvalue = base::signif(qvalue, digits = 3)
+  )
+
+# print table
+DT::datatable(
+  my_table,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 7: Overrepresented BP terms in Zygosaccharomyces parabailli transferred operon.", 
+  plugins = "ellipsis",
+  options = list(
+    columnDefs = list(list(
+      targets = "_all",
+      render = JS("$.fn.dataTable.render.ellipsis( 30, false )")
+    )),
+    overflow = "hidden",
+    whiteSpace = "nowrap",
+    scrollX = TRUE,
+    paging = TRUE,
+    fixedHeader = FALSE,
+    pageLength = 10
+  )
+)
+
+```
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 3: Dotplot of overrepresented BP terms in Zygosaccharomzces parabailli transferred operon.]{style="color: steelblue;"}'
+
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+
+print(p0)
+
+```
+
+
+
+##### Overrepresented GO MF terms
+
+```{r, warning=FALSE, message=FALSE}
+### run over-represented analysis
+enriched_GOs = enrichGO(gene = HGT_genes$ENTREZ,
+                               universe = GO_universe,
+                               OrgDb = ref_DB_list[[1]],
+                               ont = "MF",
+                               pAdjustMethod = "BH",
+                               pvalueCutoff = 0.05,
+                               qvalueCutoff = 0.05)
+
+my_table = enriched_GOs@result[which(enriched_GOs@result$p.adjust <= 0.05), ]
+my_table = my_table %>%
+  dplyr::mutate(
+    pvalue = base::signif(pvalue, digits = 3),
+    p.adjust = base::signif(p.adjust, digits = 3),
+    qvalue = base::signif(qvalue, digits = 3)
+  )
+
+# print table
+DT::datatable(
+  my_table,
+  extensions = c("FixedColumns", "FixedHeader"),
+  caption = "Table 8: Overrepresented MF terms in Zygosaccharomyces parabailli transferred operon.", 
+  plugins = "ellipsis",
+  options = list(
+    columnDefs = list(list(
+      targets = "_all",
+      render = JS("$.fn.dataTable.render.ellipsis( 30, false )")
+    )),
+    overflow = "hidden",
+    whiteSpace = "nowrap",
+    scrollX = TRUE,
+    paging = TRUE,
+    fixedHeader = FALSE,
+    pageLength = 10
+  )
+)
+
+```
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 4: Dotplot of overrepresented MF terms in Zygosaccharomzces parabailli transferred operon.]{style="color: steelblue;"}'
+
+# plot GO dotplot
+p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
+  ggtitle("Zygosaccharomzces parabailli transferred operon over-represented GO MF terms sets") +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        legend.position = "bottom",
+        strip.background = element_rect(fill = "grey85", colour = "black"),
+        strip.text = element_text(size = 12))
+
+print(p0)
+
+```
+
+
+
+## Lessons Learnt {#sec-lesson-learnt-feature-selection}
+
+Based on the  we have learnt:
+
+* Fr
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::
