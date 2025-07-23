@@ -1,0 +1,84 @@
+project:
+    type: book
+    output-dir: ./deploy/
+    
+
+book:
+    title: "Farmhouse ale cultures preserve brewing’s lost yeast diversity"
+    author: "**Del Cortona Andrea**, Bircham Peter W., Tawfeeq Mohammed T., Gallone Brigida, Herrera-Malaver Beatriz, Cortebeek Jeroen, Nolmans Robbe, Theßeling Florian A., Garshol Lars M., Steensels Jan, Verstrepen Kevin J."
+    version: 1.0.0
+    date: "2025/07/25"
+    #sharing: linkedin
+    #cover-image:
+
+    navbar:
+        search: true
+        background: LightSlateGray
+
+    page-footer:
+        border: true
+        background: Gainsboro
+        center:
+            - text: "This page is built with ❤️ and *Quarto*."
+              href: https://quarto.org/
+              aria-label: Quarto
+        left:
+            - text: "Copyright © 2025 Andrea Del Cortona." 
+        right:
+            - icon: github
+              href: https://github.com/19ADC99
+              aria-label: GitHub
+            - icon: linkedin
+              href: https://www.linkedin.com/in/andrea-del-cortona-86a75474/
+              aria-label: Lindekin
+
+    chapters:
+      - index.qmd
+      - part: "Part 1: Bioinformatics analyses"
+        chapters:
+          - p01-01-qc-and-genome-composition.qmd
+      - part: "Part 2: Publications figures"
+        chapters:
+          - p02-01-Figure1.qmd
+
+format:
+    html:
+        include-after-body: traffic.html
+        theme: cosmo
+        highlight-style: github
+        fig-width: 10
+        #cap-location: margin
+        number-sections: true
+        number-depth: 5
+        toc: true
+        toc-depth: 4
+        #toc-expand: true
+        code:
+          height: 25px
+        code-block-bg: "#FAFAFA"
+        #code-block-border-left: LightSlateGray
+        code-line-numbers: TRUE
+        code-overflow: scroll
+        grid:
+            body-width: 1000px
+        include-in-header:
+            text: |
+                <style>
+                #quarto-sidebar .sidebar-item-text {
+                  font-weight: bold;
+                }
+                #quarto-sidebar .chapter-number {
+                  font-weight: normal
+                }
+                #quarto-sidebar .chapter-title {
+                  font-weight: normal
+                }
+                #.nav-tabs .nav-link.active {
+                  background-color: rgba(239, 236, 255, 0.5);
+                }
+                </style>
+
+execute:
+  freeze: auto
+  
+  
