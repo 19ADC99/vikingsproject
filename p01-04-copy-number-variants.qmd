@@ -1,0 +1,306 @@
+# Copy Number Variants
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggplot2", "grid", "gridExtra", "magrittr",
+                 "RColorBrewer", "org.Sc.sgd.db")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+
+# retrieve S. cerevisiae genome annotation
+Scere_DB = biomaRt::useMart(
+  biomart = "ENSEMBL_MART_ENSEMBL",
+  dataset = "scerevisiae_gene_ensembl"
+)
+Scere_DB_table = biomaRt::getBM(
+  attributes = c("ensembl_gene_id", "ensembl_peptide_id", "external_gene_name", "entrezgene_id",
+                 "description", "chromosome_name", "start_position", "end_position"),
+  mart = Scere_DB
+)
+
+# build list of reference databases used for annotation steps
+ref_DB_list = c("org.Sc.sgd.db", "yeast", "scerevisiae")
+
+# create yeasts GO terms universe
+GO_universe = data.frame(matrix(nrow = nrow(Scere_DB_table), ncol = 2))
+names(GO_universe) = c("ENSEMBL", "EntrezID")
+GO_universe$ENSEMBL = Scere_DB_table$ensembl_gene_id
+# populate GO universe
+for(k in 1:nrow(GO_universe)){
+  # force to get only the first term if multiple are retrieved (sic!)
+  ENSEMBL = GO_universe[k, 1]
+  GO_universe[k, 2] = tryCatch(
+    Scere_DB_table[which(Scere_DB_table[, 1] == ENSEMBL),  c(4)][[1]],
+    error = function(e) { NA }
+  )
+}
+GO_universe = as.character(c(GO_universe[!is.na(GO_universe$EntrezID), ]$EntrezID))
+
+```
+
+
+## On this page
+
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+
+* Here
+
+
+## Call the CNVs
+
+
+To detect Copy Number Variants (CNVs) and major aneuploidies, we use the CNVnator pipeline. We use the bam files containing informations on aligned reads to the reference S288C genome, and we call CNVs based on changes of depth of mapped reads. The protocol we follow is:
+
+* For each sample, run CNVnator for 500 bp and 1,000 bp bins;
+* Retain only CNVs that are concordant for both bins;
+* Identify common CNVs pattern;
+* Identify genes affected by CNVs;
+* GO, KEGG and Reactome pathways enrichment
+
+First, we call CNVs with CNVnator, using 500 bp and 1,000 bp bins. Then, for each samples, we retain only CNVs that have been called with both bins, and that had a p-value < 0.05.
+
+
+```{bash, eval = FALSE}
+# prepare reference genome
+while read line; do
+  if [[ ${line:0:1} == '>' ]]; then
+    outfile=${line#>}.fa;
+    echo $line > $outfile;
+  else
+    echo $line >> $outfile;
+  fi;
+done < Saccharomyces_RefGen.fa
+
+#run CNVnator from the docker image
+chmod 777 09_CNVs/
+
+for file in *.bam; do
+
+  NAME=$(basename $file .S288C.align.sort.md.r.bam);
+  
+  docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+    cnvnator \
+    -root ./out."${NAME}".root \
+    -genome
+    ./00_refgen/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa \
+    -tree $file;
+    
+  for BIN in 500 1000; do
+  
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -root ./out."${NAME}".root \
+      -genome
+      ./00_refgen/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa \
+      -his $BIN -d ./;
+      
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -root ./out."${NAME}".root \
+      -stat $BIN;
+      
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -ngc \
+      -root ./out."${NAME}".root \
+      -partition $BIN;
+      
+    docker run -v /home/andrea/03_KVEIK/09_CNVs/:/data wwliao/cnvnator
+      cnvnator \
+      -ngc \
+      -root ./out."${NAME}".root \
+      -call $BIN > "${NAME}".CNV_"${BIN}"bin.tab;
+      
+  done;
+done
+
+chmod 755 09_CNVs/
+# Filter CNVs and merge 500bp 1000bp windows
+while read line; do
+
+  python3.5 ~/CNVnator_merger.py \
+    --input_1 $line.CNV_500bin.tab \
+    --input_2 $line.CNV_1000bin.tab \
+    --sample $line > $line.CNVmerged.500-1000.tab;
+    
+done < ../sample.lst
+  
+cat *merged.500-1000.tab > Vikings.plusadditional.CNVsmerged.all.tab
+
+```
+
+
+
+Then we plot the CNV that we have identified. To facilitate the visualization, duplications have been amplified up to 10X, while deletion have been reduced to 1X. Farmhouse yeasts have been clustered based on their geographical origin, in order from the top to the bottom:
+
+- North-West Norway;
+- South-West Norway;
+- Central-Eastern Norway;
+- Latvia;
+- Lithuania;
+- Russia.
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 9
+#| fig.cap: '[Figure 1: Copy Number Variants in farmhouse yeastsn.]{style="color: steelblue;"}'
+
+
+# upload files
+V_CNVs_1000 = read.delim("data/p01-04/Vikings.CNVsmerged.all.tab", header = TRUE)
+
+# reformat data
+V_CNVs_1000$chr = factor(V_CNVs_1000$chr, levels = c("I", "II", "III", "IV", "V", "VI",
+                                                     "VII", "VIII", "IX", "X", "XI", "XII",
+                                                     "XIII", "XIV", "XV", "XVI"))
+
+# group kveiks by geographical origin
+V_CNVs_1000$strain = factor(V_CNVs_1000$strain, levels = c(
+  "41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1", "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+   "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+   "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+   "42R20", "42R31", "45P5", "45R11", 
+   "46R12", "46R37", "16R23", "16R37",
+   "39R20", "40R14", "40R1", "40R20",
+   "Granvin1", "Voss1"
+))
+
+# plot
+p = ggplot(V_CNVs_1000) +
+  geom_rect(aes(xmin = start, xmax = stop, ymin = start_y, ymax = stop_y, fill = CNV), color="black", size = 0.001) +
+  scale_fill_gradient2(midpoint = 0, low = "#84ceff", mid = "white", high = "#ffb584",
+                       limits = c(0.1, 10), na.value = "grey75", trans = "log") +
+  facet_grid(strain~chr, scales = "free", space = "free_x") +
+  labs(title = "CNVs Distribution: 500-1,000 bp bin",
+       fill = "log10 ReadDepth") +
+  theme(plot.title = element_text(size = 28, hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.position = "none",
+        panel.background = element_blank(),
+        panel.spacing.x = unit(0.05, "lines"),
+        panel.spacing.y = unit(0.05, "lines"),
+        panel.border = element_rect(colour = "black", fill = NA),
+        strip.background = element_rect(colour = "black", fill = "grey90"),
+        strip.text.x = element_text(size = 10),
+        strip.text.y = element_text(size = 14, angle = 0))
+
+# change facet colors
+g = ggplot_gtable(ggplot_build(p))
+stripr = which(grepl("strip-r", g$layout$name))
+fills = c("#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0",
+          "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#92C5DE", "#92C5DE",
+          "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE",
+          "#008470", "#008470", "#008470", "#008470", "#008470", "#008470", "#FFDA00", "#FFDA00",
+          "#FFDA00", "#FFDA00", "#FBA01D", "#FBA01D", "#FBA01D", "#FBA01D", "#A6611A", "#A6611A",
+          "#A6611A", "#A6611A", "grey75", "grey75")
+k = 1
+for (i in stripr) {
+  j = which(grepl("rect", g$grobs[[i]]$grobs[[1]]$childrenOrder))
+  g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill = fills[k]
+  k = k + 1
+}
+grid::grid.draw(g)
+
+```
+
+
+While there is no clear signature associated with kveiks geographic origin, it looks like there are common CNVs shared between farmhouse yeasts that are instead absent in industrial yeasts. Let's clearly identify them.
+
+There are the apparent trends:
+
+- 5 out of 69 CNVs are shared among all Kveiks
+- Granvin1, Hornindal1, Hornindal2, Voss1 have similar CNV fingerprint
+
+
+
+## Identify common CNVs in Farmhouse yeasts
+
+We have a bunch of CNVs called on 44 different kveiks Some CNVs that are called on the same position on multiple samples, maybe differs for few hundred base pairs. To identify the "average" conserved CNV, we use a custom python script that collapse this windows, a sort of _ad hoc_ bedtools merge for CNVs positions.
+
+
+```{bash, eval=FALSE}
+# generate overlapping windows
+for i in "\tI\t" "\tII\t" "\tIII\t" "\tIV\t" "\tV\t" "\tVI\t" "\tVII\t" \
+  "\tVIII\t" "\tIX\t" "\tX\t" "\tXI\t" "\tXII\t" "\tXIII\t" "\tXIV\t" \
+  "\tXV\t" "\tXVI\t" "\tMito\t"; do
+  grep -P "${i}" Vikings.CNVsmerged.all.tab \
+    | cut -f 2-4 \
+    | sort -u \
+    | sort -k2,2n;
+done > temp.bed;
+bedtools merge -i temp.bed > Vikings.CNVsmerged.all.bed;
+rm temp.bed;
+
+python3.8 Vikings.overlapCNVs.py --allCNVs Vikings.CNVsmerged.all.tab \
+  <!-- --bed Vikings.CNVsmerged.all.bed \ -->
+  > Vikings.CNVsmerged.all.matrix.tab
+```
+
+
+Let's check the CNVs distributions:
+
+
+```{r, echo=FALSE}
+# read table
+matrix.d = read.delim(paste(mainDir, "Vikings.CNVsmerged.all.matrix.tab", sep = ""), header = TRUE)
+colnames(matrix.d) = stringr::str_replace(colnames(matrix.d), "X", "")
+
+# print table
+DT::datatable(matrix.d, 
+              extensions = c("FixedColumns", "FixedHeader"),
+              caption = "Farmhouse yeasts CNVs distribution", 
+              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
+```
+
+
+
+
+
+
+
+
+
+## Lessons Learnt {#sec-lesson-learnt-feature-selection}
+
+Based on the  we have learnt:
+
+* Fr
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::

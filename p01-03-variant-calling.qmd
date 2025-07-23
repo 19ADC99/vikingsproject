@@ -1,0 +1,97 @@
+# Variant Calling
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggplot2", "grid", "gridExtra", "magrittr",
+                 "RColorBrewer", "org.Sc.sgd.db")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+
+# retrieve S. cerevisiae genome annotation
+Scere_DB = biomaRt::useMart(
+  biomart = "ENSEMBL_MART_ENSEMBL",
+  dataset = "scerevisiae_gene_ensembl"
+)
+Scere_DB_table = biomaRt::getBM(
+  attributes = c("ensembl_gene_id", "ensembl_peptide_id", "external_gene_name", "entrezgene_id",
+                 "description", "chromosome_name", "start_position", "end_position"),
+  mart = Scere_DB
+)
+
+# build list of reference databases used for annotation steps
+ref_DB_list = c("org.Sc.sgd.db", "yeast", "scerevisiae")
+
+# create yeasts GO terms universe
+GO_universe = data.frame(matrix(nrow = nrow(Scere_DB_table), ncol = 2))
+names(GO_universe) = c("ENSEMBL", "EntrezID")
+GO_universe$ENSEMBL = Scere_DB_table$ensembl_gene_id
+# populate GO universe
+for(k in 1:nrow(GO_universe)){
+  # force to get only the first term if multiple are retrieved (sic!)
+  ENSEMBL = GO_universe[k, 1]
+  GO_universe[k, 2] = tryCatch(
+    Scere_DB_table[which(Scere_DB_table[, 1] == ENSEMBL),  c(4)][[1]],
+    error = function(e) { NA }
+  )
+}
+GO_universe = as.character(c(GO_universe[!is.na(GO_universe$EntrezID), ]$EntrezID))
+
+```
+
+
+## On this page
+
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+
+* Here
+
+
+## De novo assembly
+
+
+
+
+### LOH
+
+
+### CULTURE 28 HYBRID
+
+
+## Lessons Learnt {#sec-lesson-learnt-feature-selection}
+
+Based on the  we have learnt:
+
+* Fr
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::
