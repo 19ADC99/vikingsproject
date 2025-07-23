@@ -37,9 +37,14 @@ book:
       - part: "Part 1: Bioinformatics analyses"
         chapters:
           - p01-01-qc-and-genome-composition.qmd
+          - p01-02-genome-assembly-and-annotation.qmd
+          - p01-03-variant-calling.qmd
+          - p01-04-copy-number-variants.qmd
+          - p01-05-phylogeny-and-population-structure.qmd
+          - p01-06-genotype-to-phenotype.qmd
       - part: "Part 2: Publications figures"
-        chapters:
-          - p02-01-Figure1.qmd
+        #chapters:
+        #  - p02-01-Figure1.qmd
 
 format:
     html:
