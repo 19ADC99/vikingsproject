@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Del Cortona Andrea, Bircham Peter W., Tawfeeq Mohammed T., Gallone Brigida, Herrera-Malaver Beatriz, Cortebeek Jeroen, Nolmans Robbe, Theßeling Florian A., Garshol Lars M., Steensels Jan, Verstrepen Kevin J.">
-<meta name="dcterms.date" content="2025-07-25">
 
-<title>Farmhouse ale cultures preserve brewing’s lost yeast diversity</title>
+<title>3&nbsp; Variant Calling – Farmhouse ale cultures preserve brewing’s lost yeast diversity</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./p01-01-qc-and-genome-composition.html" rel="next">
+<link href="./p01-04-copy-number-variants.html" rel="next">
+<link href="./p01-02-genome-assembly-and-annotation.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -108,7 +107,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Abstract</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p01-01-qc-and-genome-composition.html">Part 1: Bioinformatics analyses</a></li><li class="breadcrumb-item"><a href="./p01-03-variant-calling.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variant Calling</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -122,7 +121,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Abstract</span></a>
   </div>
 </li>
@@ -149,7 +148,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p01-03-variant-calling.html" class="sidebar-item-text sidebar-link">
+  <a href="./p01-03-variant-calling.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variant Calling</span></span></a>
   </div>
 </li>
@@ -187,35 +186,30 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#on-this-page" id="toc-on-this-page" class="nav-link active" data-scroll-target="#on-this-page"><span class="header-section-number">3.1</span> On this page</a></li>
+  <li><a href="#de-novo-assembly" id="toc-de-novo-assembly" class="nav-link" data-scroll-target="#de-novo-assembly"><span class="header-section-number">3.2</span> De novo assembly</a>
+  <ul>
+  <li><a href="#loh" id="toc-loh" class="nav-link" data-scroll-target="#loh"><span class="header-section-number">3.2.1</span> LOH</a></li>
+  <li><a href="#culture-28-hybrid" id="toc-culture-28-hybrid" class="nav-link" data-scroll-target="#culture-28-hybrid"><span class="header-section-number">3.2.2</span> CULTURE 28 HYBRID</a></li>
+  </ul></li>
+  <li><a href="#sec-lesson-learnt-feature-selection" id="toc-sec-lesson-learnt-feature-selection" class="nav-link" data-scroll-target="#sec-lesson-learnt-feature-selection"><span class="header-section-number">3.3</span> Lessons Learnt</a></li>
+  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">3.4</span> Session Information</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./p01-01-qc-and-genome-composition.html">Part 1: Bioinformatics analyses</a></li><li class="breadcrumb-item"><a href="./p01-03-variant-calling.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variant Calling</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Farmhouse ale cultures preserve brewing’s lost yeast diversity</h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Variant Calling</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p><strong>Del Cortona Andrea</strong>, Bircham Peter W., Tawfeeq Mohammed T., Gallone Brigida, Herrera-Malaver Beatriz, Cortebeek Jeroen, Nolmans Robbe, Theßeling Florian A., Garshol Lars M., Steensels Jan, Verstrepen Kevin J. </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">July 25, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -225,9 +219,138 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="abstract" class="level1 unnumbered">
-<h1 class="unnumbered">Abstract</h1>
-<p>Since its inception over 10.000 years ago, beer brewing transformed from a domestic activity based on uncontrolled spontaneous fermentations into a highly optimized industrial process that uses pure single-strain starter cultures of <em>Saccharomyces</em> yeasts. Along with the storage of frozen yeast stocks, this shift halted the domestication process of beer yeasts and led to a massive loss of beer yeast biodiversity. However, a few traditional farmhouse brewers in Northern and Eastern Europe still rely on artisanal fermentation methods, using mixed cultures of yeasts that are passed on from one fermentation to the next. We genetically and phenotypically analyzed 1760 isolates from 44 traditional European farmhouse ale yeast cultures from Norway, Latvia, Lithuania and Russia. We find that farmhouse cultures harbour remarkable genetic diversity, from nearly pure S. cerevisiae strains to intricate communities of over 30 unique variants. Farmhouse yeast genomes exhibit clear geographic structuring, but also reveal signs of within-culture mating and occasional admixture between populations, alongside lineage-specific genomic features, such as a horizontally transferred gene cluster unique to Baltic strains. Large-scale phenotyping showed that the farmhouse yeasts show much greater stress tolerance and a more diverse flavour production profile compared to current industrial beer strains. Together, our study reveals the complex structure and enormous diversity of microbial communities in traditional fermentations and provides a reservoir of new yeast strains that could drive a next wave of beer innovation.</p>
+<div class="cell">
+<style type="text/css">
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+</style>
+</div>
+<section id="on-this-page" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="on-this-page"><span class="header-section-number">3.1</span> On this page</h2>
+<p>Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: <a href="p01-04-copy-number-variants.html#sec-lesson-learnt-feature-selection" class="quarto-xref"><span>Section 4.5</span></a>.</p>
+<ul>
+<li>Here</li>
+</ul>
+</section>
+<section id="de-novo-assembly" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="de-novo-assembly"><span class="header-section-number">3.2</span> De novo assembly</h2>
+<section id="loh" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="loh"><span class="header-section-number">3.2.1</span> LOH</h3>
+</section>
+<section id="culture-28-hybrid" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="culture-28-hybrid"><span class="header-section-number">3.2.2</span> CULTURE 28 HYBRID</h3>
+</section>
+</section>
+<section id="sec-lesson-learnt-feature-selection" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="sec-lesson-learnt-feature-selection"><span class="header-section-number">3.3</span> Lessons Learnt</h2>
+<p>Based on the we have learnt:</p>
+<ul>
+<li>Fr</li>
+</ul>
+</section>
+<section id="session-information" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="session-information"><span class="header-section-number">3.4</span> Session Information</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31)
+Platform: x86_64-conda-linux-gnu (64-bit)
+Running under: openSUSE Tumbleweed
+
+Matrix products: default
+BLAS/LAPACK: /home/andrea/miniforge3/envs/moai/lib/libmkl_rt.so.2;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=it_IT.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: Europe/Brussels
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats4    grid      stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] org.Sc.sgd.db_3.18.0   AnnotationDbi_1.64.1   IRanges_2.36.0        
+ [4] S4Vectors_0.40.2       Biobase_2.62.0         BiocGenerics_0.48.1   
+ [7] RColorBrewer_1.1-3     magrittr_2.0.3         gridExtra_2.3         
+[10] ggplot2_3.5.1          DT_0.33                ComplexHeatmap_2.18.0 
+[13] clusterProfiler_4.10.1 circlize_0.4.16       
+
+loaded via a namespace (and not attached):
+  [1] jsonlite_1.8.9          shape_1.4.6.1           farver_2.1.2           
+  [4] rmarkdown_2.29          GlobalOptions_0.1.2     fs_1.6.5               
+  [7] zlibbioc_1.48.2         vctrs_0.6.5             memoise_2.0.1          
+ [10] RCurl_1.98-1.16         ggtree_3.10.1           htmltools_0.5.8.1      
+ [13] progress_1.2.3          curl_6.4.0              gridGraphics_0.5-1     
+ [16] htmlwidgets_1.6.4       plyr_1.8.9              cachem_1.1.0           
+ [19] igraph_2.1.4            lifecycle_1.0.4         iterators_1.0.14       
+ [22] pkgconfig_2.0.3         Matrix_1.6-5            R6_2.5.1               
+ [25] fastmap_1.2.0           gson_0.1.0              GenomeInfoDbData_1.2.11
+ [28] clue_0.3-66             digest_0.6.37           aplot_0.2.4            
+ [31] enrichplot_1.22.0       colorspace_2.1-1        patchwork_1.3.0        
+ [34] RSQLite_2.3.9           filelock_1.0.3          httr_1.4.7             
+ [37] polyclip_1.10-7         compiler_4.3.2          bit64_4.6.0-1          
+ [40] withr_3.0.2             doParallel_1.0.17       BiocParallel_1.36.0    
+ [43] viridis_0.6.5           DBI_1.2.3               ggforce_0.4.2          
+ [46] biomaRt_2.58.2          MASS_7.3-60.0.1         rappdirs_0.3.3         
+ [49] rjson_0.2.23            HDO.db_0.99.1           tools_4.3.2            
+ [52] ape_5.8-1               scatterpie_0.2.4        glue_1.8.0             
+ [55] nlme_3.1-167            GOSemSim_2.28.1         shadowtext_0.1.4       
+ [58] cluster_2.1.8           reshape2_1.4.4          fgsea_1.28.0           
+ [61] generics_0.1.3          gtable_0.3.6            tidyr_1.3.1            
+ [64] data.table_1.16.4       hms_1.1.3               xml2_1.3.6             
+ [67] tidygraph_1.3.1         XVector_0.42.0          ggrepel_0.9.6          
+ [70] foreach_1.5.2           pillar_1.10.1           stringr_1.5.1          
+ [73] yulab.utils_0.2.0       splines_4.3.2           dplyr_1.1.4            
+ [76] tweenr_2.0.3            BiocFileCache_2.10.2    treeio_1.26.0          
+ [79] lattice_0.22-6          bit_4.5.0.1             tidyselect_1.2.1       
+ [82] GO.db_3.18.0            Biostrings_2.70.3       knitr_1.49             
+ [85] xfun_0.50               graphlayouts_1.2.2      matrixStats_1.5.0      
+ [88] stringi_1.8.4           lazyeval_0.2.2          ggfun_0.1.8            
+ [91] evaluate_1.0.3          codetools_0.2-20        ggraph_2.2.1           
+ [94] tibble_3.2.1            qvalue_2.34.0           ggplotify_0.1.2        
+ [97] cli_3.6.3               munsell_0.5.1           Rcpp_1.0.14            
+[100] GenomeInfoDb_1.38.8     dbplyr_2.5.0            png_0.1-8              
+[103] XML_3.99-0.18           parallel_4.3.2          blob_1.2.4             
+[106] prettyunits_1.2.0       DOSE_3.28.2             bitops_1.0-9           
+[109] viridisLite_0.4.2       tidytree_0.4.6          scales_1.3.0           
+[112] purrr_1.0.2             crayon_1.5.3            GetoptLong_1.0.5       
+[115] rlang_1.1.5             cowplot_1.1.3           fastmatch_1.1-6        
+[118] KEGGREST_1.42.0        </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
 </section>
@@ -656,10 +779,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./p01-02-genome-assembly-and-annotation.html" class="pagination-link" aria-label="Genome Assembly and Annotation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Genome Assembly and Annotation</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./p01-01-qc-and-genome-composition.html" class="pagination-link" aria-label="QC and Genome Composition assessment">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">QC and Genome Composition assessment</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./p01-04-copy-number-variants.html" class="pagination-link" aria-label="Copy Number Variants">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Copy Number Variants</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

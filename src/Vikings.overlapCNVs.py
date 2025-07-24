@@ -23,6 +23,7 @@ import os
 import re
 import shutil
 import string
+import statistics
 import sys
 import itertools
 import operator
@@ -122,7 +123,7 @@ def main():
 					# if sample is correct
 					if ENTRY == SAMPLE:
 						for LINE in SAMPLES_DB[ENTRY]:
-							# correct chromosome?					
+							# correct chromosome?
 							if LINE[0] == CHR:
 								START = LINE[1]
 								STOP = LINE[2]
@@ -131,9 +132,18 @@ def main():
 				if OUTPUT[j][k] == []:
 					OUTPUT[j][k] = ''
 				else:
-					OUTPUT[j][k] = ';'.join(OUTPUT[j][k])			
+					OUTPUT[j][k] = ';'.join(OUTPUT[j][k])
 				k += 1
 			j += 1
+
+	# collapse to the average
+	for i in range(len(OUTPUT)):
+		for k in range(3, len(OUTPUT[i])):
+			if OUTPUT[i][k] != '':
+				NUMS = OUTPUT[i][k].split(";")
+				NUMS = [float(x) for x in NUMS]
+				AVG = statistics.mean(NUMS)
+				OUTPUT[i][k] = str(round(AVG, 3))
 
 	# print output
 	print('\t'.join(['', '', '', '\t'.join(SAMPLES_LIST)]))

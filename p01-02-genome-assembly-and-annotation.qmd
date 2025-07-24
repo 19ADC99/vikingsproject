@@ -20,8 +20,8 @@ div.sourceCode {
 
 ```{r, echo=FALSE, include=FALSE}
 # load required libraries
-up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggplot2", "grid", "gridExtra", "magrittr",
-                 "RColorBrewer", "org.Sc.sgd.db")
+up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "gggenomes", "ggplot2", "grid", "gridExtra",
+                "magrittr", "RColorBrewer", "org.Sc.sgd.db")
 lapply(up_packages, require, character.only = TRUE)
 
 # set working directory
@@ -676,7 +676,7 @@ for(k in 1:nrow(HGT_genes)){
 DT::datatable(
   HGT_genes,
   extensions = c("FixedColumns", "FixedHeader"),
-  caption = "Table 6: HGT Zygosaccharomzces parabailli operon.", 
+  caption = "Table 6: HGT Zygosaccharomyces parabailli operon.", 
   plugins = "ellipsis",
   options = list(
     columnDefs = list(list(
@@ -691,6 +691,36 @@ DT::datatable(
     pageLength = 10
   )
 )
+
+```
+
+
+It appears that indeed a genomic region with these 8 genes were transferred from _Z. parabailli_ to the farmhouse yeasts. Noticeably, all farmhouse yeasts has the same relocation of YHR208W and an interrupted YHR205W.
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 4
+#| fig.cap: '[Figure 3: Ascomycota HTG microsynteny.]{style="color: steelblue;"}'
+
+# genome seq
+yeast_seqs = utils::read.delim("data/p01-02/Vikings.Asco.HCT.seqs.txt", header = TRUE, stringsAsFactors = FALSE) %>%
+  dplyr::mutate(seq_id = stringr::str_replace_all(seq_id, "\\\\n", "\n"))
+yeast_genes = utils::read.delim("data/p01-02/Vikings.Asco.HCT.genes.txt", header = TRUE, stringsAsFactors = FALSE) %>%
+  dplyr::mutate(seq_id = stringr::str_replace_all(seq_id, "\\\\n", "\n"))
+yeast_ava = utils::read.delim("data/p01-02/Vikings.Asco.HCT.ava.txt", header = TRUE, stringsAsFactors = FALSE) %>%
+  dplyr::mutate(seq_id = stringr::str_replace_all(seq_id, "\\\\n", "\n")) %>%
+  dplyr::mutate(seq_id2 = stringr::str_replace_all(seq_id2, "\\\\n", "\n"))
+
+p_HGT3 = gggenomes::gggenomes(seqs = yeast_seqs, genes = yeast_genes, links = yeast_ava) +
+  geom_seq(size = 1) +
+  geom_bin_label(size = 4) +
+  geom_gene(aes(fill = name)) +
+  scale_fill_brewer("HGT genes", palette = "Set3") +
+  geom_link(alpha = 0.25, show.legend = FALSE)
+p_HGT3
 
 ```
 
@@ -745,7 +775,7 @@ DT::datatable(
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 3: Dotplot of overrepresented BP terms in Zygosaccharomzces parabailli transferred operon.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 4: Dotplot of overrepresented BP terms in Zygosaccharomzces parabailli transferred operon.]{style="color: steelblue;"}'
 
 # plot GO dotplot
 p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
@@ -811,7 +841,7 @@ DT::datatable(
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 4: Dotplot of overrepresented MF terms in Zygosaccharomzces parabailli transferred operon.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 5: Dotplot of overrepresented MF terms in Zygosaccharomzces parabailli transferred operon.]{style="color: steelblue;"}'
 
 # plot GO dotplot
 p0 = enrichplot::dotplot(enriched_GOs, showCategory = nrow(enriched_GOs@result)) +
