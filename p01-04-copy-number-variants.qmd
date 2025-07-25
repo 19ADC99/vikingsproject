@@ -28,36 +28,6 @@ lapply(up_packages, require, character.only = TRUE)
 mainDir = "/home/andrea/19ADC99/vikingsproject"
 knitr::opts_knit$set(root.dir = mainDir)
 
-
-# retrieve S. cerevisiae genome annotation
-Scere_DB = biomaRt::useMart(
-  biomart = "ENSEMBL_MART_ENSEMBL",
-  dataset = "scerevisiae_gene_ensembl"
-)
-Scere_DB_table = biomaRt::getBM(
-  attributes = c("ensembl_gene_id", "ensembl_peptide_id", "external_gene_name", "entrezgene_id",
-                 "description", "chromosome_name", "start_position", "end_position"),
-  mart = Scere_DB
-)
-
-# build list of reference databases used for annotation steps
-ref_DB_list = c("org.Sc.sgd.db", "yeast", "scerevisiae")
-
-# create yeasts GO terms universe
-GO_universe = data.frame(matrix(nrow = nrow(Scere_DB_table), ncol = 2))
-names(GO_universe) = c("ENSEMBL", "EntrezID")
-GO_universe$ENSEMBL = Scere_DB_table$ensembl_gene_id
-# populate GO universe
-for(k in 1:nrow(GO_universe)){
-  # force to get only the first term if multiple are retrieved (sic!)
-  ENSEMBL = GO_universe[k, 1]
-  GO_universe[k, 2] = tryCatch(
-    Scere_DB_table[which(Scere_DB_table[, 1] == ENSEMBL),  c(4)][[1]],
-    error = function(e) { NA }
-  )
-}
-GO_universe = as.character(c(GO_universe[!is.na(GO_universe$EntrezID), ]$EntrezID))
-
 ```
 
 
@@ -399,77 +369,6 @@ There are 69 high confidence CNVs, of which 5 (4 deletions and 1 duplication) of
 
 
 
-
-
-Let's select CNVs present in at least 90% (N=40) of the sequenced farmhouse yeasts, and plot them.
-
-
-```{r, echo=FALSE}
-# filter out CNVs that are shared by less than 75% of kveiks
-matrix.d75 = matrix.d[which(rowSums(!is.na(matrix.d)) >= round((ncol(matrix.d) - 3)*0.9, 0)), ]
-  
-# print table
-DT::datatable(matrix.d75, 
-              extensions = c("FixedColumns", "FixedHeader"),
-              caption = "CNVs present in at least 90% of farmhouse yeasts", 
-              options = list(scrollX = TRUE, paging = TRUE, fixedHeader = FALSE))
-```
-
-
-There are 11 CNVs shared between 40 farmhouse yeasts or more.
-
-
-```{r, fig.cap="CNVs", fig.height=9, warning=FALSE, message=FALSE}
-# create CNV matrix for the heatmap
-matrix_heat = as.matrix(matrix.d75[, c(4:ncol(matrix.d75))])
-matrix_heat = ifelse(matrix_heat < 1, -1,
-                     ifelse(matrix_heat > 1, 1, matrix_heat))
-rownames(matrix_heat) = paste(paste(matrix.d75[, 1], matrix.d75[, 2], sep = ":"), matrix.d75[, 3], sep = "-")
-
-# create annotations
-kveiks_geo = data.frame(c("41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1", "Hornindal2", "1R16", "2R23", "8R19", "Muri",
-                                                   "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
-                                                   "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
-                                                   "42R20", "42R31", "45P5", "45R11", 
-                                                   "46R12", "46R37", "16R23", "16R37",
-                                                   "39R20", "40R14", "40R1", "40R20",
-                                                   "Granvin1", "Voss1"),
-                        c("North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway", "North-West Norway",
-                                                   "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway", "South-West Norway",
-                                                   "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway", "Central-Eastern Norway",
-                                                   "Latvia", "Latvia", "Latvia", "Latvia", 
-                                                   "Lithuania", "Lithuania", "Lithuania", "Lithuania",
-                                                   "Russia", "Russia", "Russia", "Russia",
-                                                   "Other", "Other"))
-colnames(kveiks_geo) = c("kveik", "geo")
-rownames(kveiks_geo) = kveiks_geo$kveik
-
-ComplexHeatmap::Heatmap(matrix_heat,
-                        cluster_rows = FALSE,
-                        column_dend_reorder = TRUE,
-                        col = colorRamp2(c(-1, 0, 1), rev(brewer.pal(n = 3, name = "RdBu"))),
-                        na_col = "grey75",
-                        top_annotation = HeatmapAnnotation(Geographic_origin = as.matrix(kveiks_geo$geo),
-                                                           col = list(Geographic_origin = c("North-West Norway" = "#0571B0",
-                                                                                            "South-West Norway" = "#92C5DE",
-                                                                                            "Central-Eastern Norway" = "#008470",
-                                                                                            "Latvia" = "#FFDA00",
-                                                                                            "Lithuania" = "#FBA01D",
-                                                                                            "Russia" = "#A6611A",
-                                                                                            "Other" = "grey50"))),
-                        show_row_names = TRUE,
-                        show_column_names = TRUE,
-                        show_row_dend = FALSE,
-                        show_heatmap_legend = FALSE,
-                        row_title = "CNVs",
-                        column_title_side = "bottom")
-```
-
-
-There are 69 high confidence CNVs, of which 5 (4 deletions and 1 duplication) of them are shared among all Kveiks. Interestingly, the two deletions in chromosome I and the one in chromosome XV are duplications in the lineage "Granvin1, Hornindal1, Hornindal2, Voss1". Granvin1, Hornindal1, Hornindal2, Voss1 shares a unique fingerprint of 39 conserved CNVs scattered across 15 chromosomes.
-
-
-
 ## CNV Functional Enrichment
 
 Let's see which genes (and corresponding functions) are interested by the CNVs that we identify in the farmhouse yeasts. We will run the following functional analyses:
@@ -483,6 +382,7 @@ Let's see which genes (and corresponding functions) are interested by the CNVs t
 
 
 ```{r, warning=FALSE, message=FALSE}
+
 # retrieve S. cerevisiae genome annotation
 Scere_DB = biomaRt::useMart(
   biomart = "ENSEMBL_MART_ENSEMBL",
@@ -553,25 +453,40 @@ for(i in 1:nrow(matrix_heat)){
   )
   
 }
-```
 
-
-
-
-Let's compare all enrichment together
-
-
-#### Enriched GO terms
-
-```{r, fig.cap="GO BP terms shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
 # retrieve genes
 gene_cluster = list()
 for(i in 1:length(CNV_genes_DB)){
   gene_cluster[[names(CNV_genes_DB)[[i]]]] = as.character(CNV_genes_DB[[i]]$entrezgene_id[!is.na(CNV_genes_DB[[i]]$entrezgene_id)])
 }
 
-BP = compareCluster(geneCluster = gene_cluster, fun = "enrichGO", pvalueCutoff = 0.05,
-                     OrgDb = ref_DB_list[[1]], ont = "BP")
+```
+
+
+Let's compare all enrichment together
+
+
+Usually I would convert the names in the enriched cluster with the ```DOSE``` package, with something like: ```DOSE::setReadable(BP, OrgDb = org.Sc.sgd.db, keyType = "ENTREZID")```, however, ```org.Sc.sgd.db``` does not encode the gene names as _SYMBOL_ like it happens in other reference genomes from [ENSEMBL](https://www.ensembl.org/index.html) (```org.Sc.sgd.db``` is maintained by [SGD](https://www.yeastgenome.org/)).
+
+Therefore I need a less elegant workaround to manually replace the _ENTREZID_ with the corresponding gene symbols to make the enrichment comparisons more interepretable.
+
+
+::: panel-tabset
+
+### GO BP
+
+```{r, warning=FALSE, message=FALSE}
+
+# enrich
+BP = compareCluster(
+  geneCluster = gene_cluster,
+  fun = "enrichGO",
+  pvalueCutoff = 0.05,
+  OrgDb = ref_DB_list[[1]],
+  ont = "BP"
+)
+
+# map gene symbols
 BP@keytype = "SYMBOL"
 my_symbols = c()
 for(k in 1:length(BP@geneClusters)){
@@ -594,29 +509,58 @@ for(k in 1:length(BP@compareClusterResult$geneID)){
   BP@compareClusterResult$geneID[[k]] = my_vec
 }
 
-
-enrichplot::dotplot(BP, includeAll = TRUE) +
-        ggtitle("enriched BP GO terms across CNVs") +
-        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
-        guides(colour = guide_colorbar(reverse = TRUE)) +
-        theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+# plot
+p1 = enrichplot::dotplot(BP, includeAll = TRUE) +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5)) +
   theme(axis.text.x=element_text(angle = 45, hjust = 1))
-```
 
-
-```{r, fig.cap="GO BP terms network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-cnetplot(BP) +
-  ggtitle("enriched BP GO terms across CNVs") +
+p2 = cnetplot(BP) +
   scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
   theme(plot.title = element_text(size = 22, hjust = 0.5))
+
 ```
 
 
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 9
+#| fig.cap: '[Figure 3: GO BP terms shared across CNVs.]{style="color: steelblue;"}'
 
-```{r, fig.cap="GO CC terms shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-CC = compareCluster(geneCluster = gene_cluster, fun = "enrichGO", pvalueCutoff = 0.05,
-                     OrgDb = ref_DB_list[[1]], ont = "CC")
+p1
 
+```
+
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 4: GO BP terms network shared across CNVs.]{style="color: steelblue;"}'
+
+p2
+
+```
+
+
+### GO CC
+
+```{r, warning=FALSE, message=FALSE}
+
+# enrich
+CC = compareCluster(
+  geneCluster = gene_cluster,
+  fun = "enrichGO",
+  pvalueCutoff = 0.05,
+  OrgDb = ref_DB_list[[1]],
+  ont = "CC"
+)
+
+# map gene symbols
 CC@keytype = "SYMBOL"
 my_symbols = c()
 for(k in 1:length(CC@geneClusters)){
@@ -639,29 +583,58 @@ for(k in 1:length(CC@compareClusterResult$geneID)){
   CC@compareClusterResult$geneID[[k]] = my_vec
 }
 
-enrichplot::dotplot(CC, includeAll = TRUE) +
-        ggtitle("enriched CC GO terms across CNVs") +
-        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
-        guides(colour = guide_colorbar(reverse = TRUE)) +
-        theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+# plot
+p1 = enrichplot::dotplot(CC, includeAll = TRUE) +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5)) +
   theme(axis.text.x=element_text(angle = 45, hjust = 1))
-```
 
-
-```{r, fig.cap="GO CC terms network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-cnetplot(CC) +
-  ggtitle("enriched CC GO terms across CNVs") +
-  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+p2 = cnetplot(CC) +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(CC@geneClusters))) +
   theme(plot.title = element_text(size = 22, hjust = 0.5))
+
 ```
 
 
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 9
+#| fig.cap: '[Figure 5: GO CC terms shared across CNVs.]{style="color: steelblue;"}'
+
+p1
+
+```
 
 
-```{r, fig.cap="GO MF terms shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-MF = compareCluster(geneCluster = gene_cluster, fun = "enrichGO", pvalueCutoff = 0.05,
-                     OrgDb = ref_DB_list[[1]], ont = "MF")
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: GO CC terms network shared across CNVs.]{style="color: steelblue;"}'
 
+p2
+
+```
+
+
+### GO MF
+
+```{r, warning=FALSE, message=FALSE}
+
+# enrich
+MF = compareCluster(
+  geneCluster = gene_cluster,
+  fun = "enrichGO",
+  pvalueCutoff = 0.05,
+  OrgDb = ref_DB_list[[1]],
+  ont = "MF"
+)
+
+# map gene symbols
 MF@keytype = "SYMBOL"
 my_symbols = c()
 for(k in 1:length(MF@geneClusters)){
@@ -684,41 +657,130 @@ for(k in 1:length(MF@compareClusterResult$geneID)){
   MF@compareClusterResult$geneID[[k]] = my_vec
 }
 
-enrichplot::dotplot(MF, includeAll = TRUE) +
-        ggtitle("enriched MF GO terms across CNVs") +
-        scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
-        guides(colour = guide_colorbar(reverse = TRUE)) +
-        theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+# plot
+p1 = enrichplot::dotplot(MF, includeAll = TRUE) +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5)) +
   theme(axis.text.x=element_text(angle = 45, hjust = 1))
-```
 
-
-```{r, fig.cap="GO MF terms network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-cnetplot(MF) +
-  ggtitle("enriched MF GO terms across CNVs") +
-  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+p2 = cnetplot(MF) +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(MF@geneClusters))) +
   theme(plot.title = element_text(size = 22, hjust = 0.5))
-```
-
-
-
-#### Enriched KEGG pathways
-
-
-```{r, fig.cap="KEGG pathways shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-KEGG = compareCluster(geneCluster = gene_cluster, fun = "enrichKEGG", pvalueCutoff = 0.05, organism = "sce")
 
 ```
 
 
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 9
+#| fig.cap: '[Figure 7: GO MF terms shared across CNVs.]{style="color: steelblue;"}'
 
-#### Enriched Reactome pathways
+p1
+
+```
 
 
-```{r, fig.cap="Reactome pathways shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-PA = compareCluster(geneCluster = gene_cluster, fun = "enrichPathway", pvalueCutoff = 0.05,
-                   organism = ref_DB_list[[2]])
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 8: GO MF terms network shared across CNVs.]{style="color: steelblue;"}'
 
+p2
+
+```
+
+
+### KEGG
+
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+
+# enrich
+KEGG = compareCluster(
+  geneCluster = gene_cluster,
+  fun = "enrichKEGG",
+  pvalueCutoff = 0.05,
+  organism = "sce"
+)
+
+# map gene symbols
+KEGG@keytype = "SYMBOL"
+my_symbols = c()
+for(k in 1:length(KEGG@geneClusters)){
+  for(i in 1:length(KEGG@geneClusters[[k]])){
+    ENTREZ = KEGG@geneClusters[[k]][[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_symbols[i] = SYMBOL
+  }
+  KEGG@geneClusters[[k]] = my_symbols
+}
+for(k in 1:length(KEGG@compareClusterResult$geneID)){
+  my_vec = KEGG@compareClusterResult$geneID[[k]]
+  my_vec = stringr::str_split(my_vec, "/")[[1]]
+  for(i in 1:length(my_vec)){
+    ENTREZ = my_vec[[i]]
+    SYMBOL = Scere_DB_table[which(Scere_DB_table$entrezgene_id == ENTREZ), ]$external_gene_name
+    my_vec[[i]] = SYMBOL[[1]]
+  }
+  my_vec = paste(my_vec, collapse = "/")
+  KEGG@compareClusterResult$geneID[[k]] = my_vec
+}
+
+# plot
+p1 = enrichplot::dotplot(KEGG, includeAll = TRUE) +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+  theme(axis.text.x=element_text(angle = 45, hjust = 1))
+
+p2 = cnetplot(KEGG) +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(KEGG@geneClusters))) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5))
+
+```
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 9
+#| fig.cap: '[Figure 8: KEGG pathways shared across CNVs.]{style="color: steelblue;"}'
+
+p1
+
+```
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 9: KEGG pathways shared across CNVs.]{style="color: steelblue;"}'
+
+p2
+
+```
+
+
+### Reactome
+
+
+```{r, warning=FALSE, message=FALSE}
+
+# enrich
+PA = compareCluster(
+  geneCluster = gene_cluster,
+  fun = "enrichPathway",
+  pvalueCutoff = 0.05,
+  organism = ref_DB_list[[2]]
+)
+
+# map gene symbols
 PA@keytype = "SYMBOL"
 my_symbols = c()
 for(k in 1:length(PA@geneClusters)){
@@ -741,26 +803,42 @@ for(k in 1:length(PA@compareClusterResult$geneID)){
   PA@compareClusterResult$geneID[[k]] = my_vec
 }
 
-enrichplot::dotplot(PA) +
-      ggtitle("enriched reactomePA across CNVs") +
-      scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
-      guides(colour = guide_colorbar(reverse = TRUE)) +
-      theme(plot.title = element_text(size = 22, hjust = 0.5)) +
+# plot
+p1 = enrichplot::dotplot(PA, includeAll = TRUE) +
+  scale_colour_gradientn(colours = rev(colorRampPalette(brewer.pal(7, "Reds"))(37))) +
+  guides(colour = guide_colorbar(reverse = TRUE)) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5)) +
   theme(axis.text.x=element_text(angle = 45, hjust = 1))
-```
 
-
-```{r, fig.cap="Reactome pathways  network shared across CNVs", fig.height=8, warning=FALSE, message=FALSE}
-cnetplot(PA) +
-  ggtitle("Reactome pathways  across CNVs") +
-  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(BP@geneClusters))) +
+p2 = cnetplot(PA) +
+  scale_fill_manual(values = colorRampPalette(brewer.pal(10, "Paired"))(length(PA@geneClusters))) +
   theme(plot.title = element_text(size = 22, hjust = 0.5))
+
 ```
 
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 9
+#| fig.cap: '[Figure 10: Reactome pathways shared across CNVs.]{style="color: steelblue;"}'
 
+p1
 
+```
 
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 11: Reactome pathways shared across CNVs.]{style="color: steelblue;"}'
 
+p2
+
+```
+
+:::
 
 
 

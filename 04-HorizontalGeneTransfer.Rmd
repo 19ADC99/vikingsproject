@@ -7,7 +7,7 @@ up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "ggplot2", "gri
 lapply(up_packages, require, character.only = TRUE)
 
 # set working directory
-mainDir = "/home/Andrea/Desktop/kveiks/manuscript/plotting_data/"
+mainDir = "/home/andrea/19ADC99/vikingsproject"
 knitr::opts_knit$set(root.dir = mainDir)
 
 # retrieve S. cerevisiae genome annotation
