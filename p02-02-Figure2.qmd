@@ -1,0 +1,184 @@
+# Figure 2
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("Cairo", "cowplot", "dplyr", "forcats", "ggplot2",  "ggrepel",
+                "ggtext", "RColorBrewer", "tidytext")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+```
+
+
+## Figure 2 code
+
+
+### Panel A code
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+
+library(ape)
+library(ggtree)
+library(ggplot2)
+library(RColorBrewer)
+
+# Read tree in newick format using ape
+kveik_tree <- read.tree('DendroExport_densitybased.txt') 
+# Identify tip labels that start with "AR" or "AP" as we dont have phenotype data for culture A
+#tips_to_drop <- kveik_tree$tip.label[grep("^(AR|AP)", kveik_tree$tip.label)]
+
+# rename A to AB
+kveik_tree$tip.label <- sub("^AR([0-9]+)$", "ABR\\1", kveik_tree$tip.label)
+kveik_tree$tip.label <- sub("^AP([0-9]+)$", "ABP\\1", kveik_tree$tip.label)
+
+# add 'R' strains to be swapped out to drop list
+tips_to_drop <- c( 
+               '21R40',
+               '17R20',
+               '45R38',
+               '28R31', 
+               '28R1')
+
+# Drop the identified tips
+kveik_tree <- drop.tip(kveik_tree, tips_to_drop)
+# list strains to relabel
+label_changes <- c("21P1" = "21R40",
+                   "17P5" = "17R20",
+                   "45P5" = "45R38",
+                   "28P1" = "28R31",
+                   "28P6" = "28R1")
+# Replace the specified tip labels
+kveik_tree$tip.label <- sapply(kveik_tree$tip.label, function(label) {
+  if (label %in% names(label_changes)) {
+    return(label_changes[label])
+  } else {
+    return(label)
+  }
+})
+
+# Identify tip labels that are "P" strains
+tips_to_drop <- grep("P", kveik_tree$tip.label, value = TRUE)
+# Drop the P strains 
+kveik_tree <- drop.tip(kveik_tree, tips_to_drop)
+
+# extract group info from tip labels (label format = culture R picking number e.g. 1R1, want to extract only culture number)
+gpinfo <- split(kveik_tree$tip.label, gsub("[RPb]\\w+", "", kveik_tree$tip.label))
+# assign group info to tree
+kveik_tree <- groupOTU(kveik_tree, gpinfo)
+# plot tree, circular cladogram with colors by group
+p <- ggtree(kveik_tree, aes(color = group), size = 0.25, layout = 'circular') +
+  geom_tiplab2(aes(angle = angle), size = 0.5) +
+  labs(title = 'Interdelta band clustering', color = 'Farmhouse Culture') +
+  theme(plot.title = element_text(hjust = 0.5, size = 20),
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 12)) +
+  guides(color = guide_legend(override.aes = list(label = "", size = 1)))
+
+# read in info file
+heatmapData <- read.csv('heatmap data - swaped P out.csv', row.names = 1)
+rn <- rownames(heatmapData)
+heatmapData <- heatmapData[, c(3,4)] # select which columns to display here
+heatmapData <- as.data.frame(sapply(heatmapData, as.character))
+rownames(heatmapData) <- rn
+heatmap.colours <- c('0' = '#FFFFFF',
+                     '1' = '#0571B0',
+                     '2' = '#92C5DE',
+                     '3' = '#018571',
+                     '4' = '#80CDC1',
+                     '5' = '#FFDA00',
+                     '6' = '#FBA01D',
+                     '7' = '#A6611A',
+                     '8' = '#FF0000')
+
+
+pdf(file = 'cladogram updated 2.pdf', width = 10, height = 8)
+gheatmap(p, heatmapData, offset = 1, color=NA, width = 0.1,
+         colnames = FALSE) +
+  scale_fill_manual(values=heatmap.colours, breaks=c(1:7,0,8), labels = c('North-West Norway', 'South-West Norway', 'Central-Eastern Norway', 'South-Eastern Norway','Latvia', 'Lithuania','Russia', '', 'sequenced'), aes(legend_title = 'Location'))
+dev.off()
+
+# ###########################################
+# # label nodes
+# p1 <- p + geom_text(aes(label=node), hjust=-.3)
+# pdf(file = 'nodes.pdf', width = 30, height = 30)
+# p1
+# dev.off()
+# 
+
+```
+
+### Merge
+
+
+```{r, warning=FALSE, message=FALSE}
+
+panel_a = ggplot2::ggplot() + ggplot2::annotation_custom(
+  grid::rasterGrob(
+    magick::image_read("data/p02-02/cladogram updated 2.pdf"),
+    width = ggplot2::unit(1,"npc"),
+    height = ggplot2::unit(1,"npc")),
+  -Inf, Inf, -Inf, Inf)
+
+panel_b = ggplot2::ggplot() + ggplot2::annotation_custom(
+  grid::rasterGrob(
+    magick::image_read("data/p02-02/graph2.pdf"),
+    width = ggplot2::unit(1,"npc"),
+    height = ggplot2::unit(1,"npc")),
+  -Inf, Inf, -Inf, Inf)
+
+
+final_plot = cowplot::plot_grid(
+  panel_a,
+  panel_b,
+  nrow = 2,
+  rel_heights = c(3, 1),
+  labels = c("A", "B")
+)
+
+```
+
+
+## Figure 2 plot
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 10
+#| fig.cap: '[Figure 2: Genetic diversity within and between farmhouse yeast cultures.]{style="color: steelblue;"}'
+
+final_plot
+
+```
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::

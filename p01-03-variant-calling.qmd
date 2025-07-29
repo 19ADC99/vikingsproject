@@ -20,8 +20,8 @@ div.sourceCode {
 
 ```{r, echo=FALSE, include=FALSE}
 # load required libraries
-up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggplot2", "grid", "gridExtra", "magrittr",
-                 "RColorBrewer", "org.Sc.sgd.db")
+up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggh4x", "ggplot2", "grid", "gridExtra",
+                "magrittr", "RColorBrewer", "org.Sc.sgd.db", "UpSetR")
 lapply(up_packages, require, character.only = TRUE)
 
 # set working directory
@@ -208,44 +208,136 @@ java -jar ~/bin/GenomeAnalysisTK-3.3-0-g37228af/GenomeAnalysisTK.jar \
 
 Farmhouse yeasts contains a high degree of Heterozygosity, comparable to yeast strains from the "mixed" Clade.
 
-```{r, fig.cap="Heterozygosity of yeasts from different clades", warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE}
+
 # import dataset
-kveik = read.delim(paste(mainDir, "all_plusKV.heterozygous.positions.txt", sep = ""), header = TRUE)
+kveik_het = read.delim("./data/p01-03/all_plusKV.heterozygous.positions.txt", header = TRUE)
 
 # sort 
-kveik$Pop = factor(
-  kveik$Pop,
-  levels = c("Farmhouse", "Asian", "Beer1", "Beer2", "Bread",
-             "Mixed", "Mosaic", "Sake", "Wild", "Wine")
+kveik_het$Pop = factor(kveik_het$Pop,
+                       levels = c("Farmhouse", "Asian", "Beer1", "Beer2", "Bread",
+                                  "Mixed", "Mosaic", "Sake", "Wild", "Wine"))
+kveik_het$Pop = relevel(kveik_het$Pop, "Farmhouse")
+kveik_het$Geographic.origin = ifelse(
+  kveik_het$Geographic.origin == "Central-E Norway",
+  "C-E Norway",
+  kveik_het$Geographic.origin
 )
 
-# prepare count labels
-stat_box_data <- function(y) {
-  return( 
-    data.frame(
-      y = 6,
-      #sign =tests1[which(tests1$group2 == y),]$p.signif,
-      label = paste('n =', length(y))
-    )
+colnames(kveik_het) = c("ID", "Pop", "HET_CT", "Subpopulation", "Geographic.origin")
+
+# mapping swap_yeasts
+to_swap = data.frame(
+  old_name = c("21P1", "17P5", "45P5", "28P1", "28P6"),
+  new_name = c("21R40", "17R20", "45R38", "28R31", "28R1")
+)
+
+# import final clade list
+final_clades = read.table(
+  "./data/p02-04/final_clades_for_pub.txt",
+  sep = "\t",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+
+# load annotations
+tree_annot_raw = read.table("./data/p01-03/genetrees.output.BS.annot-PETER.txt",
+                            sep = "\t",
+                            header = TRUE,
+                            stringsAsFactors = FALSE)
+tree_annot_raw = data.frame(tree_annot_raw)
+
+for(k in 1:nrow(to_swap)){
+  tree_annot_raw$Strain = stringr::str_replace(
+    tree_annot_raw$Strain,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
+  )
+  tree_annot_raw$Name = stringr::str_replace(
+    tree_annot_raw$Name,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
   )
 }
 
+# merge with last clade grouping from 20250630
+tree_annot = tree_annot_raw %>%
+  dplyr::left_join(., final_clades, by = "Strain")
+tree_annot$Clade = ifelse(tree_annot$niche1 == "farmhouse", "Farmhouse", tree_annot$Clade)
+tree_annot$Clade = ifelse(
+  is.na(tree_annot$Clade) & tree_annot$group == 'beer2',
+  "Beer2", tree_annot$Clade
+)
+tree_annot$Clade = ifelse(
+  is.na(tree_annot$Clade) & tree_annot$group == 'wine',
+  "Wine", tree_annot$Clade
+)
+tree_annot$Clade = ifelse(
+  is.na(tree_annot$Clade) & tree_annot$group == 'asian',
+  "Asia", tree_annot$Clade
+)
+tree_annot$Clade = ifelse(is.na(tree_annot$Clade), "Other", tree_annot$Clade)
+tree_annot = tree_annot[, -which(colnames(tree_annot) %in% c("niche1", "niche2", "niche3", "group", "seq_name", "Mosaic"))]
+colnames(tree_annot) = c("Strain", "ID", "Clade")
+tree_annot$ID = stringr::str_replace_all(tree_annot$ID, "x", "X")
+
+
+# merge
+kveik_het = merge(kveik_het, tree_annot, by = "ID")
+kveik_het = kveik_het[, which(colnames(kveik_het) %in% c("ID", "HET_CT", "Pop", "Culture", "Subpopulation", "Geographic.origin", "Clade"))]
+
+
+
+#------------------------------------------------------------------------------#
+## 2.2 - Heterozigous position - all                                        ####
+
+# t-test
+tests = kveik_het %>%
+  dplyr::filter(!(ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri"))) %>%
+  rstatix::t_test(HET_CT ~ Clade, ref.group = "Farmhouse")
+
+kveik_het$Clade = factor(kveik_het$Clade,
+  levels = c("Farmhouse", "Asia", "Beer1", "Beer2", "Mixed", "Other", "Wine"))
+kveik_het$Clade = relevel(kveik_het$Clade, "Farmhouse")
+
 # plot
-ggplot(kveik, aes(x = Pop, y = HET_CT)) +
-  geom_point(position = position_jitter(width = 0.25),
-             shape = 21, fill = "grey50", 
-             alpha = 0.25) +
-  geom_boxplot(fill = NA, outlier.shape = NA) +
+p_het = ggplot(kveik_het, aes(x = Clade, y = HET_CT)) +
+  geom_violin(aes(fill = Clade), alpha = 0.2,
+              scale = "width",
+              trim = FALSE) +
+  geom_point(data = ~dplyr::filter(.x, !(ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri"))),
+             aes(fill = Clade),
+             position = position_jitter(width = 0.25),
+             shape = 21, 
+             alpha = 0.375,
+             size = 3) +
+  stat_summary(fun = "median", colour = "red", geom = "crossbar") +
   geom_vline(xintercept = 1.5) +
-  stat_summary(fun.data = stat_box_data, geom = "text", hjust = 0.5, vjust = 0.9) +
-  stat_compare_means(method = "anova", label.y = 0.01) +
-  stat_compare_means(label = "p.signif", method = "t.test", ref.group = "Farmhouse") +
-  scale_y_log10(labels = scales::comma, limits = c(1, 1300000)) +
+  geom_point(data = ~dplyr::filter(.x, ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri")),
+             aes(fill = "red"),
+             position = position_jitter(width = 0.25),
+             shape = 21, 
+             alpha = 0.375,
+             size = 3) +
+  geom_text(data = ~dplyr::filter(.x, ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri")),
+            aes(label = as.character(ID)),
+            hjust = 0, vjust = 0, color = "red") +
+  scale_fill_manual(values = c("#2297e6", "#df536b", "#61d04f", "#28e2e5", "#cd0bbc", "grey75", "#bcf60c",
+                               "red")) +
+  ggpubr::stat_compare_means(method = "anova", label.x = 1.1, label.y = 98000) +
+  annotate("text", x = 2,  y = 95000, label = c(tests$p.adj.signif)[[1]]) +
+  annotate("text", x = 3,  y = 95000, label = c(tests$p.adj.signif)[[2]]) +
+  annotate("text", x = 4,  y = 95000, label = c(tests$p.adj.signif)[[3]]) +
+  annotate("text", x = 5,  y = 95000, label = c(tests$p.adj.signif)[[4]]) +
+  annotate("text", x = 6,  y = 95000, label = c(tests$p.adj.signif)[[5]]) +
+  annotate("text", x = 7,  y = 95000, label = c(tests$p.adj.signif)[[6]]) +
+  scale_y_continuous(labels = scales::comma,
+                     limits = c(1, 100000)) +
   labs(title = "Heterozygosity in yeast populations",
-       x = "Populations",
-       y = "log10 heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
+       x = "Clade / Niche",
+       y = "# heterozygous\npositions") +
+  theme(title = element_blank(),
+        axis.text.x = element_text(hjust = 0.95, angle = 60, size = 16),
         axis.text.y = element_text(size = 16),
         axis.title = element_text(size = 18),
         legend.position = "none",
@@ -255,309 +347,416 @@ ggplot(kveik, aes(x = Pop, y = HET_CT)) +
         panel.grid.major.y = element_line(colour = "grey75"),
         panel.grid.minor.y = element_blank())
 
+
+
+#------------------------------------------------------------------------------#
+## 2.3 - Heterozigous position - kveiks                                     ####
+
+# t-test
+kveik_comp = kveik_het[which(kveik_het$Pop == "Farmhouse" & kveik_het$Subpopulation != "Beer1"), ]
+kveik_comp$Subpopulation = "All Farmhouse"
+kveik_comp$Geographic.origin = "All Farmhouse"
+#kveik_comp$Culture = "All Farmhouse"
+kveik_comp = rbind(kveik_comp, kveik_het[which(kveik_het$Pop == "Farmhouse" & kveik_het$Subpopulation != "Beer1"), ])
+
+tests_geo = kveik_comp %>% 
+  dplyr::filter(!(ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri", "39R20"))) %>%
+  rstatix::t_test(HET_CT ~ Geographic.origin, ref.group = "All Farmhouse")
+
+tests_geo[6, ] = list("HET_CT", "All Farmhouse", "Russia", 37, 1, 0, 0, 1, 1, "ns")
+
 # plot
-ggplot(kveik, aes(x = Pop, y = HET_CT)) +
-  geom_point(shape = "-", size = 3.5) +
-  geom_boxplot(fill = "grey95", alpha = 0.75, width = 0.25,
-               position = position_nudge(x = -0.2),
-               outlier.colour = NA) +
-  ggdist::stat_halfeye(fill = "grey95", alpha = 0.75, slab_color = "grey45", slab_size = 0.25, 
-                       adjust = 5, justification = -0.05, .width = 0, point_colour = NA) +
-  geom_vline(xintercept = 1.5) +
-  stat_summary(fun.data = stat_box_data, geom = "text", hjust = 0.5, vjust = 0.9) +
-  stat_compare_means(method = "anova", label.y = 0.01) +
-  stat_compare_means(label = "p.signif", method = "t.test", ref.group = "Farmhouse") +
-  scale_y_log10(labels = scales::comma, limits = c(1, 1300000)) +
-  labs(title = "Heterozygosity in yeast populations",
-       x = "Populations",
-       y = "log10 heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title = element_text(size = 18),
+kveik_comp = kveik_het[which(kveik_het$Pop == "Farmhouse" & kveik_het$Subpopulation != "Beer1"), ]
+
+p_het2 = ggplot(kveik_comp, aes(x = Geographic.origin, y = HET_CT)) +
+  geom_violin(aes(fill = Geographic.origin), alpha = 0.2,
+              scale = "width",
+              trim = FALSE) +
+  geom_point(data = ~dplyr::filter(.x, !(ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri"))),
+             aes(fill = Geographic.origin),
+             position = position_jitter(width = 0.25),
+             shape = 21, 
+             alpha = 0.375,
+             size = 3) +
+  geom_point(data = ~dplyr::filter(.x, ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri")),
+             aes(fill = "red"),
+             position = position_jitter(width = 0.25),
+             shape = 21, 
+             alpha = 0.375,
+             size = 3) +
+  stat_summary(fun = "median", colour = "red", geom = "crossbar") +
+  geom_text(data = ~dplyr::filter(.x, ID %in% c("40R20", "40R1", "40R14", "38R16", "k7R25", "Muri")),
+            aes(label = as.character(ID)),
+            hjust = 0, vjust = 0, color = "red") +
+  scale_fill_manual(values = c("green", "#FFDA00", "orange", "#0571B0", "red", "#A6611A", "#92C5DE")) +
+  scale_x_discrete(labels = scales::label_wrap(10)) +
+  scale_y_continuous(labels = scales::comma,
+                     limits = c(1, 100000)) +
+  ggpubr::stat_compare_means(method = "anova", label.x = 1.1, label.y = 98000) +
+  annotate("text", x = 1,  y = 95000, label = c(tests_geo$p.adj.signif)[[1]]) +
+  annotate("text", x = 2,  y = 95000, label = c(tests_geo$p.adj.signif)[[2]]) +
+  annotate("text", x = 3,  y = 95000, label = c(tests_geo$p.adj.signif)[[3]]) +
+  annotate("text", x = 4,  y = 95000, label = c(tests_geo$p.adj.signif)[[4]]) +
+  annotate("text", x = 5,  y = 95000, label = c(tests_geo$p.adj.signif)[[5]]) +
+  annotate("text", x = 6,  y = 95000, label = c(tests_geo$p.adj.signif)[[6]]) +
+  labs(x = "Geographic origin") +
+  theme(title = element_blank(),
+        axis.text.x = element_text(hjust = 0.95, angle = 60, size = 16),
+        axis.text.y = element_blank(),
+        axis.title.x = element_text(size = 18),
+        axis.title.y = element_blank(),
         legend.position = "none",
         panel.background = element_rect(colour = "black", fill = NA),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_line(colour = "grey75"),
         panel.grid.minor.y = element_blank())
+
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 ```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 4
+#| fig.cap: '[Figure 1: Boxplot depicting total number of heterozygous sites per genetic clade (right) and geographical origin of farmhouse yeast (right).]{style="color: steelblue;"}'
 
-
-# load libraries
-library("dplyr")
-library("ggplot2")
-library("ggpubr")
-library("grid")
-library("gridExtra")
-library("plyr")
-library("RColorBrewer")
-
-
-# change working directory
-setwd("/home/Andrea/Desktop/kveiks/")
-
-
-# import dataset
-kveik = read.delim("all_plusKV.heterozygous.positions.txt", header = TRUE)
-
-
-# sort 
-kveik$Pop = factor(
-  kveik$Pop,
-  levels = c("Farmhouse", "Asian", "Beer1", "Beer2", "Bread",
-             "Mixed", "Mosaic", "Sake", "Wild", "Wine")
+ggpubr::ggarrange(
+  p_het, p_het2,
+  ncol = 2, nrow = 1,
+  align = "h",
+  widths = c(1, 0.5)
 )
-kveik$Pop = relevel(kveik$Pop, "Farmhouse")
 
-# t-test
-tests = ggpubr::compare_means(HET_CT ~ Pop, data = kveik,
-                              #ref.group = "Farmhouse",
-                              method = "anova")
+```
 
-# prepare count labels
-stat_box_data <- function(y) {
-  return( 
+
+
+## Loss Of Heterozygosity (LOH)
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 18
+#| fig.cap: '[Figure 2: Loss Of Heterozygotisy events across the genomes of the sequenced Farmhouse yeasts.]{style="color: steelblue;"}'
+
+# import LOH matrix
+LOH_table_10kb = read.delim("./data/p01-03/Vikings.LOH.10kb_win.tab", header = FALSE)
+colnames(LOH_table_10kb) = c("strain", "chr", "start", "stop", "n_var")
+
+# format
+LOH_table_10kb$chr = factor(
+  LOH_table_10kb$chr,
+  levels = c("I", "II", "III", "IV", "V", "VI", "VII", "VIII",
+             "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI")
+)
+
+# relevel
+LOH_table_10kb = LOH_table_10kb[which(LOH_table_10kb$strain %in% c(
+  "41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1",
+  "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+  "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+  "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+  "42R20", "42R31", "45P5", "45R11", 
+  "46R12", "46R37", "16R23", "16R37",
+  "39R20", "40R14", "40R1", "40R20",
+  "Granvin1", "Voss1"
+)), ]
+
+LOH_table_10kb$strain = factor(
+  LOH_table_10kb$strain,
+  levels = c("41R10", "21R38", "9R40", "17P5", "SortdalEbbe1", "3R11", "21P1", "41R15", "Hornindal1",
+             "Hornindal2", "1R16", "2R23", "8R19", "Muri",
+             "k7R25", "38R16", "44R32", "19R18", "44R7", "6R15", "Laerdal2", "7R7", "14R6", "14R30",
+             "27R17", "28P1", "28P6", "28R21", "28R33", "28R8",
+             "42R20", "42R31", "45P5", "45R11", 
+             "46R12", "46R37", "16R23", "16R37",
+             "39R20", "40R14", "40R1", "40R20",
+             "Granvin1", "Voss1")
+)
+
+
+# import coverage dataset
+file_list = list.files(
+  path = "./data/p01-03/01_start_bed/",
+  pattern = "1kb_cov.bed",
+  full.names = TRUE,
+  ignore.case = FALSE
+)
+
+# declare average df
+average_table = data.frame(
+  strain = character(),
+  average = double(),
+  max = double(),
+  sd = double(),
+  stringsAsFactors = FALSE
+)
+
+# declare cov df
+coverage_table = data.frame(
+  strain = character(),
+  chr = character(),
+  start = integer(),
+  stop = integer(),
+  cov = double(),
+  stringsAsFactors = FALSE
+)
+
+# import coverage counts per strain
+for(file_to_import in file_list){
+  
+  tmp_table = read.delim(file_to_import, header = FALSE)
+  
+  colnames(tmp_table) = c("strain", "chr", "start", "stop", "cov")
+  tmp_table = tmp_table[which(tmp_table$chr != "ref|NC_001224|"), ]
+  
+  strain_name = stringr::str_remove(file_to_import, ".align.sort.1kb_cov.bed")
+  strain_name = stringr::str_remove(strain_name, "./data/p01-03/01_start_bed//")
+  average_table = rbind(
+    average_table,
     data.frame(
-      y = 6,
-      #sign =tests1[which(tests1$group2 == y),]$p.signif,
-      label = paste('n =', length(y))
+      "strain" = strain_name,
+      "average" = mean(tmp_table$cov),
+      "max" = max(tmp_table$cov),
+      "sd" = sd(tmp_table$cov)
     )
   )
+  
+  tmp_table = tmp_table[which(tmp_table$cov <= mean(tmp_table$cov)+sd(tmp_table$cov)), ]
+  tmp_table$stop_y = NA
+  
+  coverage_table = rbind(coverage_table, tmp_table)
+  
+  coverage_table[which(coverage_table$strain == strain_name), "stop_y"] = max(coverage_table$cov)
+  
 }
 
-# open printing file
-pdf(file = "all_plusKV.heterozygous.positions.pdf",
-    width = 12,
-    height = 8)
 
-# plot
-ggplot(kveik, aes(x = Pop, y = HET_CT)) +
-  geom_point(position = position_jitter(width = 0.25),
-             shape = 21, fill = "grey50", 
-             alpha = 0.25) +
-  geom_boxplot(fill = NA, outlier.shape = NA) +
-  geom_vline(xintercept = 1.5) +
-  geom_vline(xintercept = 2.5, color = "grey75") +
-  geom_vline(xintercept = 3.5, color = "grey75") +
-  geom_vline(xintercept = 4.5, color = "grey75") +
-  geom_vline(xintercept = 5.5, color = "grey75") +
-  geom_vline(xintercept = 6.5, color = "grey75") +
-  geom_vline(xintercept = 7.5, color = "grey75") +
-  geom_vline(xintercept = 8.5, color = "grey75") +
-  geom_vline(xintercept = 9.5, color = "grey75") +
-  geom_vline(xintercept = 10.5, color = "grey75") +
-  geom_vline(xintercept = 11.5, color = "grey75") +
-  geom_vline(xintercept = 12.5, color = "grey75") +
-  stat_summary(fun.data = stat_box_data, geom = "text",
-               hjust = 0.5, vjust = 0.9) +
-  annotate("text", x = 2,  y = 1290000, label = c(tests$p.signif)[[1]]) +
-  annotate("text", x = 3,  y = 1290000, label = c(tests$p.signif)[[2]]) +
-  annotate("text", x = 4,  y = 1290000, label = c(tests$p.signif)[[3]]) +
-  annotate("text", x = 5,  y = 1290000, label = c(tests$p.signif)[[4]]) +
-  annotate("text", x = 6,  y = 1290000, label = c(tests$p.signif)[[5]]) +
-  annotate("text", x = 7,  y = 1290000, label = c(tests$p.signif)[[6]]) +
-  annotate("text", x = 8,  y = 1290000, label = c(tests$p.signif)[[7]]) +
-  annotate("text", x = 9,  y = 1290000, label = c(tests$p.signif)[[8]]) +
-  annotate("text", x = 10,  y = 1290000, label = c(tests$p.signif)[[9]]) +
-  scale_y_log10(labels = scales::comma,
-                limits = c(1, 1300000)) +
-  labs(title = "Heterozygosity in yeast populations",
-       x = "Populations",
-       y = "log10 heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title = element_text(size = 18),
-        legend.position = "none",
-        panel.background = element_rect(colour = "black", fill = NA),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "grey75"),
-        panel.grid.minor.y = element_blank())
-
-
-# plot
-ggplot(kveik, aes(x = Pop, y = HET_CT)) +
-  geom_point(shape = "-", size = 3.5) +
-  geom_boxplot(fill = "grey95", alpha = 0.75, width = 0.25,
-               position = position_nudge(x = -0.2),
-               outlier.colour = NA) +
-  ggdist::stat_halfeye(fill = "grey95", alpha = 0.75, slab_color = "grey45", slab_size = 0.25, 
-                       adjust = 5, justification = -0.05, .width = 0, point_colour = NA) +
-  geom_vline(xintercept = 1.5) +
-  stat_summary(fun.data = stat_box_data, geom = "text",
-               hjust = 0.5, vjust = 0.9) +
-  annotate("text", x = 2,  y = 1290000, label = c(tests$p.signif)[[1]]) +
-  annotate("text", x = 3,  y = 1290000, label = c(tests$p.signif)[[2]]) +
-  annotate("text", x = 4,  y = 1290000, label = c(tests$p.signif)[[3]]) +
-  annotate("text", x = 5,  y = 1290000, label = c(tests$p.signif)[[4]]) +
-  annotate("text", x = 6,  y = 1290000, label = c(tests$p.signif)[[5]]) +
-  annotate("text", x = 7,  y = 1290000, label = c(tests$p.signif)[[6]]) +
-  annotate("text", x = 8,  y = 1290000, label = c(tests$p.signif)[[7]]) +
-  annotate("text", x = 9,  y = 1290000, label = c(tests$p.signif)[[8]]) +
-  annotate("text", x = 10,  y = 1290000, label = c(tests$p.signif)[[9]]) +
-  scale_y_log10(labels = scales::comma,
-                limits = c(1, 1300000)) +
-  labs(title = "Heterozygosity in yeast populations",
-       x = "Populations",
-       y = "log10 heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title = element_text(size = 18),
-        legend.position = "none",
-        panel.background = element_rect(colour = "black", fill = NA),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "grey75"),
-        panel.grid.minor.y = element_blank())
-
-
-
-########## GRAPHS WITHOUT STAT TAHT IS BROKEN
-########## SEE https://github.com/kassambara/ggpubr/issues/572
-
-# plot
-ggplot(kveik, aes(x = Pop, y = HET_CT)) +
-  geom_point(aes(fill = Pop),
-             position = position_jitter(width = 0.25),
-             shape = 21, 
-             alpha = 0.375,
-             size = 3) +
-  geom_boxplot(fill = NA, outlier.shape = NA) +
-  geom_vline(xintercept = 1.5) +
-  scale_fill_manual(values = c("#20E0E3", "#DD4C65", "#61CF4F", "#2998E5", "#F3C200",
-                               "#CC09BB", "#050505", "#911EB4", "#F032E6", "#BCF60C")) +
-  stat_summary(fun.data = stat_box_data, geom = "text",
-               hjust = 0.5, vjust = -50) +
-  scale_y_continuous(labels = scales::comma,
-                     limits = c(1, 100000)) +
-  labs(title = "Heterozygosity in yeast populations",
-       x = "Populations",
-       y = "# heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title = element_text(size = 18),
-        legend.position = "none",
-        panel.background = element_rect(colour = "black", fill = NA),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "grey75"),
-        panel.grid.minor.y = element_blank())
-
-
-
-
-# plot
-kveik_comp = kveik[which(kveik$Pop == "Farmhouse" & kveik$Subpopulation != "Beer1"), ]
-kveik_comp$Subpopulation = "All Farmhouse"
-kveik_comp = rbind(kveik_comp, kveik[which(kveik$Pop == "Farmhouse" & kveik$Subpopulation != "Beer1"), ])
-
-ggplot(kveik_comp, aes(x = Subpopulation, y = HET_CT)) +
-  geom_point(aes(fill = Subpopulation),
-             position = position_jitter(width = 0.25),
-             shape = 21, 
-             alpha = 0.375,
-             size = 3) +
-  geom_boxplot(fill = NA, outlier.shape = NA) +
-  geom_vline(xintercept = 1.5) +
-  scale_fill_manual(values = c("#20E0E3", "#FFDA00", "#0571B0", "#92C5DE", "#A6611A", "#909090")) +
-  scale_y_continuous(labels = scales::comma,
-                limits = c(1, 100000)) +
-  stat_summary(fun.data = stat_box_data, geom = "text",
-               hjust = 0.5, vjust = -50) +
-  labs(title = "Heterozygosity in Farmhouse yeasts subpopulations",
-       x = "Subpopulations",
-       y = "# heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title = element_text(size = 18),
-        legend.position = "none",
-        panel.background = element_rect(colour = "black", fill = NA),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "grey75"),
-        panel.grid.minor.y = element_blank())
-
-#
-kveik_comp2 = kveik[which(kveik$Pop == "Farmhouse" & kveik$Subpopulation != "Beer1"), ]
-kveik_comp2$Subpopulation = "All Farmhouse"
-kveik_comp2 = rbind(kveik_comp2, kveik)
-kveik_comp2$Subpopulation = factor(
-  kveik_comp2$Subpopulation,
-  levels = c("All Farmhouse",
-             "Baltic", "Gong", "Kveik", "Russian", "Wild",
-             "Beer1", "Beer2", "Mixed", "Mosaic", "Others")
+# format
+coverage_table$chr = factor(
+  coverage_table$chr,
+  levels = c("I", "II", "III", "IV", "V", "VI", "VII", "VIII",
+             "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI")
 )
 
-ggplot(kveik_comp2, aes(x = Subpopulation, y = HET_CT)) +
-  geom_point(aes(fill = Subpopulation),
-             position = position_jitter(width = 0.25),
-             shape = 21, 
-             alpha = 0.375,
-             size = 3) +
-  geom_boxplot(fill = NA, outlier.shape = NA) +
-  geom_vline(xintercept = 1.5) +
-  geom_vline(xintercept = 6.5) +
-  scale_y_continuous(labels = scales::comma,
-                     limits = c(1, 100000)) +
-  scale_fill_manual(values = c("#20E0E3",
-                               "#FFDA00", "#0571B0", "#92C5DE", "#A6611A", "#909090",
-                               "#61CF4F", "#CC09BB", "#050505", "salmon")) +
-  stat_summary(fun.data = stat_box_data, geom = "text",
-               hjust = 0.5, vjust = -50) +
-  labs(title = "Heterozygosity in Farmhouse yeasts subpopulations",
-       x = "Subpopulations",
-       y = "# heterozygous positions") +
-  theme(plot.title = element_text(hjust = 0.5, size = 24),
-        axis.text.x = element_text(hjust = 0.95, angle = 30, size = 16),
-        axis.text.y = element_text(size = 16),
-        axis.title = element_text(size = 18),
+# plot 
+p_LOH1 = ggplot() +
+  geom_rect(data = subset(
+    coverage_table,
+    chr %in% c("I", "III", "V", "VII", "IX", "XI", "XIII", "XV")),
+    fill = "grey95",
+    xmin = 0, xmax = max(coverage_table$stop),
+    ymin = 0, ymax = max(coverage_table$cov),
+    alpha = 0.3) +
+  geom_hline(data = average_table, 
+             aes(yintercept = average),
+             color = "firebrick") +
+  geom_line(data = LOH_table_10kb,
+            aes(x = start, y = n_var),
+            color = "royalblue4",
+            linewidth = 0.25) +
+  scale_fill_manual(values = c("steelblue", "white", "salmon", "grey95")) +
+  scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
+  #scale_y_continuous(limits = c(0, 350)) +
+  coord_cartesian(expand = FALSE) +
+  annotation_custom(grid::linesGrob(y = c(0, 0), gp = grid::gpar(lwd = 3))) +
+  facet_grid2(strain ~ chr,
+              scales = "free",
+              space = "free_x",
+              switch = "both",
+              strip = strip_themed(
+                background_y = elem_list_rect(fill = c(
+                  "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0",
+                  "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0", "#0571B0",
+                  "#92C5DE", "#92C5DE",
+                  "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE", "#92C5DE",
+                  "#008470", "#008470", "#008470", "#008470", "#008470", "#008470", "#FFDA00", "#FFDA00",
+                  "#FFDA00", "#FFDA00", "#FBA01D", "#FBA01D", "#FBA01D", "#FBA01D", "#A6611A", "#A6611A",
+                  "#A6611A", "#A6611A", "#51CD34", "#51CD34"
+                ))
+              )) +
+  theme(plot.title = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
         legend.position = "none",
-        panel.background = element_rect(colour = "black", fill = NA),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "grey75"),
-        panel.grid.minor.y = element_blank())
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        panel.spacing = unit(0, "lines"),
+        strip.background = element_blank(),
+        strip.text.x = element_text(size = 8),
+        strip.text.y.left = element_text(size = 8, angle = 0, face = "bold"))
 
-
+p_LOH1
 
 ```
 
 
 
 
+## Search for signature of Culture #28 hybridization
 
 
-## LOH
+We look for variants in common between strains
+
+
+```{bash, eval=FALSE}
+# split vcf in samples
+for sample in `bcftools query -l kveiks.fltr.CE-Norway.vcf`; do
+  bcftools view -c1 -Oz -s $sample -o kveiks.fltr.CE-Norway.$sample.vcf kveiks.fltr.CE-Norway.vcf &
+done
+
+# normalize and get positions Culture #28
+for sample in 28P1 28P6 28R21 28R33 28R8; do
+  bcftools norm -m-any kveiks.fltr.CE-Norway.$sample.vcf \
+  | bcftools norm --check-ref w -f ../00_ref_genomes/Scer.fa \
+  | bcftools annotate -Ob -x 'ID' -I +'%CHROM:%POS:%REF:%ALT' \
+  > kveiks.fltr.CE-Norway.$sample.bcf ;
+  bcftools index kveiks.fltr.CE-Norway.$sample.bcf;
+  bcftools view kveiks.fltr.CE-Norway.$sample.bcf \
+  | cut -f3 | grep -v "^##" | grep -v "^ID" \
+  > kveiks.fltr.CE-Norway.$sample.lst
+done
+
+# get Culture #16 positions
+for sample in 16R23 16R37 46R12 46R37; do
+  bcftools norm -m-any kveiks.fltr.Lithuania.$sample.vcf \
+  | bcftools norm --check-ref w -f ../00_ref_genomes/Scer.fa \
+  | bcftools annotate -Ob -x 'ID' -I +'%CHROM:%POS:%REF:%ALT' \
+  > kveiks.fltr.Lithuania.$sample.bcf ;
+  bcftools index kveiks.fltr.Lithuania.$sample.bcf;
+  bcftools view kveiks.fltr.Lithuania.$sample.bcf \
+  | cut -f3 | grep -v "^##" | grep -v "^ID" \
+  > kveiks.fltr.Lithuania.$sample.lst
+done
+
+```
 
 
 
-## CULTURE 28 HYBRID
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 4
+#| fig.cap: '[Figure 3: Culture #28 CE-Norway hybridization event.]{style="color: steelblue;"}'
 
+
+list_28R31 = read.delim("./data/p01-03/kveiks.fltr.CE-Norway.28P1.lst", header = FALSE)
+list_28R1 = read.delim("./data/p01-03/kveiks.fltr.CE-Norway.28P6.lst", header = FALSE)
+list_28R21 = read.delim("./data/p01-03/kveiks.fltr.CE-Norway.28R21.lst", header = FALSE)
+list_28R33 = read.delim("./data/p01-03/kveiks.fltr.CE-Norway.28R33.lst", header = FALSE)
+list_28R8 = read.delim("./data/p01-03/kveiks.fltr.CE-Norway.28R8.lst", header = FALSE)
+
+UpSetR::upset(
+  UpSetR::fromList(
+    list(
+      `28R1` = list_28R1$V1,
+       `28R8` = list_28R8$V1,
+       `28R21` = list_28R21$V1,
+       `28R31` = list_28R31$V1,
+       `28R33` = list_28R33$V1)
+  ),
+  order.by = "freq",
+  keep.order = TRUE
+)
+
+```
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 4
+#| fig.cap: '[Figure 4: Culture #16 Lithuania hybridization event.]{style="color: steelblue;"}'
+
+list_16R23 = read.delim("./data/p01-03/kveiks.fltr.Lithuania.16R23.lst", header = FALSE)
+list_16R37 = read.delim("./data/p01-03/kveiks.fltr.Lithuania.16R37.lst", header = FALSE)
+list_46R12 = read.delim("./data/p01-03/kveiks.fltr.Lithuania.46R12.lst", header = FALSE)
+list_46R37 = read.delim("./data/p01-03/kveiks.fltr.Lithuania.46R37.lst", header = FALSE)
+
+UpSetR::upset(
+  UpSetR::fromList(
+    list(
+      `16R23` = list_16R23$V1,
+      `16R37` = list_16R37$V1,
+      `46R12` = list_46R12$V1,
+      `46R37` = list_46R37$V1)
+  ),
+  order.by = "freq",
+  keep.order = TRUE
+)
+
+```
+
+
+
+Let's try to phase Culture 28 with the predict correct parents and with the wrong parents. If the phased genome with the correct parents have significant more phased SNPs than the one with the wrong parents, maybe we can infer that Culture #28 is indeed an hybrid.
+
+correct parents
+28R21	28P6	28R33
+
+wrong parents
+28R21	28P1	28R8
+28R21	28P1	27R17
+28R21	28R8	27R17
+28R21	28P6	27R17
+
+```{bash, eval=FALSE}
+
+DB=~/00_Brigida_starting_files/variants/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa
+
+# phase with Whatshap
+whatshap phase -o phased.vcf.gz --reference=$DB culture28.vcf.gz 28R21_28P6_28R33.align.bam
+whatshap phase -o phased.wrongparents1.vcf.gz --reference=$DB culture28.wrongparents1.vcf.gz 28R21_28P1_28R8.align.bam
+whatshap phase -o phased.wrongparents2.vcf.gz --reference=$DB culture28.wrongparents2.vcf.gz 28R21_28P1_27R17.align.bam
+whatshap phase -o phased.wrongparents3.vcf.gz --reference=$DB culture28.wrongparents3.vcf.gz 28R21_28R8_27R17.align.bam
+whatshap phase -o phased.wrongparents4.vcf.gz --reference=$DB culture28.wrongparents4.vcf.gz 28R21_28P6_27R17.align.bam
+
+# generate tabular output for plotting
+python3.6 Vikings.culture_phasing_summary.py --input culture28.vcf.gz --name 28R21_28P6_28R33
+python3.6 Vikings.culture_phasing_summary.py --input culture28.wrongparents1.vcf.gz --name 28R21_28P1_28R8
+python3.6 Vikings.culture_phasing_summary.py --input culture28.wrongparents2.vcf.gz --name 28R21_28P1_27R17
+python3.6 Vikings.culture_phasing_summary.py --input culture28.wrongparents3.vcf.gz --name 28R21_28R8_27R17
+python3.6 Vikings.culture_phasing_summary.py --input culture28.wrongparents4.vcf.gz --name 28R21_28P6_27R17
+
+```
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 12
+#| fig.cap: '[Figure 5: Culture #28 Phasing combinations.]{style="color: steelblue;"}'
+
+# import
+phased = read.delim("./data/p01-03/culture28.phasing.txt")
+
+# melt
+phased_melted = reshape2::melt(phased)
+
+# plot
+ggplot(phased_melted, aes(x = variable, y = value)) +
+  geom_bar(aes(fill = variable), color = "grey45", stat = "identity") +
+  geom_text(aes(label = value), vjust = 0) +
+  scale_fill_manual(values = c("firebrick", "steelblue1", "steelblue3", "steelblue4")) +
+  facet_grid(trios ~ chr) +
+  theme_bw() +
+  theme(axis.title = element_blank(),
+        axis.text.y = element_text(size = 16),
+        axis.text.x = element_text(size = 16, angle = 90, hjust = 1, vjust = 0.5),
+        legend.position = "none")
+
+```
 
 
 ## Lessons Learnt {#sec-lesson-learnt-feature-selection}

@@ -40,11 +40,17 @@ book:
           - p01-02-genome-assembly-and-annotation.qmd
           - p01-03-variant-calling.qmd
           - p01-04-copy-number-variants.qmd
-          - p01-05-phylogeny-and-population-structure.qmd
+          #- p01-05-phylogeny-and-population-structure.qmd
           - p01-06-genotype-to-phenotype.qmd
       - part: "Part 2: Publications figures"
-        #chapters:
-        #  - p02-01-Figure1.qmd
+        chapters:
+          - p02-01-Figure1.qmd
+          - p02-02-Figure2.qmd
+          - p02-03-Figure3.qmd
+          - p02-04-Figure4.qmd
+          - p02-05-Figure5.qmd
+          - p02-06-Figure6.qmd
+          
 
 format:
     html:

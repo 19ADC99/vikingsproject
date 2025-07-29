@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -160,21 +194,58 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./p01-05-phylogeny-and-population-structure.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">p01-05-phylogeny-and-population-structure.html</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./p01-06-genotype-to-phenotype.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GENOME DOMESTICATION</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GENOME DOMESTICATION</span></span></a>
   </div>
 </li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Part 2: Publications figures</span></span>
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part 2: Publications figures</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-01-Figure1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Figure 1</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-02-Figure2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Figure 2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-03-Figure3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Figure 3</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-04-Figure4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Figure 4</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-05-Figure5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Figure 5</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./p02-06-Figure6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">p02-06-Figure6.html</span></span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -187,13 +258,17 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#on-this-page" id="toc-on-this-page" class="nav-link active" data-scroll-target="#on-this-page"><span class="header-section-number">3.1</span> On this page</a></li>
-  <li><a href="#de-novo-assembly" id="toc-de-novo-assembly" class="nav-link" data-scroll-target="#de-novo-assembly"><span class="header-section-number">3.2</span> De novo assembly</a>
+  <li><a href="#variant-calling" id="toc-variant-calling" class="nav-link" data-scroll-target="#variant-calling"><span class="header-section-number">3.2</span> Variant Calling</a>
   <ul>
-  <li><a href="#loh" id="toc-loh" class="nav-link" data-scroll-target="#loh"><span class="header-section-number">3.2.1</span> LOH</a></li>
-  <li><a href="#culture-28-hybrid" id="toc-culture-28-hybrid" class="nav-link" data-scroll-target="#culture-28-hybrid"><span class="header-section-number">3.2.2</span> CULTURE 28 HYBRID</a></li>
+  <li><a href="#reads-alignment" id="toc-reads-alignment" class="nav-link" data-scroll-target="#reads-alignment"><span class="header-section-number">3.2.1</span> Reads alignment</a></li>
+  <li><a href="#variant-calling-1" id="toc-variant-calling-1" class="nav-link" data-scroll-target="#variant-calling-1"><span class="header-section-number">3.2.2</span> Variant Calling</a></li>
+  <li><a href="#variant-filtering-and-convert-to-plink-bed-input" id="toc-variant-filtering-and-convert-to-plink-bed-input" class="nav-link" data-scroll-target="#variant-filtering-and-convert-to-plink-bed-input"><span class="header-section-number">3.2.3</span> Variant filtering and convert to plink bed input</a></li>
   </ul></li>
-  <li><a href="#sec-lesson-learnt-feature-selection" id="toc-sec-lesson-learnt-feature-selection" class="nav-link" data-scroll-target="#sec-lesson-learnt-feature-selection"><span class="header-section-number">3.3</span> Lessons Learnt</a></li>
-  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">3.4</span> Session Information</a></li>
+  <li><a href="#farmhouse-yeasts-heterozygosity" id="toc-farmhouse-yeasts-heterozygosity" class="nav-link" data-scroll-target="#farmhouse-yeasts-heterozygosity"><span class="header-section-number">3.3</span> Farmhouse yeasts heterozygosity</a></li>
+  <li><a href="#loss-of-heterozygosity-loh" id="toc-loss-of-heterozygosity-loh" class="nav-link" data-scroll-target="#loss-of-heterozygosity-loh"><span class="header-section-number">3.4</span> Loss Of Heterozygosity (LOH)</a></li>
+  <li><a href="#search-for-signature-of-culture-28-hybridization" id="toc-search-for-signature-of-culture-28-hybridization" class="nav-link" data-scroll-target="#search-for-signature-of-culture-28-hybridization"><span class="header-section-number">3.5</span> Search for signature of Culture #28 hybridization</a></li>
+  <li><a href="#sec-lesson-learnt-feature-selection" id="toc-sec-lesson-learnt-feature-selection" class="nav-link" data-scroll-target="#sec-lesson-learnt-feature-selection"><span class="header-section-number">3.6</span> Lessons Learnt</a></li>
+  <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">3.7</span> Session Information</a></li>
   </ul>
 </nav>
     </div>
@@ -244,24 +319,692 @@ div.sourceCode {
 <li>Here</li>
 </ul>
 </section>
-<section id="de-novo-assembly" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="de-novo-assembly"><span class="header-section-number">3.2</span> De novo assembly</h2>
-<section id="loh" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="loh"><span class="header-section-number">3.2.1</span> LOH</h3>
+<section id="variant-calling" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="variant-calling"><span class="header-section-number">3.2</span> Variant Calling</h2>
+<p>We will now analyse the DNA variants between the sequenced farmhouse yeasts and the reference <em>S. cerevisiae</em> lab strain S288C. Genetic variants will be combined with information from the 151 yeast strains sequenced in Gallone et al 2019 used to reconstruct (kveiks) population structures, levels of heterozygosities, putative regions with Loss Of Heterozygosity (LOH) and the eventual genes affected by LOH.</p>
+<section id="reads-alignment" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="reads-alignment"><span class="header-section-number">3.2.1</span> Reads alignment</h3>
+<p>Here the steps are the standard I always do:</p>
+<ul>
+<li>align reads to reference genome with bwa mem;</li>
+<li>sort the bam file by read position;</li>
+<li>mark reads duplicates with what used to be picard tools;</li>
+<li>assign read groups, so that each sequencing library is assigned to the right sample (necessary for when I merge the vcf files)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## align reads to reference genome S288C</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># align reads</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="va">DB</span><span class="op">=</span>~/00_Brigida_starting_files/variants/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa</span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a></span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="ex">bwa</span> mem <span class="at">-t</span> 72 <span class="dt">\</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>    <span class="at">-K</span> 100000000 <span class="dt">\</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>    <span class="va">$DB</span> <span class="dt">\</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>    ../00_trim_reads/<span class="va">$line</span>.R1.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>    ../00_trim_reads/<span class="va">$line</span>.R2.tr.fq.gz <span class="dt">\</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>    <span class="op">&gt;</span> <span class="va">$line</span>.S288C.align.sam<span class="kw">;</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>    </span>
+<span id="cb1-14"><a href="#cb1-14"></a>  <span class="ex">samtools</span> view <span class="dt">\</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>    <span class="at">-@</span> 72 <span class="dt">\</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a>    <span class="at">-Sb</span> <span class="dt">\</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>    <span class="va">$line</span>.S288C.align.sam <span class="dt">\</span></span>
+<span id="cb1-18"><a href="#cb1-18"></a>    <span class="op">&gt;</span> <span class="va">$line</span>.S288C.align.bam<span class="kw">;</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a>  </span>
+<span id="cb1-20"><a href="#cb1-20"></a>  <span class="ex">samtools</span> sort <span class="dt">\</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>    <span class="at">-@</span> 72 <span class="dt">\</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a>    <span class="va">$line</span>.S288C.align.bam <span class="va">$line</span>.S288C.align.sort<span class="kw">;</span></span>
+<span id="cb1-23"><a href="#cb1-23"></a>  </span>
+<span id="cb1-24"><a href="#cb1-24"></a>  <span class="fu">rm</span> <span class="va">$line</span>.S288C.align.sam <span class="va">$line</span>.S288C.align.bam<span class="kw">;</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="cf">done</span> <span class="op">&lt;</span> ../sample.lst</span>
+<span id="cb1-27"><a href="#cb1-27"></a></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="co">## mark duplicates</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="cf">for</span> file <span class="kw">in</span> <span class="pp">*</span>.bam<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>  <span class="ex">~/bin/gatk-4.0.11.0/gatk</span> MarkDuplicates <span class="dt">\</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a>    <span class="at">--INPUT</span><span class="op">=</span><span class="va">$file</span> <span class="dt">\</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>    <span class="at">--OUTPUT</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .bam<span class="va">)</span>.md.bam <span class="dt">\</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>    <span class="at">--METRICS_FILE</span><span class="op">=</span><span class="va">$(</span><span class="fu">basename</span> <span class="va">$file</span> .bam<span class="va">)</span>.md.log <span class="dt">\</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a>    <span class="at">--CREATE_INDEX</span><span class="op">=</span>true<span class="kw">;</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="cf">done</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="co"># assign read group</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a><span class="cf">while</span> <span class="bu">read</span> <span class="va">line</span><span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb1-39"><a href="#cb1-39"></a>  <span class="ex">~/bin/gatk-4.0.11.0/gatk</span> AddOrReplaceReadGroups <span class="dt">\</span></span>
+<span id="cb1-40"><a href="#cb1-40"></a>    <span class="at">--INPUT</span> <span class="va">$line</span>.S288C.align.sort.md.bam <span class="dt">\</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a>    <span class="at">--OUTPUT</span> <span class="va">$line</span>.S288C.align.sort.md.r.bam <span class="dt">\</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a>    <span class="at">--RGID</span> <span class="va">$line</span> <span class="dt">\</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a>    <span class="at">--RGPL</span> <span class="va">$line</span> <span class="dt">\</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>    <span class="at">--RGLB</span> <span class="va">$line</span> <span class="dt">\</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a>    <span class="at">--RGPU</span> <span class="va">$line</span> <span class="dt">\</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a>    <span class="at">--RGSM</span> <span class="va">$line</span><span class="kw">;</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="cf">done</span> <span class="op">&lt;</span> ../sample.lst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="culture-28-hybrid" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="culture-28-hybrid"><span class="header-section-number">3.2.2</span> CULTURE 28 HYBRID</h3>
+<section id="variant-calling-1" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="variant-calling-1"><span class="header-section-number">3.2.2</span> Variant Calling</h3>
+<p>I run HaplotypeCaller in gVCF mode, sample ploidy 2 and calling all the kveiks positions at the same time to reduce the number of false positives.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">## run haplotype caller</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="va">DB</span><span class="op">=</span>~/00_Brigida_starting_files/variants/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa</span>
+<span id="cb2-3"><a href="#cb2-3"></a></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="cf">for</span> i <span class="kw">in</span> chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="ex">java</span> <span class="at">-Xmx8g</span> <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="at">-jar</span> ~/bin/GenomeAnalysisTK-3.3-0-g37228af/GenomeAnalysisTK.jar <span class="dt">\</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>    <span class="at">--logging_level</span> INFO <span class="dt">\</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>    <span class="at">--num_threads</span> 4 <span class="dt">\</span></span>
+<span id="cb2-9"><a href="#cb2-9"></a>    <span class="at">--analysis_type</span> UnifiedGenotyper <span class="dt">\</span></span>
+<span id="cb2-10"><a href="#cb2-10"></a>    <span class="at">--reference_sequence</span> <span class="va">$DB</span> <span class="dt">\</span></span>
+<span id="cb2-11"><a href="#cb2-11"></a>    <span class="at">-I</span> bam_files.list <span class="dt">\</span></span>
+<span id="cb2-12"><a href="#cb2-12"></a>    <span class="at">-o</span> S288C.variants.<span class="va">$i</span>.gvcf <span class="dt">\</span></span>
+<span id="cb2-13"><a href="#cb2-13"></a>    <span class="at">--intervals</span> Saccharomyces_cerevisiae.EF4.73.dna.chromosome.<span class="va">$i</span>.interval_list <span class="dt">\</span></span>
+<span id="cb2-14"><a href="#cb2-14"></a>    <span class="at">--standard_min_confidence_threshold_for_calling</span> 20 <span class="dt">\</span></span>
+<span id="cb2-15"><a href="#cb2-15"></a>    <span class="at">-stand_emit_conf</span> 30.0 <span class="dt">\</span></span>
+<span id="cb2-16"><a href="#cb2-16"></a>    <span class="at">--min_base_quality_score</span> 20 <span class="dt">\</span></span>
+<span id="cb2-17"><a href="#cb2-17"></a>    <span class="at">-glm</span> BOTH <span class="dt">\</span></span>
+<span id="cb2-18"><a href="#cb2-18"></a>    <span class="at">--sample_ploidy</span> 2 <span class="dt">\</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a>    <span class="at">--validation_strictness</span> SILENT <span class="dt">\</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>    <span class="at">--output_mode</span> EMIT_ALL_SITES <span class="kw">&amp;</span></span>
+<span id="cb2-21"><a href="#cb2-21"></a><span class="cf">done</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a></span>
+<span id="cb2-23"><a href="#cb2-23"></a><span class="co"># merge kveiks with with brigida's chromosomes</span></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="cf">for</span> i <span class="kw">in</span> chr1 chr2 chr3 chr4 chr5 chr6 chr7 chr8 chr9 chr10 chr11 chr12 chr13 chr14 chr15 chr16<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a>  <span class="ex">bcftools</span> merge <span class="dt">\</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a>    <span class="at">--threads</span> 4 <span class="dt">\</span></span>
+<span id="cb2-27"><a href="#cb2-27"></a>    <span class="at">--output-type</span> z <span class="dt">\</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a>    <span class="at">--output</span> all_plusKV.<span class="va">$i</span>.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a>    kveiks.S288C.variants.<span class="va">$i</span>.gvcf.gz <span class="dt">\</span></span>
+<span id="cb2-30"><a href="#cb2-30"></a>    ../03_Bri_chr/Scer.<span class="va">$i</span>.raw.vcf.gz <span class="kw">&amp;</span></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="cf">done</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="co"># merge all chromosomes together</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a><span class="ex">bcftools</span> concat <span class="dt">\</span></span>
+<span id="cb2-35"><a href="#cb2-35"></a>  all_plusKV.chr1.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a>  all_plusKV.chr2.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a>  all_plusKV.chr3.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-38"><a href="#cb2-38"></a>  all_plusKV.chr4.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-39"><a href="#cb2-39"></a>  all_plusKV.chr5.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a>  all_plusKV.chr6.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a>  all_plusKV.chr7.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-42"><a href="#cb2-42"></a>  all_plusKV.chr8.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a>  all_plusKV.chr9.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-44"><a href="#cb2-44"></a>  all_plusKV.chr10.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-45"><a href="#cb2-45"></a>  all_plusKV.chr11.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a>  all_plusKV.chr12.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-47"><a href="#cb2-47"></a>  all_plusKV.chr13.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-48"><a href="#cb2-48"></a>  all_plusKV.chr14.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-49"><a href="#cb2-49"></a>  all_plusKV.chr15.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-50"><a href="#cb2-50"></a>  all_plusKV.chr16.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a>  <span class="at">--output-type</span> z <span class="dt">\</span></span>
+<span id="cb2-52"><a href="#cb2-52"></a>  <span class="at">--output</span> all_plusKV.vcf.gz <span class="dt">\</span></span>
+<span id="cb2-53"><a href="#cb2-53"></a>  <span class="at">--threads</span> 64</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="variant-filtering-and-convert-to-plink-bed-input" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="variant-filtering-and-convert-to-plink-bed-input"><span class="header-section-number">3.2.3</span> Variant filtering and convert to plink bed input</h3>
+<p>Here I filter for SNPs that are informative for Population Structure analysis. What I do:</p>
+<ul>
+<li>apply hard filters to flag low quality positions;</li>
+<li>select biallelic and high frequency SNPs, SNPs in linkage disequilibrium.</li>
+</ul>
+<p>Here I select biallelic SNPs and filter out minor allele frequency. Then I merge my vcf file with the vcf files from your dataset. After, I just invoke plink for generate the input files for FastStructure</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1"></a><span class="co"># hard filter low quality variants</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="ex">java</span> <span class="at">-jar</span> ~/bin/GenomeAnalysisTK-3.3-0-g37228af/GenomeAnalysisTK.jar <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">--analysis_type</span> VariantFiltration <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">--variant</span> all_plusKV.vcf.gz <span class="dt">\</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">--out</span> all_plusKV.fltr.vcf <span class="dt">\</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">--reference_sequence</span> <span class="va">$DB</span> <span class="dt">\</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">--filterExpression</span> <span class="st">"QD &lt; 2.0"</span> <span class="at">--filterName</span> <span class="st">"QD_Low"</span> <span class="dt">\</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="at">--filterExpression</span> <span class="st">"MQ &lt; 40.0"</span> <span class="at">--filterName</span> <span class="st">"MQ_Low"</span> <span class="dt">\</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="at">--filterExpression</span> <span class="st">"GQ &lt; 30"</span> <span class="at">--filterName</span> <span class="st">"GQ_Low"</span> <span class="dt">\</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="at">--filterExpression</span> <span class="st">"AD &lt; 5"</span> <span class="at">--filterName</span> <span class="st">"AD_Low"</span></span>
+<span id="cb3-11"><a href="#cb3-11"></a></span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="co"># select biallelic loci, filter for MAF and linkage disequilibrium</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="ex">~/bin/plink_linux_x86_64_20181202/plink</span> <span class="dt">\</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>  <span class="at">--make-bed</span> <span class="dt">\</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>  <span class="at">--double-id</span> <span class="dt">\</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>  <span class="at">--allow-extra-chr</span> <span class="dt">\</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a>  <span class="at">--indep-pairwise</span> 50 5 0.5 <span class="dt">\</span></span>
+<span id="cb3-18"><a href="#cb3-18"></a>  <span class="at">--maf</span> 0.05 <span class="dt">\</span></span>
+<span id="cb3-19"><a href="#cb3-19"></a>  <span class="at">--biallelic-only</span> <span class="dt">\</span></span>
+<span id="cb3-20"><a href="#cb3-20"></a>  <span class="at">--geno</span> 0.25 <span class="dt">\</span></span>
+<span id="cb3-21"><a href="#cb3-21"></a>  <span class="at">--vcf</span> all_plusKV.fltr.vcf.gz <span class="dt">\</span></span>
+<span id="cb3-22"><a href="#cb3-22"></a>  <span class="at">--out</span> all_plusKV.fltr.bi</span>
+<span id="cb3-23"><a href="#cb3-23"></a>  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
-<section id="sec-lesson-learnt-feature-selection" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="sec-lesson-learnt-feature-selection"><span class="header-section-number">3.3</span> Lessons Learnt</h2>
+<section id="farmhouse-yeasts-heterozygosity" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="farmhouse-yeasts-heterozygosity"><span class="header-section-number">3.3</span> Farmhouse yeasts heterozygosity</h2>
+<p>Farmhouse yeasts contains a high degree of Heterozygosity, comparable to yeast strains from the “mixed” Clade.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># import dataset</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>kveik_het <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/all_plusKV.heterozygous.positions.txt"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># sort </span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>kveik_het<span class="sc">$</span>Pop <span class="ot">=</span> <span class="fu">factor</span>(kveik_het<span class="sc">$</span>Pop,</span>
+<span id="cb4-6"><a href="#cb4-6"></a>                       <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Farmhouse"</span>, <span class="st">"Asian"</span>, <span class="st">"Beer1"</span>, <span class="st">"Beer2"</span>, <span class="st">"Bread"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>                                  <span class="st">"Mixed"</span>, <span class="st">"Mosaic"</span>, <span class="st">"Sake"</span>, <span class="st">"Wild"</span>, <span class="st">"Wine"</span>))</span>
+<span id="cb4-8"><a href="#cb4-8"></a>kveik_het<span class="sc">$</span>Pop <span class="ot">=</span> <span class="fu">relevel</span>(kveik_het<span class="sc">$</span>Pop, <span class="st">"Farmhouse"</span>)</span>
+<span id="cb4-9"><a href="#cb4-9"></a>kveik_het<span class="sc">$</span>Geographic.origin <span class="ot">=</span> <span class="fu">ifelse</span>(</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  kveik_het<span class="sc">$</span>Geographic.origin <span class="sc">==</span> <span class="st">"Central-E Norway"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11"></a>  <span class="st">"C-E Norway"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12"></a>  kveik_het<span class="sc">$</span>Geographic.origin</span>
+<span id="cb4-13"><a href="#cb4-13"></a>)</span>
+<span id="cb4-14"><a href="#cb4-14"></a></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="fu">colnames</span>(kveik_het) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"ID"</span>, <span class="st">"Pop"</span>, <span class="st">"HET_CT"</span>, <span class="st">"Subpopulation"</span>, <span class="st">"Geographic.origin"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16"></a></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co"># mapping swap_yeasts</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a>to_swap <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb4-19"><a href="#cb4-19"></a>  <span class="at">old_name =</span> <span class="fu">c</span>(<span class="st">"21P1"</span>, <span class="st">"17P5"</span>, <span class="st">"45P5"</span>, <span class="st">"28P1"</span>, <span class="st">"28P6"</span>),</span>
+<span id="cb4-20"><a href="#cb4-20"></a>  <span class="at">new_name =</span> <span class="fu">c</span>(<span class="st">"21R40"</span>, <span class="st">"17R20"</span>, <span class="st">"45R38"</span>, <span class="st">"28R31"</span>, <span class="st">"28R1"</span>)</span>
+<span id="cb4-21"><a href="#cb4-21"></a>)</span>
+<span id="cb4-22"><a href="#cb4-22"></a></span>
+<span id="cb4-23"><a href="#cb4-23"></a><span class="co"># import final clade list</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a>final_clades <span class="ot">=</span> <span class="fu">read.table</span>(</span>
+<span id="cb4-25"><a href="#cb4-25"></a>  <span class="st">"./data/p02-04/final_clades_for_pub.txt"</span>,</span>
+<span id="cb4-26"><a href="#cb4-26"></a>  <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>,</span>
+<span id="cb4-27"><a href="#cb4-27"></a>  <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-28"><a href="#cb4-28"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb4-29"><a href="#cb4-29"></a>)</span>
+<span id="cb4-30"><a href="#cb4-30"></a></span>
+<span id="cb4-31"><a href="#cb4-31"></a><span class="co"># load annotations</span></span>
+<span id="cb4-32"><a href="#cb4-32"></a>tree_annot_raw <span class="ot">=</span> <span class="fu">read.table</span>(<span class="st">"./data/p01-03/genetrees.output.BS.annot-PETER.txt"</span>,</span>
+<span id="cb4-33"><a href="#cb4-33"></a>                            <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>,</span>
+<span id="cb4-34"><a href="#cb4-34"></a>                            <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-35"><a href="#cb4-35"></a>                            <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-36"><a href="#cb4-36"></a>tree_annot_raw <span class="ot">=</span> <span class="fu">data.frame</span>(tree_annot_raw)</span>
+<span id="cb4-37"><a href="#cb4-37"></a></span>
+<span id="cb4-38"><a href="#cb4-38"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(to_swap)){</span>
+<span id="cb4-39"><a href="#cb4-39"></a>  tree_annot_raw<span class="sc">$</span>Strain <span class="ot">=</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(</span>
+<span id="cb4-40"><a href="#cb4-40"></a>    tree_annot_raw<span class="sc">$</span>Strain,</span>
+<span id="cb4-41"><a href="#cb4-41"></a>    to_swap[k, <span class="st">"old_name"</span>],</span>
+<span id="cb4-42"><a href="#cb4-42"></a>    to_swap[k, <span class="st">"new_name"</span>]</span>
+<span id="cb4-43"><a href="#cb4-43"></a>  )</span>
+<span id="cb4-44"><a href="#cb4-44"></a>  tree_annot_raw<span class="sc">$</span>Name <span class="ot">=</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(</span>
+<span id="cb4-45"><a href="#cb4-45"></a>    tree_annot_raw<span class="sc">$</span>Name,</span>
+<span id="cb4-46"><a href="#cb4-46"></a>    to_swap[k, <span class="st">"old_name"</span>],</span>
+<span id="cb4-47"><a href="#cb4-47"></a>    to_swap[k, <span class="st">"new_name"</span>]</span>
+<span id="cb4-48"><a href="#cb4-48"></a>  )</span>
+<span id="cb4-49"><a href="#cb4-49"></a>}</span>
+<span id="cb4-50"><a href="#cb4-50"></a></span>
+<span id="cb4-51"><a href="#cb4-51"></a><span class="co"># merge with last clade grouping from 20250630</span></span>
+<span id="cb4-52"><a href="#cb4-52"></a>tree_annot <span class="ot">=</span> tree_annot_raw <span class="sc">%&gt;%</span></span>
+<span id="cb4-53"><a href="#cb4-53"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(., final_clades, <span class="at">by =</span> <span class="st">"Strain"</span>)</span>
+<span id="cb4-54"><a href="#cb4-54"></a>tree_annot<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">ifelse</span>(tree_annot<span class="sc">$</span>niche1 <span class="sc">==</span> <span class="st">"farmhouse"</span>, <span class="st">"Farmhouse"</span>, tree_annot<span class="sc">$</span>Clade)</span>
+<span id="cb4-55"><a href="#cb4-55"></a>tree_annot<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">ifelse</span>(</span>
+<span id="cb4-56"><a href="#cb4-56"></a>  <span class="fu">is.na</span>(tree_annot<span class="sc">$</span>Clade) <span class="sc">&amp;</span> tree_annot<span class="sc">$</span>group <span class="sc">==</span> <span class="st">'beer2'</span>,</span>
+<span id="cb4-57"><a href="#cb4-57"></a>  <span class="st">"Beer2"</span>, tree_annot<span class="sc">$</span>Clade</span>
+<span id="cb4-58"><a href="#cb4-58"></a>)</span>
+<span id="cb4-59"><a href="#cb4-59"></a>tree_annot<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">ifelse</span>(</span>
+<span id="cb4-60"><a href="#cb4-60"></a>  <span class="fu">is.na</span>(tree_annot<span class="sc">$</span>Clade) <span class="sc">&amp;</span> tree_annot<span class="sc">$</span>group <span class="sc">==</span> <span class="st">'wine'</span>,</span>
+<span id="cb4-61"><a href="#cb4-61"></a>  <span class="st">"Wine"</span>, tree_annot<span class="sc">$</span>Clade</span>
+<span id="cb4-62"><a href="#cb4-62"></a>)</span>
+<span id="cb4-63"><a href="#cb4-63"></a>tree_annot<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">ifelse</span>(</span>
+<span id="cb4-64"><a href="#cb4-64"></a>  <span class="fu">is.na</span>(tree_annot<span class="sc">$</span>Clade) <span class="sc">&amp;</span> tree_annot<span class="sc">$</span>group <span class="sc">==</span> <span class="st">'asian'</span>,</span>
+<span id="cb4-65"><a href="#cb4-65"></a>  <span class="st">"Asia"</span>, tree_annot<span class="sc">$</span>Clade</span>
+<span id="cb4-66"><a href="#cb4-66"></a>)</span>
+<span id="cb4-67"><a href="#cb4-67"></a>tree_annot<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(tree_annot<span class="sc">$</span>Clade), <span class="st">"Other"</span>, tree_annot<span class="sc">$</span>Clade)</span>
+<span id="cb4-68"><a href="#cb4-68"></a>tree_annot <span class="ot">=</span> tree_annot[, <span class="sc">-</span><span class="fu">which</span>(<span class="fu">colnames</span>(tree_annot) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"niche1"</span>, <span class="st">"niche2"</span>, <span class="st">"niche3"</span>, <span class="st">"group"</span>, <span class="st">"seq_name"</span>, <span class="st">"Mosaic"</span>))]</span>
+<span id="cb4-69"><a href="#cb4-69"></a><span class="fu">colnames</span>(tree_annot) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"Strain"</span>, <span class="st">"ID"</span>, <span class="st">"Clade"</span>)</span>
+<span id="cb4-70"><a href="#cb4-70"></a>tree_annot<span class="sc">$</span>ID <span class="ot">=</span> stringr<span class="sc">::</span><span class="fu">str_replace_all</span>(tree_annot<span class="sc">$</span>ID, <span class="st">"x"</span>, <span class="st">"X"</span>)</span>
+<span id="cb4-71"><a href="#cb4-71"></a></span>
+<span id="cb4-72"><a href="#cb4-72"></a></span>
+<span id="cb4-73"><a href="#cb4-73"></a><span class="co"># merge</span></span>
+<span id="cb4-74"><a href="#cb4-74"></a>kveik_het <span class="ot">=</span> <span class="fu">merge</span>(kveik_het, tree_annot, <span class="at">by =</span> <span class="st">"ID"</span>)</span>
+<span id="cb4-75"><a href="#cb4-75"></a>kveik_het <span class="ot">=</span> kveik_het[, <span class="fu">which</span>(<span class="fu">colnames</span>(kveik_het) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"ID"</span>, <span class="st">"HET_CT"</span>, <span class="st">"Pop"</span>, <span class="st">"Culture"</span>, <span class="st">"Subpopulation"</span>, <span class="st">"Geographic.origin"</span>, <span class="st">"Clade"</span>))]</span>
+<span id="cb4-76"><a href="#cb4-76"></a></span>
+<span id="cb4-77"><a href="#cb4-77"></a></span>
+<span id="cb4-78"><a href="#cb4-78"></a></span>
+<span id="cb4-79"><a href="#cb4-79"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb4-80"><a href="#cb4-80"></a><span class="do">## 2.2 - Heterozigous position - all                                        ####</span></span>
+<span id="cb4-81"><a href="#cb4-81"></a></span>
+<span id="cb4-82"><a href="#cb4-82"></a><span class="co"># t-test</span></span>
+<span id="cb4-83"><a href="#cb4-83"></a>tests <span class="ot">=</span> kveik_het <span class="sc">%&gt;%</span></span>
+<span id="cb4-84"><a href="#cb4-84"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>(ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb4-85"><a href="#cb4-85"></a>  rstatix<span class="sc">::</span><span class="fu">t_test</span>(HET_CT <span class="sc">~</span> Clade, <span class="at">ref.group =</span> <span class="st">"Farmhouse"</span>)</span>
+<span id="cb4-86"><a href="#cb4-86"></a></span>
+<span id="cb4-87"><a href="#cb4-87"></a>kveik_het<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">factor</span>(kveik_het<span class="sc">$</span>Clade,</span>
+<span id="cb4-88"><a href="#cb4-88"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Farmhouse"</span>, <span class="st">"Asia"</span>, <span class="st">"Beer1"</span>, <span class="st">"Beer2"</span>, <span class="st">"Mixed"</span>, <span class="st">"Other"</span>, <span class="st">"Wine"</span>))</span>
+<span id="cb4-89"><a href="#cb4-89"></a>kveik_het<span class="sc">$</span>Clade <span class="ot">=</span> <span class="fu">relevel</span>(kveik_het<span class="sc">$</span>Clade, <span class="st">"Farmhouse"</span>)</span>
+<span id="cb4-90"><a href="#cb4-90"></a></span>
+<span id="cb4-91"><a href="#cb4-91"></a><span class="co"># plot</span></span>
+<span id="cb4-92"><a href="#cb4-92"></a>p_het <span class="ot">=</span> <span class="fu">ggplot</span>(kveik_het, <span class="fu">aes</span>(<span class="at">x =</span> Clade, <span class="at">y =</span> HET_CT)) <span class="sc">+</span></span>
+<span id="cb4-93"><a href="#cb4-93"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Clade), <span class="at">alpha =</span> <span class="fl">0.2</span>,</span>
+<span id="cb4-94"><a href="#cb4-94"></a>              <span class="at">scale =</span> <span class="st">"width"</span>,</span>
+<span id="cb4-95"><a href="#cb4-95"></a>              <span class="at">trim =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb4-96"><a href="#cb4-96"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">~</span>dplyr<span class="sc">::</span><span class="fu">filter</span>(.x, <span class="sc">!</span>(ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>))),</span>
+<span id="cb4-97"><a href="#cb4-97"></a>             <span class="fu">aes</span>(<span class="at">fill =</span> Clade),</span>
+<span id="cb4-98"><a href="#cb4-98"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>),</span>
+<span id="cb4-99"><a href="#cb4-99"></a>             <span class="at">shape =</span> <span class="dv">21</span>, </span>
+<span id="cb4-100"><a href="#cb4-100"></a>             <span class="at">alpha =</span> <span class="fl">0.375</span>,</span>
+<span id="cb4-101"><a href="#cb4-101"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-102"><a href="#cb4-102"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> <span class="st">"median"</span>, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">geom =</span> <span class="st">"crossbar"</span>) <span class="sc">+</span></span>
+<span id="cb4-103"><a href="#cb4-103"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb4-104"><a href="#cb4-104"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">~</span>dplyr<span class="sc">::</span><span class="fu">filter</span>(.x, ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>)),</span>
+<span id="cb4-105"><a href="#cb4-105"></a>             <span class="fu">aes</span>(<span class="at">fill =</span> <span class="st">"red"</span>),</span>
+<span id="cb4-106"><a href="#cb4-106"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>),</span>
+<span id="cb4-107"><a href="#cb4-107"></a>             <span class="at">shape =</span> <span class="dv">21</span>, </span>
+<span id="cb4-108"><a href="#cb4-108"></a>             <span class="at">alpha =</span> <span class="fl">0.375</span>,</span>
+<span id="cb4-109"><a href="#cb4-109"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-110"><a href="#cb4-110"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="sc">~</span>dplyr<span class="sc">::</span><span class="fu">filter</span>(.x, ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>)),</span>
+<span id="cb4-111"><a href="#cb4-111"></a>            <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">as.character</span>(ID)),</span>
+<span id="cb4-112"><a href="#cb4-112"></a>            <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb4-113"><a href="#cb4-113"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#2297e6"</span>, <span class="st">"#df536b"</span>, <span class="st">"#61d04f"</span>, <span class="st">"#28e2e5"</span>, <span class="st">"#cd0bbc"</span>, <span class="st">"grey75"</span>, <span class="st">"#bcf60c"</span>,</span>
+<span id="cb4-114"><a href="#cb4-114"></a>                               <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb4-115"><a href="#cb4-115"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_compare_means</span>(<span class="at">method =</span> <span class="st">"anova"</span>, <span class="at">label.x =</span> <span class="fl">1.1</span>, <span class="at">label.y =</span> <span class="dv">98000</span>) <span class="sc">+</span></span>
+<span id="cb4-116"><a href="#cb4-116"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests<span class="sc">$</span>p.adj.signif)[[<span class="dv">1</span>]]) <span class="sc">+</span></span>
+<span id="cb4-117"><a href="#cb4-117"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">3</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests<span class="sc">$</span>p.adj.signif)[[<span class="dv">2</span>]]) <span class="sc">+</span></span>
+<span id="cb4-118"><a href="#cb4-118"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">4</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests<span class="sc">$</span>p.adj.signif)[[<span class="dv">3</span>]]) <span class="sc">+</span></span>
+<span id="cb4-119"><a href="#cb4-119"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">5</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests<span class="sc">$</span>p.adj.signif)[[<span class="dv">4</span>]]) <span class="sc">+</span></span>
+<span id="cb4-120"><a href="#cb4-120"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">6</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests<span class="sc">$</span>p.adj.signif)[[<span class="dv">5</span>]]) <span class="sc">+</span></span>
+<span id="cb4-121"><a href="#cb4-121"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">7</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests<span class="sc">$</span>p.adj.signif)[[<span class="dv">6</span>]]) <span class="sc">+</span></span>
+<span id="cb4-122"><a href="#cb4-122"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma,</span>
+<span id="cb4-123"><a href="#cb4-123"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
+<span id="cb4-124"><a href="#cb4-124"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Heterozygosity in yeast populations"</span>,</span>
+<span id="cb4-125"><a href="#cb4-125"></a>       <span class="at">x =</span> <span class="st">"Clade / Niche"</span>,</span>
+<span id="cb4-126"><a href="#cb4-126"></a>       <span class="at">y =</span> <span class="st">"# heterozygous</span><span class="sc">\n</span><span class="st">positions"</span>) <span class="sc">+</span></span>
+<span id="cb4-127"><a href="#cb4-127"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-128"><a href="#cb4-128"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.95</span>, <span class="at">angle =</span> <span class="dv">60</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb4-129"><a href="#cb4-129"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb4-130"><a href="#cb4-130"></a>        <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>),</span>
+<span id="cb4-131"><a href="#cb4-131"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb4-132"><a href="#cb4-132"></a>        <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb4-133"><a href="#cb4-133"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-134"><a href="#cb4-134"></a>        <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-135"><a href="#cb4-135"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"grey75"</span>),</span>
+<span id="cb4-136"><a href="#cb4-136"></a>        <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb4-137"><a href="#cb4-137"></a></span>
+<span id="cb4-138"><a href="#cb4-138"></a></span>
+<span id="cb4-139"><a href="#cb4-139"></a></span>
+<span id="cb4-140"><a href="#cb4-140"></a><span class="co">#------------------------------------------------------------------------------#</span></span>
+<span id="cb4-141"><a href="#cb4-141"></a><span class="do">## 2.3 - Heterozigous position - kveiks                                     ####</span></span>
+<span id="cb4-142"><a href="#cb4-142"></a></span>
+<span id="cb4-143"><a href="#cb4-143"></a><span class="co"># t-test</span></span>
+<span id="cb4-144"><a href="#cb4-144"></a>kveik_comp <span class="ot">=</span> kveik_het[<span class="fu">which</span>(kveik_het<span class="sc">$</span>Pop <span class="sc">==</span> <span class="st">"Farmhouse"</span> <span class="sc">&amp;</span> kveik_het<span class="sc">$</span>Subpopulation <span class="sc">!=</span> <span class="st">"Beer1"</span>), ]</span>
+<span id="cb4-145"><a href="#cb4-145"></a>kveik_comp<span class="sc">$</span>Subpopulation <span class="ot">=</span> <span class="st">"All Farmhouse"</span></span>
+<span id="cb4-146"><a href="#cb4-146"></a>kveik_comp<span class="sc">$</span>Geographic.origin <span class="ot">=</span> <span class="st">"All Farmhouse"</span></span>
+<span id="cb4-147"><a href="#cb4-147"></a><span class="co">#kveik_comp$Culture = "All Farmhouse"</span></span>
+<span id="cb4-148"><a href="#cb4-148"></a>kveik_comp <span class="ot">=</span> <span class="fu">rbind</span>(kveik_comp, kveik_het[<span class="fu">which</span>(kveik_het<span class="sc">$</span>Pop <span class="sc">==</span> <span class="st">"Farmhouse"</span> <span class="sc">&amp;</span> kveik_het<span class="sc">$</span>Subpopulation <span class="sc">!=</span> <span class="st">"Beer1"</span>), ])</span>
+<span id="cb4-149"><a href="#cb4-149"></a></span>
+<span id="cb4-150"><a href="#cb4-150"></a>tests_geo <span class="ot">=</span> kveik_comp <span class="sc">%&gt;%</span> </span>
+<span id="cb4-151"><a href="#cb4-151"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span>(ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>, <span class="st">"39R20"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb4-152"><a href="#cb4-152"></a>  rstatix<span class="sc">::</span><span class="fu">t_test</span>(HET_CT <span class="sc">~</span> Geographic.origin, <span class="at">ref.group =</span> <span class="st">"All Farmhouse"</span>)</span>
+<span id="cb4-153"><a href="#cb4-153"></a></span>
+<span id="cb4-154"><a href="#cb4-154"></a>tests_geo[<span class="dv">6</span>, ] <span class="ot">=</span> <span class="fu">list</span>(<span class="st">"HET_CT"</span>, <span class="st">"All Farmhouse"</span>, <span class="st">"Russia"</span>, <span class="dv">37</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="st">"ns"</span>)</span>
+<span id="cb4-155"><a href="#cb4-155"></a></span>
+<span id="cb4-156"><a href="#cb4-156"></a><span class="co"># plot</span></span>
+<span id="cb4-157"><a href="#cb4-157"></a>kveik_comp <span class="ot">=</span> kveik_het[<span class="fu">which</span>(kveik_het<span class="sc">$</span>Pop <span class="sc">==</span> <span class="st">"Farmhouse"</span> <span class="sc">&amp;</span> kveik_het<span class="sc">$</span>Subpopulation <span class="sc">!=</span> <span class="st">"Beer1"</span>), ]</span>
+<span id="cb4-158"><a href="#cb4-158"></a></span>
+<span id="cb4-159"><a href="#cb4-159"></a>p_het2 <span class="ot">=</span> <span class="fu">ggplot</span>(kveik_comp, <span class="fu">aes</span>(<span class="at">x =</span> Geographic.origin, <span class="at">y =</span> HET_CT)) <span class="sc">+</span></span>
+<span id="cb4-160"><a href="#cb4-160"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> Geographic.origin), <span class="at">alpha =</span> <span class="fl">0.2</span>,</span>
+<span id="cb4-161"><a href="#cb4-161"></a>              <span class="at">scale =</span> <span class="st">"width"</span>,</span>
+<span id="cb4-162"><a href="#cb4-162"></a>              <span class="at">trim =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb4-163"><a href="#cb4-163"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">~</span>dplyr<span class="sc">::</span><span class="fu">filter</span>(.x, <span class="sc">!</span>(ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>))),</span>
+<span id="cb4-164"><a href="#cb4-164"></a>             <span class="fu">aes</span>(<span class="at">fill =</span> Geographic.origin),</span>
+<span id="cb4-165"><a href="#cb4-165"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>),</span>
+<span id="cb4-166"><a href="#cb4-166"></a>             <span class="at">shape =</span> <span class="dv">21</span>, </span>
+<span id="cb4-167"><a href="#cb4-167"></a>             <span class="at">alpha =</span> <span class="fl">0.375</span>,</span>
+<span id="cb4-168"><a href="#cb4-168"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-169"><a href="#cb4-169"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> <span class="sc">~</span>dplyr<span class="sc">::</span><span class="fu">filter</span>(.x, ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>)),</span>
+<span id="cb4-170"><a href="#cb4-170"></a>             <span class="fu">aes</span>(<span class="at">fill =</span> <span class="st">"red"</span>),</span>
+<span id="cb4-171"><a href="#cb4-171"></a>             <span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.25</span>),</span>
+<span id="cb4-172"><a href="#cb4-172"></a>             <span class="at">shape =</span> <span class="dv">21</span>, </span>
+<span id="cb4-173"><a href="#cb4-173"></a>             <span class="at">alpha =</span> <span class="fl">0.375</span>,</span>
+<span id="cb4-174"><a href="#cb4-174"></a>             <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb4-175"><a href="#cb4-175"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> <span class="st">"median"</span>, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">geom =</span> <span class="st">"crossbar"</span>) <span class="sc">+</span></span>
+<span id="cb4-176"><a href="#cb4-176"></a>  <span class="fu">geom_text</span>(<span class="at">data =</span> <span class="sc">~</span>dplyr<span class="sc">::</span><span class="fu">filter</span>(.x, ID <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"40R20"</span>, <span class="st">"40R1"</span>, <span class="st">"40R14"</span>, <span class="st">"38R16"</span>, <span class="st">"k7R25"</span>, <span class="st">"Muri"</span>)),</span>
+<span id="cb4-177"><a href="#cb4-177"></a>            <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">as.character</span>(ID)),</span>
+<span id="cb4-178"><a href="#cb4-178"></a>            <span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">vjust =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb4-179"><a href="#cb4-179"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"green"</span>, <span class="st">"#FFDA00"</span>, <span class="st">"orange"</span>, <span class="st">"#0571B0"</span>, <span class="st">"red"</span>, <span class="st">"#A6611A"</span>, <span class="st">"#92C5DE"</span>)) <span class="sc">+</span></span>
+<span id="cb4-180"><a href="#cb4-180"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_wrap</span>(<span class="dv">10</span>)) <span class="sc">+</span></span>
+<span id="cb4-181"><a href="#cb4-181"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma,</span>
+<span id="cb4-182"><a href="#cb4-182"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
+<span id="cb4-183"><a href="#cb4-183"></a>  ggpubr<span class="sc">::</span><span class="fu">stat_compare_means</span>(<span class="at">method =</span> <span class="st">"anova"</span>, <span class="at">label.x =</span> <span class="fl">1.1</span>, <span class="at">label.y =</span> <span class="dv">98000</span>) <span class="sc">+</span></span>
+<span id="cb4-184"><a href="#cb4-184"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">1</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests_geo<span class="sc">$</span>p.adj.signif)[[<span class="dv">1</span>]]) <span class="sc">+</span></span>
+<span id="cb4-185"><a href="#cb4-185"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">2</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests_geo<span class="sc">$</span>p.adj.signif)[[<span class="dv">2</span>]]) <span class="sc">+</span></span>
+<span id="cb4-186"><a href="#cb4-186"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">3</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests_geo<span class="sc">$</span>p.adj.signif)[[<span class="dv">3</span>]]) <span class="sc">+</span></span>
+<span id="cb4-187"><a href="#cb4-187"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">4</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests_geo<span class="sc">$</span>p.adj.signif)[[<span class="dv">4</span>]]) <span class="sc">+</span></span>
+<span id="cb4-188"><a href="#cb4-188"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">5</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests_geo<span class="sc">$</span>p.adj.signif)[[<span class="dv">5</span>]]) <span class="sc">+</span></span>
+<span id="cb4-189"><a href="#cb4-189"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="dv">6</span>,  <span class="at">y =</span> <span class="dv">95000</span>, <span class="at">label =</span> <span class="fu">c</span>(tests_geo<span class="sc">$</span>p.adj.signif)[[<span class="dv">6</span>]]) <span class="sc">+</span></span>
+<span id="cb4-190"><a href="#cb4-190"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Geographic origin"</span>) <span class="sc">+</span></span>
+<span id="cb4-191"><a href="#cb4-191"></a>  <span class="fu">theme</span>(<span class="at">title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-192"><a href="#cb4-192"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.95</span>, <span class="at">angle =</span> <span class="dv">60</span>, <span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb4-193"><a href="#cb4-193"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-194"><a href="#cb4-194"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>),</span>
+<span id="cb4-195"><a href="#cb4-195"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-196"><a href="#cb4-196"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb4-197"><a href="#cb4-197"></a>        <span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="cn">NA</span>),</span>
+<span id="cb4-198"><a href="#cb4-198"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-199"><a href="#cb4-199"></a>        <span class="at">panel.grid.minor.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb4-200"><a href="#cb4-200"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">"grey75"</span>),</span>
+<span id="cb4-201"><a href="#cb4-201"></a>        <span class="at">panel.grid.minor.y =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>ggpubr<span class="sc">::</span><span class="fu">ggarrange</span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  p_het, p_het2,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">nrow =</span> <span class="dv">1</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">align =</span> <span class="st">"h"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-03-variant-calling_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 1: Boxplot depicting total number of heterozygous sites per genetic clade (right) and geographical origin of farmhouse yeast (right).</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="loss-of-heterozygosity-loh" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="loss-of-heterozygosity-loh"><span class="header-section-number">3.4</span> Loss Of Heterozygosity (LOH)</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># import LOH matrix</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>LOH_table_10kb <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/Vikings.LOH.10kb_win.tab"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="fu">colnames</span>(LOH_table_10kb) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"strain"</span>, <span class="st">"chr"</span>, <span class="st">"start"</span>, <span class="st">"stop"</span>, <span class="st">"n_var"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4"></a></span>
+<span id="cb6-5"><a href="#cb6-5"></a><span class="co"># format</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>LOH_table_10kb<span class="sc">$</span>chr <span class="ot">=</span> <span class="fu">factor</span>(</span>
+<span id="cb6-7"><a href="#cb6-7"></a>  LOH_table_10kb<span class="sc">$</span>chr,</span>
+<span id="cb6-8"><a href="#cb6-8"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>, <span class="st">"III"</span>, <span class="st">"IV"</span>, <span class="st">"V"</span>, <span class="st">"VI"</span>, <span class="st">"VII"</span>, <span class="st">"VIII"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>             <span class="st">"IX"</span>, <span class="st">"X"</span>, <span class="st">"XI"</span>, <span class="st">"XII"</span>, <span class="st">"XIII"</span>, <span class="st">"XIV"</span>, <span class="st">"XV"</span>, <span class="st">"XVI"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10"></a>)</span>
+<span id="cb6-11"><a href="#cb6-11"></a></span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co"># relevel</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a>LOH_table_10kb <span class="ot">=</span> LOH_table_10kb[<span class="fu">which</span>(LOH_table_10kb<span class="sc">$</span>strain <span class="sc">%in%</span> <span class="fu">c</span>(</span>
+<span id="cb6-14"><a href="#cb6-14"></a>  <span class="st">"41R10"</span>, <span class="st">"21R38"</span>, <span class="st">"9R40"</span>, <span class="st">"17P5"</span>, <span class="st">"SortdalEbbe1"</span>, <span class="st">"3R11"</span>, <span class="st">"21P1"</span>, <span class="st">"41R15"</span>, <span class="st">"Hornindal1"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15"></a>  <span class="st">"Hornindal2"</span>, <span class="st">"1R16"</span>, <span class="st">"2R23"</span>, <span class="st">"8R19"</span>, <span class="st">"Muri"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16"></a>  <span class="st">"k7R25"</span>, <span class="st">"38R16"</span>, <span class="st">"44R32"</span>, <span class="st">"19R18"</span>, <span class="st">"44R7"</span>, <span class="st">"6R15"</span>, <span class="st">"Laerdal2"</span>, <span class="st">"7R7"</span>, <span class="st">"14R6"</span>, <span class="st">"14R30"</span>,</span>
+<span id="cb6-17"><a href="#cb6-17"></a>  <span class="st">"27R17"</span>, <span class="st">"28P1"</span>, <span class="st">"28P6"</span>, <span class="st">"28R21"</span>, <span class="st">"28R33"</span>, <span class="st">"28R8"</span>,</span>
+<span id="cb6-18"><a href="#cb6-18"></a>  <span class="st">"42R20"</span>, <span class="st">"42R31"</span>, <span class="st">"45P5"</span>, <span class="st">"45R11"</span>, </span>
+<span id="cb6-19"><a href="#cb6-19"></a>  <span class="st">"46R12"</span>, <span class="st">"46R37"</span>, <span class="st">"16R23"</span>, <span class="st">"16R37"</span>,</span>
+<span id="cb6-20"><a href="#cb6-20"></a>  <span class="st">"39R20"</span>, <span class="st">"40R14"</span>, <span class="st">"40R1"</span>, <span class="st">"40R20"</span>,</span>
+<span id="cb6-21"><a href="#cb6-21"></a>  <span class="st">"Granvin1"</span>, <span class="st">"Voss1"</span></span>
+<span id="cb6-22"><a href="#cb6-22"></a>)), ]</span>
+<span id="cb6-23"><a href="#cb6-23"></a></span>
+<span id="cb6-24"><a href="#cb6-24"></a>LOH_table_10kb<span class="sc">$</span>strain <span class="ot">=</span> <span class="fu">factor</span>(</span>
+<span id="cb6-25"><a href="#cb6-25"></a>  LOH_table_10kb<span class="sc">$</span>strain,</span>
+<span id="cb6-26"><a href="#cb6-26"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"41R10"</span>, <span class="st">"21R38"</span>, <span class="st">"9R40"</span>, <span class="st">"17P5"</span>, <span class="st">"SortdalEbbe1"</span>, <span class="st">"3R11"</span>, <span class="st">"21P1"</span>, <span class="st">"41R15"</span>, <span class="st">"Hornindal1"</span>,</span>
+<span id="cb6-27"><a href="#cb6-27"></a>             <span class="st">"Hornindal2"</span>, <span class="st">"1R16"</span>, <span class="st">"2R23"</span>, <span class="st">"8R19"</span>, <span class="st">"Muri"</span>,</span>
+<span id="cb6-28"><a href="#cb6-28"></a>             <span class="st">"k7R25"</span>, <span class="st">"38R16"</span>, <span class="st">"44R32"</span>, <span class="st">"19R18"</span>, <span class="st">"44R7"</span>, <span class="st">"6R15"</span>, <span class="st">"Laerdal2"</span>, <span class="st">"7R7"</span>, <span class="st">"14R6"</span>, <span class="st">"14R30"</span>,</span>
+<span id="cb6-29"><a href="#cb6-29"></a>             <span class="st">"27R17"</span>, <span class="st">"28P1"</span>, <span class="st">"28P6"</span>, <span class="st">"28R21"</span>, <span class="st">"28R33"</span>, <span class="st">"28R8"</span>,</span>
+<span id="cb6-30"><a href="#cb6-30"></a>             <span class="st">"42R20"</span>, <span class="st">"42R31"</span>, <span class="st">"45P5"</span>, <span class="st">"45R11"</span>, </span>
+<span id="cb6-31"><a href="#cb6-31"></a>             <span class="st">"46R12"</span>, <span class="st">"46R37"</span>, <span class="st">"16R23"</span>, <span class="st">"16R37"</span>,</span>
+<span id="cb6-32"><a href="#cb6-32"></a>             <span class="st">"39R20"</span>, <span class="st">"40R14"</span>, <span class="st">"40R1"</span>, <span class="st">"40R20"</span>,</span>
+<span id="cb6-33"><a href="#cb6-33"></a>             <span class="st">"Granvin1"</span>, <span class="st">"Voss1"</span>)</span>
+<span id="cb6-34"><a href="#cb6-34"></a>)</span>
+<span id="cb6-35"><a href="#cb6-35"></a></span>
+<span id="cb6-36"><a href="#cb6-36"></a></span>
+<span id="cb6-37"><a href="#cb6-37"></a><span class="co"># import coverage dataset</span></span>
+<span id="cb6-38"><a href="#cb6-38"></a>file_list <span class="ot">=</span> <span class="fu">list.files</span>(</span>
+<span id="cb6-39"><a href="#cb6-39"></a>  <span class="at">path =</span> <span class="st">"./data/p01-03/01_start_bed/"</span>,</span>
+<span id="cb6-40"><a href="#cb6-40"></a>  <span class="at">pattern =</span> <span class="st">"1kb_cov.bed"</span>,</span>
+<span id="cb6-41"><a href="#cb6-41"></a>  <span class="at">full.names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb6-42"><a href="#cb6-42"></a>  <span class="at">ignore.case =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-43"><a href="#cb6-43"></a>)</span>
+<span id="cb6-44"><a href="#cb6-44"></a></span>
+<span id="cb6-45"><a href="#cb6-45"></a><span class="co"># declare average df</span></span>
+<span id="cb6-46"><a href="#cb6-46"></a>average_table <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-47"><a href="#cb6-47"></a>  <span class="at">strain =</span> <span class="fu">character</span>(),</span>
+<span id="cb6-48"><a href="#cb6-48"></a>  <span class="at">average =</span> <span class="fu">double</span>(),</span>
+<span id="cb6-49"><a href="#cb6-49"></a>  <span class="at">max =</span> <span class="fu">double</span>(),</span>
+<span id="cb6-50"><a href="#cb6-50"></a>  <span class="at">sd =</span> <span class="fu">double</span>(),</span>
+<span id="cb6-51"><a href="#cb6-51"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-52"><a href="#cb6-52"></a>)</span>
+<span id="cb6-53"><a href="#cb6-53"></a></span>
+<span id="cb6-54"><a href="#cb6-54"></a><span class="co"># declare cov df</span></span>
+<span id="cb6-55"><a href="#cb6-55"></a>coverage_table <span class="ot">=</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-56"><a href="#cb6-56"></a>  <span class="at">strain =</span> <span class="fu">character</span>(),</span>
+<span id="cb6-57"><a href="#cb6-57"></a>  <span class="at">chr =</span> <span class="fu">character</span>(),</span>
+<span id="cb6-58"><a href="#cb6-58"></a>  <span class="at">start =</span> <span class="fu">integer</span>(),</span>
+<span id="cb6-59"><a href="#cb6-59"></a>  <span class="at">stop =</span> <span class="fu">integer</span>(),</span>
+<span id="cb6-60"><a href="#cb6-60"></a>  <span class="at">cov =</span> <span class="fu">double</span>(),</span>
+<span id="cb6-61"><a href="#cb6-61"></a>  <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span></span>
+<span id="cb6-62"><a href="#cb6-62"></a>)</span>
+<span id="cb6-63"><a href="#cb6-63"></a></span>
+<span id="cb6-64"><a href="#cb6-64"></a><span class="co"># import coverage counts per strain</span></span>
+<span id="cb6-65"><a href="#cb6-65"></a><span class="cf">for</span>(file_to_import <span class="cf">in</span> file_list){</span>
+<span id="cb6-66"><a href="#cb6-66"></a>  </span>
+<span id="cb6-67"><a href="#cb6-67"></a>  tmp_table <span class="ot">=</span> <span class="fu">read.delim</span>(file_to_import, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-68"><a href="#cb6-68"></a>  </span>
+<span id="cb6-69"><a href="#cb6-69"></a>  <span class="fu">colnames</span>(tmp_table) <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"strain"</span>, <span class="st">"chr"</span>, <span class="st">"start"</span>, <span class="st">"stop"</span>, <span class="st">"cov"</span>)</span>
+<span id="cb6-70"><a href="#cb6-70"></a>  tmp_table <span class="ot">=</span> tmp_table[<span class="fu">which</span>(tmp_table<span class="sc">$</span>chr <span class="sc">!=</span> <span class="st">"ref|NC_001224|"</span>), ]</span>
+<span id="cb6-71"><a href="#cb6-71"></a>  </span>
+<span id="cb6-72"><a href="#cb6-72"></a>  strain_name <span class="ot">=</span> stringr<span class="sc">::</span><span class="fu">str_remove</span>(file_to_import, <span class="st">".align.sort.1kb_cov.bed"</span>)</span>
+<span id="cb6-73"><a href="#cb6-73"></a>  strain_name <span class="ot">=</span> stringr<span class="sc">::</span><span class="fu">str_remove</span>(strain_name, <span class="st">"./data/p01-03/01_start_bed//"</span>)</span>
+<span id="cb6-74"><a href="#cb6-74"></a>  average_table <span class="ot">=</span> <span class="fu">rbind</span>(</span>
+<span id="cb6-75"><a href="#cb6-75"></a>    average_table,</span>
+<span id="cb6-76"><a href="#cb6-76"></a>    <span class="fu">data.frame</span>(</span>
+<span id="cb6-77"><a href="#cb6-77"></a>      <span class="st">"strain"</span> <span class="ot">=</span> strain_name,</span>
+<span id="cb6-78"><a href="#cb6-78"></a>      <span class="st">"average"</span> <span class="ot">=</span> <span class="fu">mean</span>(tmp_table<span class="sc">$</span>cov),</span>
+<span id="cb6-79"><a href="#cb6-79"></a>      <span class="st">"max"</span> <span class="ot">=</span> <span class="fu">max</span>(tmp_table<span class="sc">$</span>cov),</span>
+<span id="cb6-80"><a href="#cb6-80"></a>      <span class="st">"sd"</span> <span class="ot">=</span> <span class="fu">sd</span>(tmp_table<span class="sc">$</span>cov)</span>
+<span id="cb6-81"><a href="#cb6-81"></a>    )</span>
+<span id="cb6-82"><a href="#cb6-82"></a>  )</span>
+<span id="cb6-83"><a href="#cb6-83"></a>  </span>
+<span id="cb6-84"><a href="#cb6-84"></a>  tmp_table <span class="ot">=</span> tmp_table[<span class="fu">which</span>(tmp_table<span class="sc">$</span>cov <span class="sc">&lt;=</span> <span class="fu">mean</span>(tmp_table<span class="sc">$</span>cov)<span class="sc">+</span><span class="fu">sd</span>(tmp_table<span class="sc">$</span>cov)), ]</span>
+<span id="cb6-85"><a href="#cb6-85"></a>  tmp_table<span class="sc">$</span>stop_y <span class="ot">=</span> <span class="cn">NA</span></span>
+<span id="cb6-86"><a href="#cb6-86"></a>  </span>
+<span id="cb6-87"><a href="#cb6-87"></a>  coverage_table <span class="ot">=</span> <span class="fu">rbind</span>(coverage_table, tmp_table)</span>
+<span id="cb6-88"><a href="#cb6-88"></a>  </span>
+<span id="cb6-89"><a href="#cb6-89"></a>  coverage_table[<span class="fu">which</span>(coverage_table<span class="sc">$</span>strain <span class="sc">==</span> strain_name), <span class="st">"stop_y"</span>] <span class="ot">=</span> <span class="fu">max</span>(coverage_table<span class="sc">$</span>cov)</span>
+<span id="cb6-90"><a href="#cb6-90"></a>  </span>
+<span id="cb6-91"><a href="#cb6-91"></a>}</span>
+<span id="cb6-92"><a href="#cb6-92"></a></span>
+<span id="cb6-93"><a href="#cb6-93"></a></span>
+<span id="cb6-94"><a href="#cb6-94"></a><span class="co"># format</span></span>
+<span id="cb6-95"><a href="#cb6-95"></a>coverage_table<span class="sc">$</span>chr <span class="ot">=</span> <span class="fu">factor</span>(</span>
+<span id="cb6-96"><a href="#cb6-96"></a>  coverage_table<span class="sc">$</span>chr,</span>
+<span id="cb6-97"><a href="#cb6-97"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"II"</span>, <span class="st">"III"</span>, <span class="st">"IV"</span>, <span class="st">"V"</span>, <span class="st">"VI"</span>, <span class="st">"VII"</span>, <span class="st">"VIII"</span>,</span>
+<span id="cb6-98"><a href="#cb6-98"></a>             <span class="st">"IX"</span>, <span class="st">"X"</span>, <span class="st">"XI"</span>, <span class="st">"XII"</span>, <span class="st">"XIII"</span>, <span class="st">"XIV"</span>, <span class="st">"XV"</span>, <span class="st">"XVI"</span>)</span>
+<span id="cb6-99"><a href="#cb6-99"></a>)</span>
+<span id="cb6-100"><a href="#cb6-100"></a></span>
+<span id="cb6-101"><a href="#cb6-101"></a><span class="co"># plot </span></span>
+<span id="cb6-102"><a href="#cb6-102"></a>p_LOH1 <span class="ot">=</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-103"><a href="#cb6-103"></a>  <span class="fu">geom_rect</span>(<span class="at">data =</span> <span class="fu">subset</span>(</span>
+<span id="cb6-104"><a href="#cb6-104"></a>    coverage_table,</span>
+<span id="cb6-105"><a href="#cb6-105"></a>    chr <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"I"</span>, <span class="st">"III"</span>, <span class="st">"V"</span>, <span class="st">"VII"</span>, <span class="st">"IX"</span>, <span class="st">"XI"</span>, <span class="st">"XIII"</span>, <span class="st">"XV"</span>)),</span>
+<span id="cb6-106"><a href="#cb6-106"></a>    <span class="at">fill =</span> <span class="st">"grey95"</span>,</span>
+<span id="cb6-107"><a href="#cb6-107"></a>    <span class="at">xmin =</span> <span class="dv">0</span>, <span class="at">xmax =</span> <span class="fu">max</span>(coverage_table<span class="sc">$</span>stop),</span>
+<span id="cb6-108"><a href="#cb6-108"></a>    <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="fu">max</span>(coverage_table<span class="sc">$</span>cov),</span>
+<span id="cb6-109"><a href="#cb6-109"></a>    <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb6-110"><a href="#cb6-110"></a>  <span class="fu">geom_hline</span>(<span class="at">data =</span> average_table, </span>
+<span id="cb6-111"><a href="#cb6-111"></a>             <span class="fu">aes</span>(<span class="at">yintercept =</span> average),</span>
+<span id="cb6-112"><a href="#cb6-112"></a>             <span class="at">color =</span> <span class="st">"firebrick"</span>) <span class="sc">+</span></span>
+<span id="cb6-113"><a href="#cb6-113"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> LOH_table_10kb,</span>
+<span id="cb6-114"><a href="#cb6-114"></a>            <span class="fu">aes</span>(<span class="at">x =</span> start, <span class="at">y =</span> n_var),</span>
+<span id="cb6-115"><a href="#cb6-115"></a>            <span class="at">color =</span> <span class="st">"royalblue4"</span>,</span>
+<span id="cb6-116"><a href="#cb6-116"></a>            <span class="at">linewidth =</span> <span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb6-117"><a href="#cb6-117"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"white"</span>, <span class="st">"salmon"</span>, <span class="st">"grey95"</span>)) <span class="sc">+</span></span>
+<span id="cb6-118"><a href="#cb6-118"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cf">function</span>(x) <span class="fu">format</span>(x, <span class="at">big.mark =</span> <span class="st">","</span>, <span class="at">scientific =</span> <span class="cn">FALSE</span>)) <span class="sc">+</span></span>
+<span id="cb6-119"><a href="#cb6-119"></a>  <span class="co">#scale_y_continuous(limits = c(0, 350)) +</span></span>
+<span id="cb6-120"><a href="#cb6-120"></a>  <span class="fu">coord_cartesian</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb6-121"><a href="#cb6-121"></a>  <span class="fu">annotation_custom</span>(grid<span class="sc">::</span><span class="fu">linesGrob</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>), <span class="at">gp =</span> grid<span class="sc">::</span><span class="fu">gpar</span>(<span class="at">lwd =</span> <span class="dv">3</span>))) <span class="sc">+</span></span>
+<span id="cb6-122"><a href="#cb6-122"></a>  <span class="fu">facet_grid2</span>(strain <span class="sc">~</span> chr,</span>
+<span id="cb6-123"><a href="#cb6-123"></a>              <span class="at">scales =</span> <span class="st">"free"</span>,</span>
+<span id="cb6-124"><a href="#cb6-124"></a>              <span class="at">space =</span> <span class="st">"free_x"</span>,</span>
+<span id="cb6-125"><a href="#cb6-125"></a>              <span class="at">switch =</span> <span class="st">"both"</span>,</span>
+<span id="cb6-126"><a href="#cb6-126"></a>              <span class="at">strip =</span> <span class="fu">strip_themed</span>(</span>
+<span id="cb6-127"><a href="#cb6-127"></a>                <span class="at">background_y =</span> <span class="fu">elem_list_rect</span>(<span class="at">fill =</span> <span class="fu">c</span>(</span>
+<span id="cb6-128"><a href="#cb6-128"></a>                  <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>,</span>
+<span id="cb6-129"><a href="#cb6-129"></a>                  <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>, <span class="st">"#0571B0"</span>,</span>
+<span id="cb6-130"><a href="#cb6-130"></a>                  <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>,</span>
+<span id="cb6-131"><a href="#cb6-131"></a>                  <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>, <span class="st">"#92C5DE"</span>,</span>
+<span id="cb6-132"><a href="#cb6-132"></a>                  <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#008470"</span>, <span class="st">"#FFDA00"</span>, <span class="st">"#FFDA00"</span>,</span>
+<span id="cb6-133"><a href="#cb6-133"></a>                  <span class="st">"#FFDA00"</span>, <span class="st">"#FFDA00"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#FBA01D"</span>, <span class="st">"#A6611A"</span>, <span class="st">"#A6611A"</span>,</span>
+<span id="cb6-134"><a href="#cb6-134"></a>                  <span class="st">"#A6611A"</span>, <span class="st">"#A6611A"</span>, <span class="st">"#51CD34"</span>, <span class="st">"#51CD34"</span></span>
+<span id="cb6-135"><a href="#cb6-135"></a>                ))</span>
+<span id="cb6-136"><a href="#cb6-136"></a>              )) <span class="sc">+</span></span>
+<span id="cb6-137"><a href="#cb6-137"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-138"><a href="#cb6-138"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-139"><a href="#cb6-139"></a>        <span class="at">axis.ticks =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-140"><a href="#cb6-140"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-141"><a href="#cb6-141"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb6-142"><a href="#cb6-142"></a>        <span class="at">panel.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-143"><a href="#cb6-143"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-144"><a href="#cb6-144"></a>        <span class="at">panel.spacing =</span> <span class="fu">unit</span>(<span class="dv">0</span>, <span class="st">"lines"</span>),</span>
+<span id="cb6-145"><a href="#cb6-145"></a>        <span class="at">strip.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb6-146"><a href="#cb6-146"></a>        <span class="at">strip.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
+<span id="cb6-147"><a href="#cb6-147"></a>        <span class="at">strip.text.y.left =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">angle =</span> <span class="dv">0</span>, <span class="at">face =</span> <span class="st">"bold"</span>))</span>
+<span id="cb6-148"><a href="#cb6-148"></a></span>
+<span id="cb6-149"><a href="#cb6-149"></a>p_LOH1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-03-variant-calling_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 2: Loss Of Heterozygotisy events across the genomes of the sequenced Farmhouse yeasts.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="search-for-signature-of-culture-28-hybridization" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="search-for-signature-of-culture-28-hybridization"><span class="header-section-number">3.5</span> Search for signature of Culture #28 hybridization</h2>
+<p>We look for variants in common between strains</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># split vcf in samples</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="cf">for</span> sample <span class="kw">in</span> <span class="kw">`</span><span class="ex">bcftools</span> query <span class="at">-l</span> kveiks.fltr.CE-Norway.vcf<span class="kw">`;</span> <span class="cf">do</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="ex">bcftools</span> view <span class="at">-c1</span> <span class="at">-Oz</span> <span class="at">-s</span> <span class="va">$sample</span> <span class="at">-o</span> kveiks.fltr.CE-Norway.<span class="va">$sample</span>.vcf kveiks.fltr.CE-Norway.vcf <span class="kw">&amp;</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="cf">done</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co"># normalize and get positions Culture #28</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="cf">for</span> sample <span class="kw">in</span> 28P1 28P6 28R21 28R33 28R8<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="ex">bcftools</span> norm <span class="at">-m-any</span> kveiks.fltr.CE-Norway.<span class="va">$sample</span>.vcf <span class="dt">\</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="kw">|</span> <span class="ex">bcftools</span> norm <span class="at">--check-ref</span> w <span class="at">-f</span> ../00_ref_genomes/Scer.fa <span class="dt">\</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>  <span class="kw">|</span> <span class="ex">bcftools</span> annotate <span class="at">-Ob</span> <span class="at">-x</span> <span class="st">'ID'</span> <span class="at">-I</span> +<span class="st">'%CHROM:%POS:%REF:%ALT'</span> <span class="dt">\</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>  <span class="op">&gt;</span> kveiks.fltr.CE-Norway.<span class="va">$sample</span>.bcf <span class="kw">;</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>  <span class="ex">bcftools</span> index kveiks.fltr.CE-Norway.<span class="va">$sample</span>.bcf<span class="kw">;</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>  <span class="ex">bcftools</span> view kveiks.fltr.CE-Norway.<span class="va">$sample</span>.bcf <span class="dt">\</span></span>
+<span id="cb7-14"><a href="#cb7-14"></a>  <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f3</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">"^##"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">"^ID"</span> <span class="dt">\</span></span>
+<span id="cb7-15"><a href="#cb7-15"></a>  <span class="op">&gt;</span> kveiks.fltr.CE-Norway.<span class="va">$sample</span>.lst</span>
+<span id="cb7-16"><a href="#cb7-16"></a><span class="cf">done</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a></span>
+<span id="cb7-18"><a href="#cb7-18"></a><span class="co"># get Culture #16 positions</span></span>
+<span id="cb7-19"><a href="#cb7-19"></a><span class="cf">for</span> sample <span class="kw">in</span> 16R23 16R37 46R12 46R37<span class="kw">;</span> <span class="cf">do</span></span>
+<span id="cb7-20"><a href="#cb7-20"></a>  <span class="ex">bcftools</span> norm <span class="at">-m-any</span> kveiks.fltr.Lithuania.<span class="va">$sample</span>.vcf <span class="dt">\</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>  <span class="kw">|</span> <span class="ex">bcftools</span> norm <span class="at">--check-ref</span> w <span class="at">-f</span> ../00_ref_genomes/Scer.fa <span class="dt">\</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a>  <span class="kw">|</span> <span class="ex">bcftools</span> annotate <span class="at">-Ob</span> <span class="at">-x</span> <span class="st">'ID'</span> <span class="at">-I</span> +<span class="st">'%CHROM:%POS:%REF:%ALT'</span> <span class="dt">\</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a>  <span class="op">&gt;</span> kveiks.fltr.Lithuania.<span class="va">$sample</span>.bcf <span class="kw">;</span></span>
+<span id="cb7-24"><a href="#cb7-24"></a>  <span class="ex">bcftools</span> index kveiks.fltr.Lithuania.<span class="va">$sample</span>.bcf<span class="kw">;</span></span>
+<span id="cb7-25"><a href="#cb7-25"></a>  <span class="ex">bcftools</span> view kveiks.fltr.Lithuania.<span class="va">$sample</span>.bcf <span class="dt">\</span></span>
+<span id="cb7-26"><a href="#cb7-26"></a>  <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-f3</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">"^##"</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-v</span> <span class="st">"^ID"</span> <span class="dt">\</span></span>
+<span id="cb7-27"><a href="#cb7-27"></a>  <span class="op">&gt;</span> kveiks.fltr.Lithuania.<span class="va">$sample</span>.lst</span>
+<span id="cb7-28"><a href="#cb7-28"></a><span class="cf">done</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>list_28R31 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.CE-Norway.28P1.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>list_28R1 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.CE-Norway.28P6.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>list_28R21 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.CE-Norway.28R21.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a>list_28R33 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.CE-Norway.28R33.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-5"><a href="#cb8-5"></a>list_28R8 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.CE-Norway.28R8.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>UpSetR<span class="sc">::</span><span class="fu">upset</span>(</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  UpSetR<span class="sc">::</span><span class="fu">fromList</span>(</span>
+<span id="cb8-9"><a href="#cb8-9"></a>    <span class="fu">list</span>(</span>
+<span id="cb8-10"><a href="#cb8-10"></a>      <span class="st">`</span><span class="at">28R1</span><span class="st">`</span> <span class="ot">=</span> list_28R1<span class="sc">$</span>V1,</span>
+<span id="cb8-11"><a href="#cb8-11"></a>       <span class="st">`</span><span class="at">28R8</span><span class="st">`</span> <span class="ot">=</span> list_28R8<span class="sc">$</span>V1,</span>
+<span id="cb8-12"><a href="#cb8-12"></a>       <span class="st">`</span><span class="at">28R21</span><span class="st">`</span> <span class="ot">=</span> list_28R21<span class="sc">$</span>V1,</span>
+<span id="cb8-13"><a href="#cb8-13"></a>       <span class="st">`</span><span class="at">28R31</span><span class="st">`</span> <span class="ot">=</span> list_28R31<span class="sc">$</span>V1,</span>
+<span id="cb8-14"><a href="#cb8-14"></a>       <span class="st">`</span><span class="at">28R33</span><span class="st">`</span> <span class="ot">=</span> list_28R33<span class="sc">$</span>V1)</span>
+<span id="cb8-15"><a href="#cb8-15"></a>  ),</span>
+<span id="cb8-16"><a href="#cb8-16"></a>  <span class="at">order.by =</span> <span class="st">"freq"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17"></a>  <span class="at">keep.order =</span> <span class="cn">TRUE</span></span>
+<span id="cb8-18"><a href="#cb8-18"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-03-variant-calling_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 3: Culture #28 CE-Norway hybridization event.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>list_16R23 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.Lithuania.16R23.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-2"><a href="#cb9-2"></a>list_16R37 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.Lithuania.16R37.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-3"><a href="#cb9-3"></a>list_46R12 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.Lithuania.46R12.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>list_46R37 <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/kveiks.fltr.Lithuania.46R37.lst"</span>, <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a>UpSetR<span class="sc">::</span><span class="fu">upset</span>(</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  UpSetR<span class="sc">::</span><span class="fu">fromList</span>(</span>
+<span id="cb9-8"><a href="#cb9-8"></a>    <span class="fu">list</span>(</span>
+<span id="cb9-9"><a href="#cb9-9"></a>      <span class="st">`</span><span class="at">16R23</span><span class="st">`</span> <span class="ot">=</span> list_16R23<span class="sc">$</span>V1,</span>
+<span id="cb9-10"><a href="#cb9-10"></a>      <span class="st">`</span><span class="at">16R37</span><span class="st">`</span> <span class="ot">=</span> list_16R37<span class="sc">$</span>V1,</span>
+<span id="cb9-11"><a href="#cb9-11"></a>      <span class="st">`</span><span class="at">46R12</span><span class="st">`</span> <span class="ot">=</span> list_46R12<span class="sc">$</span>V1,</span>
+<span id="cb9-12"><a href="#cb9-12"></a>      <span class="st">`</span><span class="at">46R37</span><span class="st">`</span> <span class="ot">=</span> list_46R37<span class="sc">$</span>V1)</span>
+<span id="cb9-13"><a href="#cb9-13"></a>  ),</span>
+<span id="cb9-14"><a href="#cb9-14"></a>  <span class="at">order.by =</span> <span class="st">"freq"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15"></a>  <span class="at">keep.order =</span> <span class="cn">TRUE</span></span>
+<span id="cb9-16"><a href="#cb9-16"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-03-variant-calling_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 4: Culture #16 Lithuania hybridization event.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s try to phase Culture 28 with the predict correct parents and with the wrong parents. If the phased genome with the correct parents have significant more phased SNPs than the one with the wrong parents, maybe we can infer that Culture #28 is indeed an hybrid.</p>
+<p>correct parents 28R21 28P6 28R33</p>
+<p>wrong parents 28R21 28P1 28R8 28R21 28P1 27R17 28R21 28R8 27R17 28R21 28P6 27R17</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="va">DB</span><span class="op">=</span>~/00_Brigida_starting_files/variants/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># phase with Whatshap</span></span>
+<span id="cb10-5"><a href="#cb10-5"></a><span class="ex">whatshap</span> phase <span class="at">-o</span> phased.vcf.gz <span class="at">--reference</span><span class="op">=</span><span class="va">$DB</span> culture28.vcf.gz 28R21_28P6_28R33.align.bam</span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="ex">whatshap</span> phase <span class="at">-o</span> phased.wrongparents1.vcf.gz <span class="at">--reference</span><span class="op">=</span><span class="va">$DB</span> culture28.wrongparents1.vcf.gz 28R21_28P1_28R8.align.bam</span>
+<span id="cb10-7"><a href="#cb10-7"></a><span class="ex">whatshap</span> phase <span class="at">-o</span> phased.wrongparents2.vcf.gz <span class="at">--reference</span><span class="op">=</span><span class="va">$DB</span> culture28.wrongparents2.vcf.gz 28R21_28P1_27R17.align.bam</span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="ex">whatshap</span> phase <span class="at">-o</span> phased.wrongparents3.vcf.gz <span class="at">--reference</span><span class="op">=</span><span class="va">$DB</span> culture28.wrongparents3.vcf.gz 28R21_28R8_27R17.align.bam</span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="ex">whatshap</span> phase <span class="at">-o</span> phased.wrongparents4.vcf.gz <span class="at">--reference</span><span class="op">=</span><span class="va">$DB</span> culture28.wrongparents4.vcf.gz 28R21_28P6_27R17.align.bam</span>
+<span id="cb10-10"><a href="#cb10-10"></a></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="co"># generate tabular output for plotting</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="ex">python3.6</span> Vikings.culture_phasing_summary.py <span class="at">--input</span> culture28.vcf.gz <span class="at">--name</span> 28R21_28P6_28R33</span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="ex">python3.6</span> Vikings.culture_phasing_summary.py <span class="at">--input</span> culture28.wrongparents1.vcf.gz <span class="at">--name</span> 28R21_28P1_28R8</span>
+<span id="cb10-14"><a href="#cb10-14"></a><span class="ex">python3.6</span> Vikings.culture_phasing_summary.py <span class="at">--input</span> culture28.wrongparents2.vcf.gz <span class="at">--name</span> 28R21_28P1_27R17</span>
+<span id="cb10-15"><a href="#cb10-15"></a><span class="ex">python3.6</span> Vikings.culture_phasing_summary.py <span class="at">--input</span> culture28.wrongparents3.vcf.gz <span class="at">--name</span> 28R21_28R8_27R17</span>
+<span id="cb10-16"><a href="#cb10-16"></a><span class="ex">python3.6</span> Vikings.culture_phasing_summary.py <span class="at">--input</span> culture28.wrongparents4.vcf.gz <span class="at">--name</span> 28R21_28P6_27R17</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># import</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>phased <span class="ot">=</span> <span class="fu">read.delim</span>(<span class="st">"./data/p01-03/culture28.phasing.txt"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3"></a></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co"># melt</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a>phased_melted <span class="ot">=</span> reshape2<span class="sc">::</span><span class="fu">melt</span>(phased)</span>
+<span id="cb11-6"><a href="#cb11-6"></a></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co"># plot</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="fu">ggplot</span>(phased_melted, <span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> variable), <span class="at">color =</span> <span class="st">"grey45"</span>, <span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> value), <span class="at">vjust =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"firebrick"</span>, <span class="st">"steelblue1"</span>, <span class="st">"steelblue3"</span>, <span class="st">"steelblue4"</span>)) <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12"></a>  <span class="fu">facet_grid</span>(trios <span class="sc">~</span> chr) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb11-14"><a href="#cb11-14"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-15"><a href="#cb11-15"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb11-16"><a href="#cb11-16"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb11-17"><a href="#cb11-17"></a>        <span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="p01-03-variant-calling_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 5: Culture #28 Phasing combinations.</span></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-lesson-learnt-feature-selection" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-lesson-learnt-feature-selection"><span class="header-section-number">3.6</span> Lessons Learnt</h2>
 <p>Based on the we have learnt:</p>
 <ul>
 <li>Fr</li>
 </ul>
 </section>
-<section id="session-information" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="session-information"><span class="header-section-number">3.4</span> Session Information</h2>
+<section id="session-information" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="session-information"><span class="header-section-number">3.7</span> Session Information</h2>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -299,49 +1042,50 @@ attached base packages:
 [8] methods   base     
 
 other attached packages:
- [1] org.Sc.sgd.db_3.18.0   AnnotationDbi_1.64.1   IRanges_2.36.0        
- [4] S4Vectors_0.40.2       Biobase_2.62.0         BiocGenerics_0.48.1   
- [7] RColorBrewer_1.1-3     magrittr_2.0.3         gridExtra_2.3         
-[10] ggplot2_3.5.1          DT_0.33                ComplexHeatmap_2.18.0 
-[13] clusterProfiler_4.10.1 circlize_0.4.16       
+ [1] UpSetR_1.4.0           org.Sc.sgd.db_3.18.0   AnnotationDbi_1.64.1  
+ [4] IRanges_2.36.0         S4Vectors_0.40.2       Biobase_2.62.0        
+ [7] BiocGenerics_0.48.1    RColorBrewer_1.1-3     magrittr_2.0.3        
+[10] gridExtra_2.3          ggh4x_0.3.0            ggplot2_3.5.1         
+[13] DT_0.33                ComplexHeatmap_2.18.0  clusterProfiler_4.10.1
+[16] circlize_0.4.16       
 
 loaded via a namespace (and not attached):
   [1] jsonlite_1.8.9          shape_1.4.6.1           farver_2.1.2           
   [4] rmarkdown_2.29          GlobalOptions_0.1.2     fs_1.6.5               
   [7] zlibbioc_1.48.2         vctrs_0.6.5             memoise_2.0.1          
- [10] RCurl_1.98-1.16         ggtree_3.10.1           htmltools_0.5.8.1      
- [13] progress_1.2.3          curl_6.4.0              gridGraphics_0.5-1     
- [16] htmlwidgets_1.6.4       plyr_1.8.9              cachem_1.1.0           
- [19] igraph_2.1.4            lifecycle_1.0.4         iterators_1.0.14       
- [22] pkgconfig_2.0.3         Matrix_1.6-5            R6_2.5.1               
- [25] fastmap_1.2.0           gson_0.1.0              GenomeInfoDbData_1.2.11
- [28] clue_0.3-66             digest_0.6.37           aplot_0.2.4            
- [31] enrichplot_1.22.0       colorspace_2.1-1        patchwork_1.3.0        
- [34] RSQLite_2.3.9           filelock_1.0.3          httr_1.4.7             
- [37] polyclip_1.10-7         compiler_4.3.2          bit64_4.6.0-1          
- [40] withr_3.0.2             doParallel_1.0.17       BiocParallel_1.36.0    
- [43] viridis_0.6.5           DBI_1.2.3               ggforce_0.4.2          
- [46] biomaRt_2.58.2          MASS_7.3-60.0.1         rappdirs_0.3.3         
- [49] rjson_0.2.23            HDO.db_0.99.1           tools_4.3.2            
- [52] ape_5.8-1               scatterpie_0.2.4        glue_1.8.0             
- [55] nlme_3.1-167            GOSemSim_2.28.1         shadowtext_0.1.4       
- [58] cluster_2.1.8           reshape2_1.4.4          fgsea_1.28.0           
- [61] generics_0.1.3          gtable_0.3.6            tidyr_1.3.1            
- [64] data.table_1.16.4       hms_1.1.3               xml2_1.3.6             
- [67] tidygraph_1.3.1         XVector_0.42.0          ggrepel_0.9.6          
- [70] foreach_1.5.2           pillar_1.10.1           stringr_1.5.1          
- [73] yulab.utils_0.2.0       splines_4.3.2           dplyr_1.1.4            
- [76] tweenr_2.0.3            BiocFileCache_2.10.2    treeio_1.26.0          
- [79] lattice_0.22-6          bit_4.5.0.1             tidyselect_1.2.1       
- [82] GO.db_3.18.0            Biostrings_2.70.3       knitr_1.49             
- [85] xfun_0.50               graphlayouts_1.2.2      matrixStats_1.5.0      
- [88] stringi_1.8.4           lazyeval_0.2.2          ggfun_0.1.8            
- [91] evaluate_1.0.3          codetools_0.2-20        ggraph_2.2.1           
- [94] tibble_3.2.1            qvalue_2.34.0           ggplotify_0.1.2        
- [97] cli_3.6.3               munsell_0.5.1           Rcpp_1.0.14            
-[100] GenomeInfoDb_1.38.8     dbplyr_2.5.0            png_0.1-8              
-[103] XML_3.99-0.18           parallel_4.3.2          blob_1.2.4             
-[106] prettyunits_1.2.0       DOSE_3.28.2             bitops_1.0-9           
+ [10] RCurl_1.98-1.16         ggtree_3.10.1           rstatix_0.7.2          
+ [13] htmltools_0.5.8.1       broom_1.0.7             Formula_1.2-5          
+ [16] gridGraphics_0.5-1      htmlwidgets_1.6.4       plyr_1.8.9             
+ [19] cachem_1.1.0            igraph_2.1.4            lifecycle_1.0.4        
+ [22] iterators_1.0.14        pkgconfig_2.0.3         Matrix_1.6-5           
+ [25] R6_2.5.1                fastmap_1.2.0           gson_0.1.0             
+ [28] GenomeInfoDbData_1.2.11 clue_0.3-66             digest_0.6.37          
+ [31] aplot_0.2.4             enrichplot_1.22.0       colorspace_2.1-1       
+ [34] patchwork_1.3.0         RSQLite_2.3.9           ggpubr_0.6.0           
+ [37] labeling_0.4.3          abind_1.4-8             httr_1.4.7             
+ [40] polyclip_1.10-7         compiler_4.3.2          bit64_4.6.0-1          
+ [43] withr_3.0.2             doParallel_1.0.17       backports_1.5.0        
+ [46] BiocParallel_1.36.0     carData_3.0-5           viridis_0.6.5          
+ [49] DBI_1.2.3               ggforce_0.4.2           ggsignif_0.6.4         
+ [52] MASS_7.3-60.0.1         rjson_0.2.23            HDO.db_0.99.1          
+ [55] tools_4.3.2             ape_5.8-1               scatterpie_0.2.4       
+ [58] glue_1.8.0              nlme_3.1-167            GOSemSim_2.28.1        
+ [61] shadowtext_0.1.4        cluster_2.1.8           reshape2_1.4.4         
+ [64] fgsea_1.28.0            generics_0.1.3          gtable_0.3.6           
+ [67] tidyr_1.3.1             data.table_1.16.4       car_3.1-3              
+ [70] tidygraph_1.3.1         XVector_0.42.0          ggrepel_0.9.6          
+ [73] foreach_1.5.2           pillar_1.10.1           stringr_1.5.1          
+ [76] yulab.utils_0.2.0       splines_4.3.2           dplyr_1.1.4            
+ [79] tweenr_2.0.3            treeio_1.26.0           lattice_0.22-6         
+ [82] bit_4.5.0.1             tidyselect_1.2.1        GO.db_3.18.0           
+ [85] Biostrings_2.70.3       knitr_1.49              xfun_0.50              
+ [88] graphlayouts_1.2.2      matrixStats_1.5.0       stringi_1.8.4          
+ [91] lazyeval_0.2.2          ggfun_0.1.8             yaml_2.3.10            
+ [94] evaluate_1.0.3          codetools_0.2-20        ggraph_2.2.1           
+ [97] tibble_3.2.1            qvalue_2.34.0           ggplotify_0.1.2        
+[100] cli_3.6.3               munsell_0.5.1           Rcpp_1.0.14            
+[103] GenomeInfoDb_1.38.8     png_0.1-8               parallel_4.3.2         
+[106] blob_1.2.4              DOSE_3.28.2             bitops_1.0-9           
 [109] viridisLite_0.4.2       tidytree_0.4.6          scales_1.3.0           
 [112] purrr_1.0.2             crayon_1.5.3            GetoptLong_1.0.5       
 [115] rlang_1.1.5             cowplot_1.1.3           fastmatch_1.1-6        
