@@ -1,4 +1,67 @@
+# Genotype to Phenotype
 
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("ape", "aplot", "ggnewscale", "ggplot2", "ggtree", "ggtreeExtra",
+                "grid", "gridExtra", "naturalsort", "pophelper", "RColorBrewer",
+                "reshape", "stringr", "treeio")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+```
+
+
+## On this page
+
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+
+* Here
+
+
+## Genome Domestication Signature
 
 
 ##### GENOME DOMESTICATION
+
+
+
+
+
+
+## Lessons Learnt {#sec-lesson-learnt-feature-selection}
+
+Based on the  we have learnt:
+
+* Fr
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::
