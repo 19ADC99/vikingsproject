@@ -36,7 +36,7 @@ knitr::opts_knit$set(root.dir = mainDir)
 
 Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
 
-* Here we
+* Here 
 
 
 ## Phylogeny
