@@ -1,4 +1,4 @@
-# Genotype to Phenotype
+# High-throughput phenotyping
 
 ```{css, echo=FALSE}
 
@@ -20,9 +20,9 @@ div.sourceCode {
 
 ```{r, echo=FALSE, include=FALSE}
 # load required libraries
-up_packages = c("ape", "aplot", "ggnewscale", "ggplot2", "ggtree", "ggtreeExtra",
-                "grid", "gridExtra", "naturalsort", "pophelper", "RColorBrewer",
-                "reshape", "stringr", "treeio")
+up_packages = c("ape", "aplot", "dplyr", "ggnewscale", "ggplot2", "ggpubr", "ggtree", "ggtreeExtra",
+                "grid", "gridExtra", "gtable", "naturalsort", "phytools", "plyr", "RColorBrewer",
+                "reshape", "reshape2", "stringr", "treeio")
 lapply(up_packages, require, character.only = TRUE)
 
 # set working directory
@@ -39,11 +39,11 @@ Biological insights and take-home messages are at the bottom of the page at sect
 * Here
 
 
-## Genome Domestication Signature
+## High-throughput phenotyping of farmhouse and industrial yeasts
 
 
-##### GENOME DOMESTICATION
 
+## Fermentations
 
 
 

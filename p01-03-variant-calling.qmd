@@ -20,8 +20,10 @@ div.sourceCode {
 
 ```{r, echo=FALSE, include=FALSE}
 # load required libraries
-up_packages = c("circlize", "clusterProfiler", "ComplexHeatmap", "DT", "ggh4x", "ggplot2", "grid", "gridExtra",
-                "magrittr", "RColorBrewer", "org.Sc.sgd.db", "UpSetR")
+up_packages = c("ape", "aplot", "circlize", "clusterProfiler", "ComplexHeatmap", "dplyr", "DT", "ggh4x",
+                "ggnewscale", "ggplot2", "ggpubr", "ggtree", "ggtreeExtra", "grid", "gridExtra",
+                "gtable", "magrittr", "naturalsort", "org.Sc.sgd.db", "phytools", "plyr", "RColorBrewer", 
+                "reshape", "reshape2", "stringr", "treeio", "UpSetR")
 lapply(up_packages, require, character.only = TRUE)
 
 # set working directory
@@ -757,6 +759,874 @@ ggplot(phased_melted, aes(x = variable, y = value)) +
         legend.position = "none")
 
 ```
+
+
+
+
+## Genome Domestication Signature
+
+Now we try to identify genetic signatures in the Kveiks lineage that hints to genome domestication or potential interesting brewing and industrial phenotypes. The idea is to look for the genes and the respective alleles involved in: copper tolerance, production of Phenolic Off-Flavours, maltose/maltotriose metabolism, ethanol resistance, amilase activity, glycerol production, temperature tolerance, heat-shock proteins, sulfites production, flocculation, desiccation tolerance, presence of Killer Toxins.
+
+To achieve this we follow an approach based on sequence similarity search, variant calling and- based and phylogeny based:
+
+- we will look for genes involved in industrial phenotypes but absent in S288C with a sequence similarity search.
+- we will look at loss of function (internal premature stop codons and frame-shifts) for genes involved in industrial phenotypes.
+- we will look at Kveiks allelic variants and compare them to the variaat sin other industrial yeast strains to discover conserved patterns.
+- we will cluster phylogenetically kveiks and other industrial strains in a phenotype-wise manner.
+
+
+### Identifying genes missing in S288C
+
+Some genes involved in industrial phenotypes are absent in S288C. In order to discover their presence in the sequenced kveiks, we will download the protein sequences of the genes of interest from SGD (https://www.yeastgenome.org/) and perform a sequence similarity search against the predicted proteins for each kveik strain.
+
+
+```{bash, eval=FALSE}
+# create protein databases
+for file in *fasta; do makeblastdb -dbtype prot -in $file; done
+
+## BLASTp
+# EthanolResistance
+for GENE in MPR1; do
+	for file in ../00_prot_DB/*fasta; do
+		blastp -db $file -query EthanolResistance.$GENE.aa.fa \
+			-out $GENE.$(basename $file .fasta).BLASTp.ER \
+			-num_threads 8 -outfmt 6 -threshold 0.9 -qcov_hsp_perc 0.7;
+	done;
+done
+
+# Amilase activity
+for GENE in STA1 STA2; do
+	for file in ../00_prot_DB/*fasta; do
+		blastp -db $file -query AmilaseActivity.$GENE.aa.fa \
+			-out $GENE.$(basename $file .fasta).BLASTp.AA \
+			-num_threads 8 -outfmt 6 -threshold 0.9 -qcov_hsp_perc 0.7;
+	done;
+done
+
+# KillerToxin
+for TOXIN in KHM1 KHR1 KHS1; do
+	for file in ../00_prot_DB/*fasta; do
+		blastp -db $file -query KillerToxins.$TOXIN.aa.fa \
+			-out $TOXIN.$(basename $file .fasta).BLASTp.KT \
+			-num_threads 8 -outfmt 6 -threshold 0.9 -qcov_hsp_perc 0.7;
+	done;
+done
+
+```
+
+
+
+
+### Annotate variants
+
+We use SnpEff to annotate variants effect. 
+
+To run SnpEff, first we need to add reference S288C genome to snpEff. To do so, we modify the config file: ``~/bin/snpEff/snpEff.config``. by adding teh following lines:
+
+```
+# S288C GENOME
+Scere64K: Scere64K
+```
+
+The, we copy the proteins, transcripts and fasta files to ``~/bin/snpEff/data``. 
+
+```{bash, eval=FALSE}
+mkdir ~/bin/snpEff/data/Scere64K
+cp Scere64K.aa.fa /bin/snpEff/data/S4.consensus/protein.fa
+cp Scere64K.genes.gff ~/bin/snpEff/data/S4.consensus.genes.gff
+cp Scere64K.cds.fa ~/bin/snpEff/data/S4.consensus/genes.fa
+cp Scere64K.fa ~/bin/snpEff/data/S4.consensus/sequences,fa
+```
+
+and build the reference database:
+
+```{bash, eval=FALSE}
+java -jar ~/bin/snpEff/snpEff.jar build -gff3 -v Scere64K
+```
+
+
+Now we can run SnpEff on a subset of variants composed by the kveiks strains plus the 22 additional industrial strains that we used as comparing in the previous analyses.
+
+```{bash, eval=FALSE}
+# select species for genome domestication
+~/bin/bcftools-1.9/bcftools view \
+  --samples-file species_list.lst \
+	--force-samples \
+	--threads 16 \
+	--min-alleles 2 \
+	--output-type z ../08_GATK_variants3.3/all_plusKV.fltr.backup.vcf.gz \
+	> all_plusKV.fltr.backup.reduced.vcf.gz
+
+# annotate variants
+java -jar ~/bin/snpEff/snpEff.jar eff \
+	Scere64K \
+	all_plusKV.fltr.backup.reduced.vcf.gz \
+	> all_plusKV.fltr.backup.reduced.snpEff.vcf;
+mv snpEff_genes.txt all_plusKV.fltr.backup.reduced.snpEff_genes.txt;
+mv snpEff_summary.html all_plusKV.fltr.backup.reduced.vcf.snpEff_summary.html;
+```
+
+
+
+### Parse variants
+
+Now we can select the subset of variants that falls between gene of interest for industrial applications.
+
+```{bash, eval=FALSE}
+# select variants
+while read line; do
+	CAT=$(echo $line | cut -f 1 -d " ");
+	GENE=$(echo $line | cut -f 2 -d " ");
+	CHR=$(echo $line | cut -f 4 -d " ");
+	START=$(echo $line | cut -f 5 -d " ");
+	STOP=$(echo $line | cut -f 6 -d " ");
+	tabix all_plusKV.fltr.backup.reduced.snpEff.vcf.gz \
+		"${CHR}":"${START}"-"${STOP}" > $CAT.$GENE.variants.vcf;
+done < Domestication.genes.windows.lst
+
+# reformat output for plotting
+for DIR in 0[1-9]* 1[0-2]*; do
+	for file in $DIR/*.vcf; do
+		python3.5 Vikings_domesticationVCFparser.py \
+			--input $file \
+			--samples vcf_sample_positions.txt;
+	done \
+	| sed "s|$DIR/||g" \
+	| perl -ne '@a = <>; print sort { length $b <=> length $a } @a' \
+  > variant."${DIR}"_all.tab &
+done
+
+while read line; do
+	for file in variants.*_all.tab; do
+		OLD=$(echo $line | cut -f 2 -d " ");
+		NEW=$(echo $line | cut -f 3 -d " ");
+		sed -i "s/$OLD/$NEW/g" $file;
+	done;
+done < Domestication.genes.windows.lst 
+```
+
+
+Let's plot them.
+
+```{r, warning=FALSE, message=FALSE}
+
+# plot
+phenotypes = list(
+  "01_coppertolerance",
+  "02_POF",
+  "03_maltosemaltotriose",
+  "04_ethanolresistance",
+  "05_amilaseactivity",
+  "06_glycerol",
+  "07_temperaturetolerance",
+  "08_heatshock",
+  "09_sulfites",
+  "10_flocculation",
+  "11_dessication",
+  "12_killertoxin"
+)
+
+color_list = c(
+  "grey85", "white", "#a2d5c6", "#077b8a", "#d72631", "#5c3c92",
+  "#e75874", "#be1558", "#fbcbc9", "#322514", "#1e3d59", "#ff6e40",
+  "#ffc13b", "#ecc19c", "#1e847f", "#000000", "#d9a5b3", "#1868ae",
+  "#c6d7eb", "#da68a0", "#77c593", "#ed3572", "#1d3c45", "#d2601a",
+  "#fff1e1", "#097770", "#ffea04", "#b85042", "#ffcce7", "#daf2dc",
+  "#e1dd72", "#a8c66c", "#1b6535"
+)
+
+plot_list = list()
+
+for (i in 1:length(phenotypes)){
+  
+  name = phenotypes[i]
+  file = paste0("./data/p01-03/variants.", name, "_all.tab")
+  # dataset = read.delim(file, header = FALSE, fill = TRUE)
+  dataset = read.delim(file, header = FALSE)
+  
+  dataset$V3 = factor(
+    dataset$V3,
+    levels = c(
+      "14R30", "14R6", "16R23", "16R37", "17P5", "19R18", "1R16", "21P1", "21R38", "27R17", "28P1",
+       "28P6", "28R21", "28R33", "28R8", "2R23", "38R16", "39R20", "3R11", "40R14", "40R1", "40R20",
+       "41R10", "41R15", "42R20", "42R31", "44R32", "44R7", "45P5", "45R11", "46R12", "46R37", "6R15",
+       "7R7", "8R19", "9R40", "Granvin1", "Hornindal1", "Hornindal2", "k7R25", "Laerdal2", "Muri", "SortdalEbbe1",
+       "Voss1", "X5000", "X5009", "X6004", "x97", "X1002", "X1014", "X1030", "X1129", "X5508", "X1007",
+       "X1118", "X1148", "X7078", "X1011", "X1091", "X1111", "X1119", "X8003", "X35", "X1046", "X4037", "X4051"
+    )
+  )
+  
+  dataset$V6 = factor(
+    dataset$V6,
+    levels = c(
+      "NO_COV", "REF", "0/1", "1/1", "0/2", "0/3", 
+      "0/4", "0/6", "1/2", "1/3", "1/4", "1/5",
+      "1/6", "1/8", "2/1", "2/2", "2/3", "2/4",
+      "2/5", "3/1", "3/2", "3/3", "3/4", "4/1",
+      "4/3", "4/4", "5/1", "5/5", "5/6", "7/7",
+      "7/8", "8/8", "./."
+    )
+  )
+  
+  ### create the plot
+  p1 = ggplot(dataset, aes(V3, V5)) + 
+    geom_tile(aes(fill = V6)) +
+    geom_vline(aes(xintercept = 44.5), color = "grey50", size = 0.125) +
+    geom_vline(aes(xintercept = 48.5), color = "grey50", size = 0.125) +
+    geom_vline(aes(xintercept = 53.5), color = "grey50", size = 0.125) +
+    geom_vline(aes(xintercept = 57.5), color = "grey50", size = 0.125) +
+    geom_vline(aes(xintercept = 61.5), color = "grey50", size = 0.125) +
+    geom_vline(aes(xintercept = 62.5), color = "grey50", size = 0.125) +
+    scale_fill_manual(values = color_list) +
+    coord_cartesian(expand = FALSE) +
+    facet_wrap(~V2, nrow = 1, scales = "free",
+               strip.position = "bottom") +
+    labs(fill = "Genotype",
+         y = "Positions") +
+    theme(plot.title = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.ticks.x = element_line(
+            size = 2,
+            colour = c(
+              "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", 
+              "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", 
+              "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", 
+              "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", 
+              "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", 
+              "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#3288BD", "#3288BD", "#3288BD", "#3288BD",
+              "#FC8D59", "#FC8D59", "#FC8D59", "#FC8D59", "#FC8D59", "#99D594", "#99D594", "#99D594",
+              "#99D594", "#FFFFBF", "#FFFFBF", "#FFFFBF", "#FFFFBF", "#7BCEB8", "#FEE08B", "#FEE08B",
+              "#FEE08B"
+            )
+          ),
+          axis.ticks.length.x = unit(1, "lines"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_text(size = 16),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          legend.box.background = element_rect(fill = NA, colour = "black"),
+          legend.key = element_rect(fill = NA, colour = "black"),
+          legend.position = "bottom",
+          panel.background = element_blank(),
+          panel.spacing = unit(-0.2, "lines"),
+          panel.border = element_rect(colour = "black", fill = NA),
+          strip.background = element_rect(colour = "black", fill = "grey90"),
+          strip.placement = "outside",
+          strip.text.x = element_text(size = 10))
+
+  ### Construct species tables
+  # Construct the 14 grobs - 7 symbols and 7 labels
+  L1 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#D53E4F", col = "black"))
+  L2 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#3288BD", col = "black"))
+  L3 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#FC8D59", col = "black"))
+  L4 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#99D594", col = "black"))
+  L5 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#FFFFBF", col = "black"))
+  L6 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#7BCEB8", col = "black"))
+  L7 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#FEE08B", col = "black"))
+  T1 = textGrob("Farmhouse", x = .2, just = "left")
+  T2 = textGrob("Asia", x = .2, just = "left")
+  T3 = textGrob("Beer 1", x = .2, just = "left")
+  T4 = textGrob("Beer 2", x = .2, just = "left")
+  T5 = textGrob("Mixed", x = .2, just = "left")
+  T6 = textGrob("Mosaic", x = .2, just = "left")
+  T7 = textGrob("Wine", x = .2, just = "left")
+  
+  # Construct a gtable - 2 columns X 8 rows
+  leg = gtable(width = unit(c(1, 2), "cm"),
+               height = unit(c(1, 1, 1, 1, 1, 1, 1, 1), "cm"))
+  leg = gtable_add_grob(leg, rectGrob(gp = gpar(fill = NA, col = "black")),
+                        t = 1, l = 1, b = 8, r = 2)
+
+  # gtable_show_layout(leg)
+  # Place the 14 grob into the table
+  leg = gtable_add_grob(leg, L1, t=2, l=1)
+  leg = gtable_add_grob(leg, L2, t=3, l=1)
+  leg = gtable_add_grob(leg, L3, t=4, l=1)
+  leg = gtable_add_grob(leg, L4, t=5, l=1)
+  leg = gtable_add_grob(leg, L5, t=6, l=1)
+  leg = gtable_add_grob(leg, L6, t=7, l=1)
+  leg = gtable_add_grob(leg, L7, t=8, l=1)  
+  leg = gtable_add_grob(leg, T1, t=2, l=2)
+  leg = gtable_add_grob(leg, T2, t=3, l=2)
+  leg = gtable_add_grob(leg, T3, t=4, l=2)
+  leg = gtable_add_grob(leg, T4, t=5, l=2)
+  leg = gtable_add_grob(leg, T5, t=6, l=2)
+  leg = gtable_add_grob(leg, T6, t=7, l=2)
+  leg = gtable_add_grob(leg, T7, t=8, l=2)
+  
+  # Give it a title (if needed)
+  leg = gtable_add_grob(leg, textGrob("Population"), t = 1, l = 1, r = 2)
+  
+  # Get the ggplot grob for plot1
+  g = ggplotGrob(p1)
+  
+  # Get the position of the panel,
+  # add a column to the right of the panel, 
+  # put the legend into that column, 
+  # and then add another spacing column
+  pos = g$layout[grepl("panel", g$layout$name), c('t', 'l')]
+  g = gtable_add_cols(g, sum(leg$widths), tail(pos$l, n =1))
+  g = gtable_add_grob(g, leg, t = pos$t[1], l = tail(pos$l, n =1) + 1)
+  g = gtable_add_cols(g, unit(6, "pt"), tail(pos$l, n =1))
+  
+  # Draw it
+  plot_list[[i]] = g
+  
+}
+
+```
+
+::: panel-tabset
+
+#### Copper Tolerance
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Variants on Copper Tolerance genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[1]])
+
+```
+
+
+#### Phenolic Off-Flavours
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 7: Variants on Phenolic Off-Flavours genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[2]])
+
+```
+
+
+#### Maltose/Maltotriose Metabolism
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 8: Variants on Maltose/Maltotriose Metabolism genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[3]])
+
+```
+
+
+#### Ethanol Resistance
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 9: Variants on Ethanol Resistance genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[4]])
+
+```
+
+
+#### Amilase Activity
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 10: Variants on Amilase Activity genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[5]])
+
+```
+
+
+#### Glycerol Production
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 11: Variants on Glycerol Production genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[6]])
+
+```
+
+
+#### Temperature Tolerance
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 12: Variants on Temperature Tolerance genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[7]])
+
+```
+
+
+#### Heat-Shock Proteins
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 13: Variants on Heat-Shock Proteins genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[8]])
+
+```
+
+
+#### Sulfites Production
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 14: Variants on Sulfites Production genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[9]])
+
+```
+
+
+#### Flocculation
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 15: Variants on Flocculation genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[10]])
+
+```
+
+
+#### Dessication Tolerance
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 16: Variants on Dessication Tolerance genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[11]])
+
+```
+
+
+#### Killer Toxin
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 17: Variants on Killer Toxin genes.]{style="color: steelblue;"}'
+
+grid.draw(plot_list[[12]])
+
+```
+
+:::
+
+
+### Identify disrupted genes
+
+From the annotate variants, we can easily filter disrupted genes (variants with HIGH effect: i.e. premature stop codons and frameshifts), and look for patterns of disrupted "pathways" among kveiks and other industrial yeasts.
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 18: Premature stop codons distribution.]{style="color: steelblue;"}'
+
+# import
+dataset = read.delim("./data/p01-03/variants.stopcodons.ready.tab", header = FALSE)
+
+# reformat dataset
+dataset$V4 = factor(
+  dataset$V4,
+  levels = c(
+    "X4051", "X4037", "X1046", "X35", "X8003", "x1119", "X1111", "X1091", "X1011", "x7078-B", "X1148",
+    "X1118", "X1007", "X5508", "x1129", "X1030", "X1014", "X1002", "x97", "X6004", "X5009", "X5000", "Voss1",
+    "SortdalEbbe1", "Muri", "Laerdal2", "k7R25", "Hornindal2", "Hornindal1", "Granvin1", "9R40", "8R19", "7R7",
+    "6R15", "46R37", "46R12", "45R11", "45P5", "44R7", "44R32", "42R31", "42R20", "41R15", "41R10", "40R20",
+    "40R1", "40R14", "3R11", "39R20", "38R16", "2R23", "28R8", "28R33", "28R21", "28P6", "28P1", "27R17",
+    "21R38", "21P1", "1R16", "19R18", "17P5", "16R37", "16R23", "14R6", "14R30"
+  )
+)
+
+dataset$V1 = factor(
+  dataset$V1,
+  levels = c(
+    "Copper tolerance", "POF", "maltose/maltotriose", "ethanol tolerance", "amylase activity",
+    "glycerol", "temperature tolerance", "heat-shock", "sulfites", "flocculation", "dessication",
+    "killer toxin"
+  )
+)
+
+# label wrapper function
+label_wrap_gen = function(width = 25) {
+  function(variable, value) {
+    laply(strwrap(as.character(value), width=width, simplify=FALSE), 
+          paste, collapse="\n")
+  }
+}
+
+# plot
+p1 = ggplot(dataset) +
+  geom_tile(aes(x = V3, y = V4, fill = V6), color = "grey75") +
+  scale_fill_gradient(low = "white", high = "red") +
+  facet_grid(~V1, scales = "free", space = "free_x",
+             labeller=label_wrap_gen(width = 10)) +
+  labs(title = "Premature stop codons distribution",
+       x = "Genes",
+       y = "Strains") +
+  theme(plot.title = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_line(
+          size = 2.5,
+          colour = c(
+            "#FEE08B", "#FEE08B", "#FEE08B", "#7BCEB8", "#FFFFBF", "#FFFFBF", "#FFFFBF", "#FFFFBF",
+            "#FFFFBF", "#99D594", "#99D594", "#99D594", "#99D594", "#FC8D59", "#FC8D59", "#FC8D59", 
+            "#FC8D59", "#FC8D59", "#3288BD", "#3288BD", "#3288BD", "#3288BD", "#D53E4F", "#D53E4F",
+            "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F",
+            "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F",
+            "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F",
+            "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F",
+            "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F", "#D53E4F",
+            "#D53E4F", "#D53E4F"
+          )
+        ),
+        axis.ticks.length.y = unit(1, "lines"),
+        axis.title = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5),
+        legend.position = "none",
+        panel.background = element_blank(),
+        panel.spacing = unit(-0.2, "lines"),
+        panel.border = element_rect(colour = "black", fill = NA),
+        strip.background = element_rect(colour = "NA", fill = "NA"),
+        strip.placement = "outside",
+        strip.text = element_text(size = 10, angle = 90, vjust = 0.5, hjust = 0))
+
+### Construct species tables
+# Construct the 14 grobs - 7 symbols and 7 labels
+L1 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#D53E4F", col = "black"))
+L2 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#3288BD", col = "black"))
+L3 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#FC8D59", col = "black"))
+L4 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#99D594", col = "black"))
+L5 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#FFFFBF", col = "black"))
+L6 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#7BCEB8", col = "black"))
+L7 = rectGrob(height = .5, width = .5, gp = gpar(fill = "#FEE08B", col = "black"))
+T1 = textGrob("Kveik", x = .2, just = "left")
+T2 = textGrob("Asia", x = .2, just = "left")
+T3 = textGrob("Beer 1", x = .2, just = "left")
+T4 = textGrob("Beer 2", x = .2, just = "left")
+T5 = textGrob("Mixed", x = .2, just = "left")
+T6 = textGrob("Mosaic", x = .2, just = "left")
+T7 = textGrob("Wine", x = .2, just = "left")
+ 
+# Construct a gtable - 2 columns X 8 rows
+leg = gtable(width = unit(c(1, 2), "cm"),
+             height = unit(c(1, 1, 1, 1, 1, 1, 1, 1), "cm"))
+leg = gtable_add_grob(leg, rectGrob(gp = gpar(fill = NA, col = "black")),
+                      t = 1, l = 1, b = 8, r = 2)
+
+# gtable_show_layout(leg)
+# Place the 14 grob into the table
+leg = gtable_add_grob(leg, L1, t=2, l=1)
+leg = gtable_add_grob(leg, L2, t=3, l=1)
+leg = gtable_add_grob(leg, L3, t=4, l=1)
+leg = gtable_add_grob(leg, L4, t=5, l=1)
+leg = gtable_add_grob(leg, L5, t=6, l=1)
+leg = gtable_add_grob(leg, L6, t=7, l=1)
+leg = gtable_add_grob(leg, L7, t=8, l=1)  
+leg = gtable_add_grob(leg, T1, t=2, l=2)
+leg = gtable_add_grob(leg, T2, t=3, l=2)
+leg = gtable_add_grob(leg, T3, t=4, l=2)
+leg = gtable_add_grob(leg, T4, t=5, l=2)
+leg = gtable_add_grob(leg, T5, t=6, l=2)
+leg = gtable_add_grob(leg, T6, t=7, l=2)
+leg = gtable_add_grob(leg, T7, t=8, l=2)
+ 
+# Give it a title (if needed)
+leg = gtable_add_grob(leg, textGrob("Population"), t = 1, l = 1, r = 2)
+ 
+# Get the ggplot grob for plot1
+g = ggplotGrob(p1)
+ 
+# Get the position of the panel,
+# add a column to the right of the panel,
+# put the legend into that column,
+# and then add another spacing column
+pos = g$layout[grepl("panel", g$layout$name), c('t', 'l')]
+g = gtable_add_cols(g, sum(leg$widths), tail(pos$l, n =1))
+g = gtable_add_grob(g, leg, t = pos$t[1], l = tail(pos$l, n =1) + 1)
+g = gtable_add_cols(g, unit(6, "pt"), tail(pos$l, n =1))
+ 
+# Draw it
+grid.newpage()
+grid.draw(g)
+
+```
+
+
+### Phylogenetic relationships
+
+Since it is difficult to eye-ball patterns of distributions of variants among strains by eye, we can use a phylogeny approach to visualize these patterns and genetic distances. The idea behind this, is to infer phylogenetic relationships based only ina  small set of genes involved in a particular phenotype. While these signals are lost in a massive multigene phylogenetic analysis, they still can be informative and give hints on how to cluster strains based on their industrial phenotypes.
+
+The protocol we will apply is the following:
+
+- For each strain of interest (kviks + 22 industrial), generate the consensus fasta file from the aligned variants.
+-  Generate gene alignments.
+- Concatenate all the alignments for each of the 12 industrial phenotypes of interest.
+- 
+- Build a Maximum-Likelihood phylogenetic tree with IQtree.
+
+```{bash, eval=FALSE}
+SAMPLES="14R30 14R6 16R23 16R37 17P5 19R18 1R16 21P1 21R38 27R17 28P1 28P6 28R21 28R33 28R8 2R23 38R16 39R20 3R11 40R14 40R1 40R20 41R10 41R15 42R20 42R31 44R32 44R7 45P5 45R11 46R12 46R37 6R15 7R7 8R19 9R40 Granvin1 Hornindal1 Hornindal2 k7R25 Laerdal2 Muri SortdalEbbe1 Voss1 X1002_all_sorted_picard_dedup_all X1007_all_sorted_picard_dedup_all X1011_all_sorted_picard_dedup_realigned_recalibrated_all X1014_all_sorted_picard_dedup_all X1030_all_sorted_picard_dedup_all X1046_all_sorted_picard_dedup_realigned_recalibrated_all X1091_all_sorted_picard_dedup_all X1111_all_sorted_picard_dedup_all X1118_all_sorted_picard_dedup_all X1148_all_sorted_picard_dedup_all X35_all_sorted_picard_dedup_all X4037_all_sorted_picard_dedup_all X4051_all_sorted_picard_dedup_all X5000_all_sorted_picard_dedup_all X5009_all_sorted_picard_dedup_all X5508_all_sorted_picard_dedup_all X6004_all_sorted_picard_dedup_all X8003_all_sorted_picard_dedup_all x1119_all_sorted_picard_dedup_all x1129_all_sorted_picard_dedup_all x7078-B x97"
+
+# generate the fasta files for the genes of interest
+~/bin/bcftools-1.9/bcftools view \
+	-h all_plusKV.fltr.backup.reduced.snpEff.vcf.gz \
+	> all_plusKV.fltr.backup.header
+	
+for file in 0[1-9]*/*vcf 1[0-2]*/*vcf; do
+
+	cat all_plusKV.fltr.backup.header $file > $file.1;
+	mv $file.1 $file;
+	bgzip -c $file > $file.gz;
+	tabix $file.gz;
+	GENE=$(echo $file | echo $file | tr "." "\t" | cut -f 2);
+	CHR=$(grep $GENE Domestication.genes.windows.lst | cut -f 4);
+	START=$(grep $GENE Domestication.genes.windows.lst | cut -f 5);
+	STOP=$(grep $GENE Domestication.genes.windows.lst | cut -f 6);
+	
+	for SAMPLE in $SAMPLES; do
+		~/bin/samtools-1.9/samtools faidx \
+        	../09_CNVs/00_refgen/Saccharomyces_cerevisiae.EF4.73.dna.chromosome.all.fa \
+            "${CHR}":"${START}"-"${STOP}" |\
+            ~/bin/bcftools-1.9/bcftools consensus \
+            	--haplotype A \
+            	--missing - \
+            	--sample $SAMPLE $file.gz \
+              | sed "s/>.*/>$SAMPLE/g";
+	done > $(echo $file | sed 's/vcf/fa/g');
+	
+done 
+
+# alignments
+for file in 00_nt_genes/*.fa; do
+	mafft --localpair \
+	  --maxiterate 1000 \
+		--nuc \
+		--ep 0.123 \
+		--thread 32 \
+		$file \
+		> 01_mafft_align/$(basename $file .fa).align.fa;
+done
+
+for file in 01_mafft_align/*.fa; do
+	sed -i 's/_all_sorted_picard_dedup_all//g' $file;
+	sed -i 's/_all_sorted_picard_dedup_realigned_recalibrated_all//g' $file;
+done
+
+# concatenate and ML tree
+# I filter out Muri and k7R25, since they are hybrid and 
+for WORD in amylase_activity \
+  Copper_tolerance \
+  dessication \
+	ethanol_tolerance \
+	flocculation \
+	glycerol \
+	heat-shock \
+	killer_toxin \
+	maltose_maltotriose \
+	POF \
+	sulfites \
+	temperature_rolerance; do
+	perl ~/scripts/catfasta2phyml.pl \
+		--concatenate \
+		--sequential 01_mafft_align/$WORD.*fa \
+		> 03_concatenated_align/$WORD.allgenes.fa;
+done
+
+for file in 03_concatenated_align/*.fa; do
+	iqtree-omp -s $file \
+	  -st DNA \
+		-pre $(basename $file .fa) \
+		-nt 72 \
+		-bb 1000 \
+		-wbt \
+		-alrt 1000 \
+		-m GTR+G;
+done
+```
+
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 19: Domestication gene trees.]{style="color: steelblue;"}'
+
+# upload files
+phenotypes = list(
+  "Copper_tolerance",
+  "POF",
+  "maltose_maltotriose",
+  "ethanol_tolerance",
+  "amylase_activity",
+  "glycerol",
+  "temperature_rolerance",
+  "heat-shock",
+  "sulfites",
+  "flocculation",
+  "dessication",
+  "killer_toxin"
+)
+
+headers = list(
+  "Copper Tolerance",
+  "Phenolic Off-flavours",
+  "Maltose Utilization",
+  "Ethanol Resistance",
+  "Amilase Activity",
+  "Glycerol Production",
+  "Temperature Tolerance",
+  "Heat-shock Proteins",
+  "Sulfites Production",
+  "Flocculation",
+  "Dessication Tolerance",
+  "Killer Toxins"
+)
+
+info = read.csv("./data/p01-03/variants.tree.tiplabels.csv")
+
+p = list()
+
+for (i in 1:12){
+  
+  # read the tree and root it
+  name = phenotypes[i]
+  file = paste0("./data/p01-03/", name, ".allgenes.contree")
+  tree = read.newick(file)
+  tree = root(tree, which(tree$tip.label == "S288C"))
+
+  max_axis = max(nodeHeights(tree))*1.09
+  
+  p[[i]] = ggtree(tree, ladderize = FALSE) %<+% info +
+    geom_tiplab(align = TRUE, size = 1.75) +
+    geom_tippoint(aes(fill = population, size = 2.5), shape = 21) +
+    scale_fill_manual(values = c(Kveik = "#D53E4F", Mixed = "#FFFFBF", Mosaic = "#7BCEB8",
+                                  Wine = "#FEE08B", Asia = "#3288BD", Beer1 = "#FC8D59",
+                                  Beer2 = "#99D594", Lab = "grey")) +
+    labs(title = headers[[i]]) +
+    xlim(0, max_axis) +
+    ylim(0, NA) +
+    theme_tree(plot.title = element_text(hjust = 0.5, size = 16),
+               legend.position = "none")
+  
+}
+
+myplots = list(
+  p[[1]], p[[2]], p[[3]], p[[4]],
+  p[[5]], p[[6]], p[[7]], p[[8]],
+  p[[9]], p[[10]], p[[11]], p[[12]]
+)
+
+p1 = ggarrange(plotlist = myplots, widths = c(4, 3))
+
+### Construct species tables
+# Construct the 16 grobs - 8 symbols and 8 labels
+L1 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#D53E4F", col = "black"))
+L2 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#3288BD", col = "black"))
+L3 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#FC8D59", col = "black"))
+L4 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#99D594", col = "black"))
+L5 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#FFFFBF", col = "black"))
+L6 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#7BCEB8", col = "black"))
+L7 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "#FEE08B", col = "black"))
+L8 = circleGrob(x=0.5, y=0.5, r=0.25, gp = gpar(fill = "grey", col = "black"))
+T1 = textGrob("Farmhouse", x = .2, just = "left")
+T2 = textGrob("Asia", x = .2, just = "left")
+T3 = textGrob("Beer 1", x = .2, just = "left")
+T4 = textGrob("Beer 2", x = .2, just = "left")
+T5 = textGrob("Mixed", x = .2, just = "left")
+T6 = textGrob("Mosaic", x = .2, just = "left")
+T7 = textGrob("Wine", x = .2, just = "left")
+T8 = textGrob("Lab", x = .2, just = "left")
+
+# Construct a gtable - 2 columns X 8 rows
+leg = gtable(width = unit(c(1, 2), "cm"),
+             height = unit(c(1, 1, 1, 1, 1, 1, 1, 1, 1), "cm"))
+leg = gtable_add_grob(leg, rectGrob(gp = gpar(fill = NA, col = "black")),
+                      t = 1, l = 1, b = 9, r = 2)
+
+# gtable_show_layout(leg)
+# Place the 14 grob into the table
+leg = gtable_add_grob(leg, L1, t=2, l=1)
+leg = gtable_add_grob(leg, L2, t=3, l=1)
+leg = gtable_add_grob(leg, L3, t=4, l=1)
+leg = gtable_add_grob(leg, L4, t=5, l=1)
+leg = gtable_add_grob(leg, L5, t=6, l=1)
+leg = gtable_add_grob(leg, L6, t=7, l=1)
+leg = gtable_add_grob(leg, L7, t=8, l=1)
+leg = gtable_add_grob(leg, L8, t=9, l=1)
+leg = gtable_add_grob(leg, T1, t=2, l=2)
+leg = gtable_add_grob(leg, T2, t=3, l=2)
+leg = gtable_add_grob(leg, T3, t=4, l=2)
+leg = gtable_add_grob(leg, T4, t=5, l=2)
+leg = gtable_add_grob(leg, T5, t=6, l=2)
+leg = gtable_add_grob(leg, T6, t=7, l=2)
+leg = gtable_add_grob(leg, T7, t=8, l=2)
+leg = gtable_add_grob(leg, T8, t=9, l=2)
+
+# Give it a title (if needed)
+leg = gtable_add_grob(leg, textGrob("Population"), t = 1, l = 1, r = 2)
+
+# Get the ggplot grob for plot1
+g = ggplotGrob(p1)
+
+# Get the position of the panel,
+# add a column to the right of the panel, 
+# put the legend into that column, 
+# and then add another spacing column
+pos = g$layout[grepl("panel", g$layout$name), c('t', 'l')]
+g = gtable_add_cols(g, sum(leg$widths), tail(pos$l, n =1))
+g = gtable_add_grob(g, leg, t = pos$t[1], l = tail(pos$l, n =1) + 1)
+g = gtable_add_cols(g, unit(6, "pt"), tail(pos$l, n =1))
+
+# Draw it
+grid.newpage()
+grid.draw(g)
+
+```
+
+
+
+
 
 
 ## Lessons Learnt {#sec-lesson-learnt-feature-selection}
