@@ -1248,6 +1248,29 @@ grid.draw(plot_list[[12]])
 :::
 
 
+
+
+TPS3
+238G>A : 41 / 44 Farmhouse yeasts
+2500A>G : 42 / 44 Farmhouse yeasts
+
+AGT1 / MAL11
+1175_1176insT
+1772delA : 38 / 44 Farmhouse yeasts
+491AAG>TTA
+1236C>G 
+
+NTH1
+1213C>T (Leu405Phe) : 38 / 44 Farmhouse yeasts
+
+ATH1
+3394A>G, Asn1132Asp :
+3434A>G, Ser1145Asn :
+3596A>G; Asn1199Ser :
+
+
+
+
 ### Identify disrupted genes
 
 From the annotate variants, we can easily filter disrupted genes (variants with HIGH effect: i.e. premature stop codons and frameshifts), and look for patterns of disrupted "pathways" among kveiks and other industrial yeasts.

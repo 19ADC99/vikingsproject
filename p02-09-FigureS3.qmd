@@ -1,0 +1,70 @@
+# Figure 5
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("ggplot2", "grid", "magick")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+```
+
+
+## Figure S3 code
+
+```{r, warning=FALSE, message=FALSE}
+
+# get Figure S3
+final_plot = ggplot2::ggplot() + ggplot2::annotation_custom(
+  grid::rasterGrob(
+    magick::image_read("data/p02-09/Figure_S3.png"),
+    width = ggplot2::unit(1, "npc"),
+    height = ggplot2::unit(1, "npc")),
+  -Inf, Inf, -Inf, Inf)
+
+```
+
+
+## Figure S3 plot
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 18
+#| fig.cap: '[Figure S3: Strain diversity within farmhouse yeast cultures.]{style="color: steelblue;"}'
+
+final_plot
+
+```
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::

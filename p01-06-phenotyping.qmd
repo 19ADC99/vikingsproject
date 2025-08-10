@@ -1,0 +1,540 @@
+# High-throughput phenotyping
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("ape", "aplot", "dplyr", "ggnewscale", "ggplot2", "ggpubr", "ggtree", "ggtreeExtra",
+                "grid", "gridExtra", "gtable", "mixOmics", "naturalsort", "PCAtools", "phytools", "plyr", "RColorBrewer",
+                "reshape", "reshape2", "stringr", "treeio")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+```
+
+
+## On this page
+
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+
+* Here
+
+
+## High-throughput phenotyping of farmhouse and industrial yeasts
+
+Let's import the phenotypic data and reformat them.
+
+```{r, warning=FALSE, message=FALSE}
+
+# import and prep data
+raw_data = read.delim("./data/p01-06/grouped phenotype data with annotations.csv", sep = ",", header = TRUE)
+
+raw_data = raw_data %>%
+  dplyr::filter(group != "WL004") %>%
+  dplyr::filter(group != "LA001")
+raw_data$Industry = ifelse(
+  raw_data$region %in% c("South-West Norway", "Lithuania", "North-West Norway", "Russia",
+                         "Central-Eastern Norway", "Latvia", "South-Eastern Norway"),
+  "Farmhouse",
+  raw_data$region
+)
+raw_data$Industry = ifelse(
+  raw_data$Outside == "yes",
+  "Allochthonous\nyeast",
+  raw_data$Industry
+)
+raw_data$region = ifelse(
+  raw_data$Industry == "Farmhouse",
+  raw_data$region,
+  "NA"
+)
+
+raw_data$region = ifelse(
+  raw_data$culture %in% c("7", "38"),
+  "South-West Norway",
+  ifelse(
+    raw_data$culture == "40",
+    "Russia",
+    ifelse(
+      raw_data$culture == "45",
+      "Latvia",
+      ifelse(
+        raw_data$culture == "57",
+        "Central-Eastern Norway",
+        raw_data$region
+      )
+    )
+  )
+)
+
+
+raw_data = raw_data %>%
+  dplyr::mutate(region = dplyr::case_when(
+    region == "South-West Norway" ~ "SW Norway",
+    region == "North-West Norway" ~ "NW Norway",
+    region == "Central-Eastern Norway" ~ "CE Norway",
+    region == "South-Eastern Norway" ~ "SE Norway",
+    .default = as.character(region)
+  ))
+
+metadata = raw_data %>%
+  dplyr::select(c("group", "culture", "region", "Industry", "Outside", "method"))
+rownames(metadata) = metadata$group
+
+rownames(raw_data) = raw_data$group
+counts = raw_data %>%
+  dplyr::select(-c("group", "culture", "region", "Industry", "Outside", "method"))
+
+# import final clade list
+final_clades = read.table(
+  "./data/p01-06/final_clades_for_pub.txt",
+  sep = "\t",
+  header = TRUE,
+  stringsAsFactors = FALSE
+)
+# replace
+for(i in 1:nrow(final_clades)){
+
+  strain = final_clades[i, "Strain"]
+  clade = final_clades[i, "Clade"]
+  metadata[which(metadata$group == strain), "Industry"] = clade
+
+}
+metadata$Industry = ifelse(metadata$Industry == "Beer", "Beer2", metadata$Industry)
+metadata$Industry = ifelse(metadata$group == "BI001", "Asia", metadata$Industry)
+metadata$Industry = ifelse(metadata$group == "BR003", "Mixed", metadata$Industry)
+metadata$Industry = ifelse(metadata$group == "BI002", "Other", metadata$Industry)
+metadata$Industry = ifelse(metadata$group == "BI004", "Asia", metadata$Industry)
+metadata$Industry = ifelse(metadata$group == "BI005", "Other", metadata$Industry)
+
+
+## background: no farmhouse
+metadata_no_farm = metadata[which(metadata$Industry != "Farmhouse"), ]
+metadata_no_farm = metadata_no_farm[which(metadata_no_farm$Industry != "Allochthonous\nyeast"), ]
+counts_no_farm = counts[which(rownames(counts) %in% metadata_no_farm$group), ]
+
+## farmhouse focus
+metadata_farm_only = metadata[which(metadata$Industry %in% c("Farmhouse", "Allochthonous\nyeast")), ]
+colnames(metadata_farm_only)[5] = "Allochthonous"
+metadata_farm_only$Allochthonous = ifelse(metadata_farm_only$Allochthonous == "yes", "yes", "no")
+counts_farm_only = counts[which(rownames(counts) %in% metadata_farm_only$group), ]
+
+```
+
+
+### Principal Component Analysis
+
+
+
+
+#### Background: no farmhouse yeasts
+
+
+```{r, warning=FALSE, message=FALSE}
+
+# create PCA object
+pca_obj = PCAtools::pca(t(counts_no_farm),
+                        metadata_no_farm,
+                        removeVar = 0.1)
+
+
+### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS
+# Elbow method
+elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
+
+# minimum number of components that explains 80% of variance
+nPCopt = which(cumsum(pca_obj$variance) > 80)[1]
+
+# max number of component + 1
+if(elbow_method >= nPCopt){
+  nPCmax = elbow_method + 1
+} else{
+  nPCmax= nPCopt
+}
+
+### SCREEPLOT
+# screeplot
+p1 = PCAtools::screeplot(pca_obj,
+                        components = pca_obj$components[1:nPCmax],
+                        vline = c(elbow_method, nPCopt),
+                        colBar = rev(colorRampPalette(brewer.pal(7, "Blues"))(nPCmax)),
+                        axisLabSize = 18,
+                        titleLabSize = 22) +
+  geom_label(aes(x = elbow_method, y = 50, label = "Elbow method", vjust = -1, size = 8)) +
+  geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, size = 8), colour = "steelblue") +
+  theme(plot.title = element_blank())
+print(p1)
+
+### BIPLOT
+p1 = PCAtools::biplot(pca_obj,
+                      labSize = 0,
+                      pointSize = 5,
+                      drawConnectors = FALSE,
+                      max.overlaps = 700,
+                      colby = "Industry",
+                      colkey = c('#e6194b', '#ffe119', '#3cb44b', '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
+                      legendPosition = "bottom") +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        plot.subtitle = element_text(size = 18, hjust = 0.5),
+        legend.background = element_rect(colour = "grey25", size = 0.5))
+plot(p1)
+p1 = PCAtools::biplot(pca_obj,
+                      labSize = 2,
+                      pointSize = 5,
+                      drawConnectors = TRUE,
+                      max.overlaps = 700,
+                      colby = "Industry",
+                      title = "PCA - Industry",
+                      legendPosition = "bottom") +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        plot.subtitle = element_text(size = 18, hjust = 0.5),
+        legend.background = element_rect(colour = "grey25", size = 0.5))
+plot(p1)
+
+## PAIRSPLOT
+max_pairplot_comp = ifelse(nPCmax - 1 <= 10, nPCmax - 1, 10)
+p1 = PCAtools::pairsplot(pca_obj,
+                          components = pca_obj$components[1:(max_pairplot_comp)],
+                          colby = "Industry",
+                          pointSize = 2,
+                          trianglelabSize = 12,
+                          plotaxes = FALSE,
+                          margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm"),
+                          title = paste0("Top ", nPCmax - 1, " Principal Components")) +
+  theme(plot.title = element_text(size = 12, hjust = 0.5))
+print(p1)
+
+### PRINCIPAL COMPONENTS LOADINGS
+# plot loadings
+p1 = PCAtools::plotloadings(pca_obj,
+                            components = getComponents(pca_obj, seq_len(nPCmax - 1)),
+                            rangeRetain = 0.01,
+                            labSize = 3,
+                            title = "Loadings plot: correlation between phenotypes",
+                            subtitle = paste0("and the ", nPCmax - 1, " Significant Principal Components "),
+                            caption = "Top 1% variables",
+                            shape = 21,
+                            col = c('steelblue', 'white', 'red3'),
+                            drawConnectors = TRUE) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        plot.subtitle = element_text(size = 18, hjust = 0.5))
+print(p1)
+
+```
+
+
+
+
+### PCA all
+
+```{r}
+
+#------------------------------------------------------------------------------#
+## 3.1 - PCA                                                                ####
+
+# create PCA object
+pca_obj = PCAtools::pca(t(counts),
+                        metadata,
+                        removeVar = 0.1)
+
+
+### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS
+# Horn method
+horn_method = tryCatch(
+  PCAtools::parallelPCA(counts),
+  error = function(e) { list(n = 1) }
+)
+
+# Elbow method
+elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
+
+# minimum number of components that explains 80% of variance
+nPCopt = which(cumsum(pca_obj$variance) > 80)[1]
+
+# max number of component + 1
+if(horn_method$n >= elbow_method & horn_method$n >= nPCopt){
+  nPCmax = horn_method$n + 1
+} else if(elbow_method >= horn_method$n & elbow_method >= nPCopt){
+  nPCmax = elbow_method + 1
+} else{
+  nPCmax= nPCopt
+}
+
+
+### SCREEPLOT
+# screeplot
+p_all_scree = PCAtools::screeplot(pca_obj,
+                        components = pca_obj$components[1:nPCmax],
+                        vline = c(elbow_method, nPCopt),
+                        title = "Screeplot - number of significant Principal Components",
+                        ylab = "Explained\nVariation (%)",
+                        colBar = rev(colorRampPalette(brewer.pal(7, "Blues"))(nPCmax)),
+                        axisLabSize = 18,
+                        titleLabSize = 22) +
+  geom_label(aes(x = elbow_method, y = 50, label = "Elbow method", vjust = -1, size = 8)) +
+  geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, size = 8), colour = "steelblue") +
+  theme(plot.title = element_blank(),
+        axis.title.x = element_blank())
+print(p_all_scree)
+
+### BIPLOT
+p_all_bi = PCAtools::biplot(pca_obj,
+                            labSize = 0,
+                            pointSize = 1.5,
+                            drawConnectors = FALSE,
+                            max.overlaps = 700,
+                            shape ="Outside",
+                            shapekey = c(20, 21),
+                            colby = "Industry",
+                            colkey = c('#e6194b', '#ffe119', '#3cb44b', '#4363d8', "red", '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
+                            title = "PCA - Industry",
+                            legendPosition = "bottom") +
+  theme(plot.title = element_blank(),
+        legend.background = element_rect(colour = "grey25", size = 0.5))
+plot(p_all_bi)
+
+
+
+# p1 = PCAtools::biplot(pca_obj,
+#                       labSize = 2,
+#                       pointSize = 5,
+#                       drawConnectors = TRUE,
+#                       max.overlaps = 700,
+#                       colby = "Industry",
+#                       #colkey = c("grey75", colorRampPalette(brewer.pal(n = 4, name = "Reds"))(8)),
+#                       title = "PCA - Industry",
+#                       legendPosition = "bottom") +
+#   theme(plot.title = element_text(size = 22, hjust = 0.5),
+#         plot.subtitle = element_text(size = 18, hjust = 0.5),
+#         legend.background = element_rect(colour = "grey25", size = 0.5))
+# plot(p1)
+
+## PAIRSPLOT
+p_all_pair = PCAtools::pairsplot(pca_obj,
+                                 components = pca_obj$components[1:4],
+                                 shape ="Outside",
+                                 shapekey = c(20, 21),
+                                 colby = "Industry",
+                                 colkey = c('#e6194b', '#ffe119', '#3cb44b', '#4363d8', "red", '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
+                                 pointSize = 1,
+                                 trianglelabSize = 12,
+                                 plotaxes = FALSE,
+                                 margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm")) +
+  theme(plot.title = element_blank())
+print(p_all_pair)
+
+### PRINCIPAL COMPONENTS LOADINGS
+# plot loadings
+p_all_loads = PCAtools::plotloadings(pca_obj,
+                                     components = getComponents(pca_obj, seq_len(4)),
+                                     rangeRetain = 0.01,
+                                     labSize = 3,
+                                     caption = "Top 1% variables",
+                                     shape = 21,
+                                     col = c('steelblue', 'white', 'red3'),
+                                     drawConnectors = TRUE) +
+  theme(plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        legend.position = "none",
+        axis.title.x = element_blank())
+print(p_all_loads)
+
+```
+
+
+
+
+
+##### SPLS-DA
+
+
+
+## FArmhouse
+
+
+### PCA
+
+
+```{r}
+
+# create PCA object
+pca_obj = PCAtools::pca(t(counts_farm_only),
+                        metadata_farm_only,
+                        removeVar = 0.1)
+
+
+### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS
+# Horn method
+horn_method = tryCatch(
+  PCAtools::parallelPCA(counts),
+  error = function(e) { list(n = 1) }
+)
+
+# Elbow method
+elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
+
+# minimum number of components that explains 80% of variance
+nPCopt = which(cumsum(pca_obj$variance) > 80)[1]
+
+# max number of component + 1
+if(horn_method$n >= elbow_method & horn_method$n >= nPCopt){
+  nPCmax = horn_method$n + 1
+} else if(elbow_method >= horn_method$n & elbow_method >= nPCopt){
+  nPCmax = elbow_method + 1
+} else{
+  nPCmax= nPCopt
+}
+
+
+### SCREEPLOT
+# screeplot
+p1 = PCAtools::screeplot(pca_obj,
+                        components = pca_obj$components[1:nPCmax],
+                        vline = c(horn_method$n, elbow_method, nPCopt),
+                        title = "Screeplot - number of significant Principal Components",
+                        colBar = rev(colorRampPalette(brewer.pal(7, "Blues"))(nPCmax)),
+                        axisLabSize = 18,
+                        titleLabSize = 22) +
+  geom_label(aes(x = horn_method$n, y = 50, label = "Horn\'s", vjust = -1, size = 8)) +
+  geom_label(aes(x = elbow_method, y = 50, label = "Elbow method", vjust = -1, size = 8)) +
+  geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, size = 8), colour = "steelblue") +
+  theme(plot.title = element_text(size = 18, hjust = 0.5))
+print(p1)
+
+### BIPLOT
+p1 = PCAtools::biplot(pca_obj,
+                      labSize = 0,
+                      pointSize = 2,
+                      drawConnectors = FALSE,
+                      max.overlaps = 700,
+                      colby = "culture",
+                      #colkey = c("grey75", colorRampPalette(brewer.pal(n = 4, name = "Reds"))(8)),
+                      title = "PCA - culture",
+                      legendPosition = "bottom") +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        plot.subtitle = element_text(size = 18, hjust = 0.5),
+        legend.background = element_rect(colour = "grey25", size = 0.5))
+plot(p1)
+p_farm = PCAtools::biplot(pca_obj,
+                          labSize = 0,
+                          pointSize = 2,
+                          drawConnectors = FALSE,
+                          max.overlaps = 700,
+                          shape ="Outside",
+                          shapekey = c(20, 21),
+                          colby = "region",
+                          colkey = c('#0571B0', '#FBA01D',"#FFDA00", "steelblue", '#A6611A',"#008470",'#92C5DE'),
+                          title = "PCA - region",
+                          legendPosition = "none") +
+  theme(plot.title = element_blank(),
+        plot.subtitle = element_blank(),
+        legend.background = element_rect(colour = "grey25", size = 0.5))
+plot(p_farm)
+p_farm_pair = PCAtools::pairsplot(pca_obj,
+                                  components = pca_obj$components[1:4],
+                                  colby = "region",
+                                  shape ="Outside",
+                                  shapekey = c(20, 21),
+                                  colkey = c('#0571B0', '#FBA01D',"#FFDA00", "steelblue", '#A6611A',"#008470",'#92C5DE'),
+                                  pointSize = 1,
+                                  trianglelabSize = 12,
+                                  plotaxes = FALSE,
+                                  margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm")) +
+  theme(plot.title = element_blank())
+print(p_farm_pair)
+
+
+p1 = PCAtools::biplot(pca_obj,
+                      labSize = 0,
+                      pointSize = 2,
+                      drawConnectors = FALSE,
+                      max.overlaps = 700,
+                      colby = "method",
+                      colkey = c("grey75", "firebrick", "steelblue"),
+                      title = "PCA - preservation",
+                      legendPosition = "bottom") +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        plot.subtitle = element_text(size = 18, hjust = 0.5),
+        legend.background = element_rect(colour = "grey25", size = 0.5))
+plot(p1)
+p1 = PCAtools::pairsplot(pca_obj,
+                          components = pca_obj$components[1:10],
+                          colby = "method",
+                          colkey = c("grey75", "firebrick", "steelblue"),
+                          pointSize = 1,
+                          trianglelabSize = 12,
+                          plotaxes = FALSE,
+                          margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm")) +
+  theme(plot.title = element_blank())
+print(p1)
+
+### PRINCIPAL COMPONENTS LOADINGS
+# plot loadings
+p1 = PCAtools::plotloadings(pca_obj,
+                            components = getComponents(pca_obj, seq_len(nPCmax - 1)),
+                            rangeRetain = 0.01,
+                            labSize = 3,
+                            title = "Loadings plot: correlation between phenotypes",
+                            subtitle = paste0("and the ", nPCmax - 1, " Significant Principal Components "),
+                            caption = "Top 1% variables",
+                            shape = 21,
+                            col = c('steelblue', 'white', 'red3'),
+                            drawConnectors = TRUE) +
+  theme(plot.title = element_text(size = 22, hjust = 0.5),
+        plot.subtitle = element_text(size = 18, hjust = 0.5))
+print(p1)
+
+```
+
+
+
+
+### Distributions
+
+
+
+
+
+
+
+## Fermentations
+
+
+
+
+
+## Lessons Learnt {#sec-lesson-learnt-feature-selection}
+
+Based on the  we have learnt:
+
+* Fr
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::

@@ -267,7 +267,7 @@ p_diversity_individuals <- ggplot(total_diversity, aes(x = n_individuals, y = Me
   scale_color_manual(values = RegionColors) +
   labs(
     x = "Number of individuals in culture",
-    y = "Phenotypic diversity (mean pairwise distance)"
+    y = "Phenotypic diversity\n(mean pairwise distance)"
   ) +
   theme_classic(base_size = 14) +
   theme(
@@ -281,60 +281,6 @@ p_diversity_individuals <- ggplot(total_diversity, aes(x = n_individuals, y = Me
            y = max(total_diversity$Mean_Pairwise_Distance) * 0.9,
            label = paste0("R² = ", r_squared, "\np = ", p_value), 
            size = 5, hjust = 0)
-
-# ------------------------------
-# Load the pairwise similarities dataset
-pairwise_similarities <- read.csv('./data/p02-05/pairwise-similarities.csv')
-
-# Ensure the culture column is character
-pairwise_similarities$culture <- as.character(pairwise_similarities$culture)
-
-# Add culture info to total_diversity from the original dataset
-total_diversity <- total_diversity %>%
-  left_join(mydata %>% dplyr::select(grouping, culture) %>% distinct(), by = "grouping")
-
-# Merge datasets based on the culture column
-combined_data <- total_diversity %>%
-  left_join(pairwise_similarities, by = "culture")
-
-# (Optional) Check the merged data structure
-print(head(combined_data))
-
-# Test correlation between Mean Pairwise Distance and Similarity
-cor_test_similarity_distance <- cor.test(combined_data$similarity, combined_data$Mean_Pairwise_Distance, method = "pearson")
-print(cor_test_similarity_distance)
-
-# Extract correlation results for annotation
-r_squared2 <- round(cor_test_similarity_distance$estimate^2, 2)
-p_value2 <- signif(cor_test_similarity_distance$p.value, 3)
-
-# Plot: Mean Pairwise Distance vs. Similarity
-p_similarity_distance <- ggplot(combined_data, aes(x = similarity, y = Mean_Pairwise_Distance, color = region)) +
-  geom_point(size = 3) +
-  geom_smooth(method = "lm", color = "red", se = TRUE) +
-  scale_color_manual(values = RegionColors) +
-  labs(
-    x = "Culture strain similarity",
-    y = "Phenotypic diversity (mean pairwise distance)",
-    color = "Region"
-  ) +
-  theme_classic(base_size = 14) +
-  theme(
-    axis.line.x = element_line(color = "black"),
-    axis.line.y = element_line(color = "black"),
-    axis.ticks = element_line(color = "black"),
-    legend.title = element_text(size = 14),
-    legend.text = element_text(size = 12)
-  ) +
-  annotate("text", 
-           x = (max(combined_data$similarity)-min(combined_data$similarity)) * 0.8 + min(combined_data$similarity), 
-           y = max(combined_data$Mean_Pairwise_Distance) * 0.9,
-           label = paste0("R² = ", r_squared2, "\np = ", p_value2), 
-           size = 5, hjust = 0)
-
-# ------------------------------
-# Combine and display the two plots side by side
-panel_c <- p_diversity_individuals + p_similarity_distance
 
 ```
 
@@ -519,12 +465,11 @@ for(k in 1:length(pheno_list)){
 
 final_plot = cowplot::plot_grid(
   cowplot::plot_grid(
-    p_all_spls, p_farm_spls,
+    p_all_spls, p_farm_spls, p_diversity_individuals,
     nrow = 1,
-    rel_widths = c(1, 1),
-    labels = c("A", "B")
+    rel_widths = c(1, 1, 1),
+    labels = c("A", "B", "C")
   ),
-  panel_c,
   cowplot::plot_grid(
     p_violins_final[[1]], p_violins_final[[2]], p_violins_final[[3]],
     p_violins_final[[4]],

@@ -1,0 +1,70 @@
+# Figure S4
+
+```{css, echo=FALSE}
+
+pre {
+  max-height: 300px;
+}
+
+div.sourceCode {
+  overflow: scroll;
+}
+
+.bash-code {
+  font-style: italic;
+}
+
+
+```
+
+
+```{r, echo=FALSE, include=FALSE}
+# load required libraries
+up_packages = c("ggplot2", "grid", "magick")
+lapply(up_packages, require, character.only = TRUE)
+
+# set working directory
+mainDir = "/home/andrea/19ADC99/vikingsproject"
+knitr::opts_knit$set(root.dir = mainDir)
+
+```
+
+
+## Figure S4 code
+
+```{r, warning=FALSE, message=FALSE}
+
+# get Figure S4
+final_plot = ggplot2::ggplot() + ggplot2::annotation_custom(
+  grid::rasterGrob(
+    magick::image_read("data/p02-10/Figure_S4.png"),
+    width = ggplot2::unit(1, "npc"),
+    height = ggplot2::unit(1, "npc")),
+  -Inf, Inf, -Inf, Inf)
+
+```
+
+
+## Figure S4 plot
+
+```{r}
+#| echo: FALSE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 18
+#| fig.cap: '[Figure S4: Strain overlap between cultures originating from the same farmhouse, but isolated at different times.]{style="color: steelblue;"}'
+
+final_plot
+
+```
+
+
+## Session Information
+
+:::{.callout-note collapse=true}
+
+```{r, echo=FALSE}
+utils::sessionInfo()
+```
+
+:::
