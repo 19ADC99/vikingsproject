@@ -20,8 +20,7 @@ div.sourceCode {
 
 ```{r, echo=FALSE, include=FALSE}
 # load required libraries
-up_packages = c("dplyr", "forcats", "ggplot2",  "ggrepel", "mixOmics", "patchwork",
-                "PCAtools", "RColorBrewer", "tidytext", "umap", "vegan")
+up_packages = c("circlize", "ComplexHeatmap", "grid", "patchwork", "RColorBrewer", "tidytext", "umap", "vegan")
 lapply(up_packages, require, character.only = TRUE)
 
 # set working directory
@@ -38,46 +37,172 @@ knitr::opts_knit$set(root.dir = mainDir)
 
 ```{r, warning=FALSE, message=FALSE}
 
-```
 
+################################################################################
+# Load fermentation data and set up color functions
+################################################################################
+label.colours <- brewer.pal(7, 'Paired')
+col_fun <- colorRamp2(c(-3, 0, 3), c("blue", "white", "red"))
+compound_split <- factor(c(rep("16P Fermentation", 22),
+                           rep("22P Fermentation", 22),
+                           rep("Growth", 14)),
+                         levels = c("16P Fermentation", "22P Fermentation", "Growth"))
 
+mydata <- read.csv('./data/p02-06/data for R FILTERED.csv')
+annotations <- mydata[1:4]
+row_split <- factor(annotations$region, levels = c("Ale",
+                                                   "Russia",
+                                                   "Latvia",
+                                                   "Lithuania",
+                                                   "Central-Eastern Norway",
+                                                   "North-West Norway",
+                                                   "South-West Norway"))
+rownames(mydata) <- mydata[,1]
+mydata <- mydata[,-c(1:4)]
+mydata <- as.matrix(mydata)
+mydata <- t(mydata)  # Transpose the matrix
 
-
-### Panel B code
-
-```{r, warning=FALSE, message=FALSE}
-
-```
-
-
-
-
-### Merge
-
-
-```{r, warning=FALSE, message=FALSE}
-
-final_plot = cowplot::plot_grid(
-  cowplot::plot_grid(
-    p_all_spls, p_farm_spls, p_diversity_individuals,
-    nrow = 1,
-    rel_widths = c(1, 1, 1),
-    labels = c("A", "B", "C")
+################################################################################
+# Create annotations with legends disabled
+################################################################################
+# For Historic_preservation, use anno_simple so it appears without generating a legend.
+ha <- HeatmapAnnotation(
+  Region = annotations$region, 
+  `Current preservation` = annotations$current_preservation,
+  `Historic preservation` = annotations$historic_preservation,
+  col = list(
+    Region = c('North-West Norway' = '#0571B0',
+               'South-West Norway' = '#92C5DE',
+               'Central-Eastern Norway' = '#018571',
+               'South-Eastern Norway' = '#80CDC1',
+               'Latvia' = '#FFDA00',
+               'Lithuania' = '#FBA01D',
+               'Russia' = '#A6611A',
+               'Ale' = '#FF0000'),
+    `Current preservation` = c('Dried' = 'purple', 'Liquid' = 'green'),
+    `Historic preservation` = c('Dried' = 'purple', 'Liquid' = 'green')
   ),
-  cowplot::plot_grid(
-    p_violins_final[[1]], p_violins_final[[2]], p_violins_final[[3]],
-    p_violins_final[[4]],
-    ncol = 1,
-    labels = c("D", NA, NA, NA)
+  # Disable legends for vector annotations
+  annotation_legend_param = list(
+    Region = list(legend = FALSE),
+    `Current preservation` = list(legend = FALSE),
+    `Historic preservation` = list(legend = FALSE)
   ),
-  nrow = 3,
-  rel_heights = c(1.5, 1, 2.5)
+  annotation_name_side = "left",
+  annotation_name_gp = gpar(fontsize = 16)
 )
 
+################################################################################
+# Create heatmap with default legends disabled
+################################################################################
+# Assume mydata already has unique rownames
+custom_labels <- c("isobutyl acetate", 
+                   "isopentyl acetate", 
+                   "phenethyl acetate", 
+                   "ethyl acetate", 
+                   "propyl acetate", 
+                   "ethyl decanoate", 
+                   "ethyl butyrate", 
+                   "ethyl octanoate", 
+                   "ethyl hexanoate", 
+                   "ethyl isovalerate", 
+                   "isobutanol", 
+                   "butanol", 
+                   "propanol", 
+                   "hexanol", 
+                   "isoamyl alcohol", 
+                   "phenethyl alcohol", 
+                   "4VG", 
+                   "ABV", 
+                   "acetic acid", 
+                   "glycerol", 
+                   "pH", 
+                   "SO2", 
+                   "isobutyl acetate", 
+                   "isopentyl acetate", 
+                   "phenethyl acetate", 
+                   "ethyl acetate", 
+                   "propyl acetate", 
+                   "ethyl decanoate", 
+                   "ethyl butyrate", 
+                   "ethyl octanoate", 
+                   "ethyl hexanoate", 
+                   "ethyl isovalerate", 
+                   "isobutanol", 
+                   "butanol", 
+                   "propanol", 
+                   "hexanol", 
+                   "isoamyl alcohol", 
+                   "phenethyl alcohol", 
+                   "4VG", 
+                   "ABV", 
+                   "acetic acid", 
+                   "glycerol", 
+                   "pH", 
+                   "SO2", 
+                   "Biggy", 
+                   "CuSO4", 
+                   "8% ethanol", 
+                   "10% ethanol", 
+                   "12% ethanol", 
+                   "Low nitrogen", 
+                   "8°C", 
+                   "12°C", 
+                   "20°C", 
+                   "37°C", 
+                   "39°C", 
+                   "41°C", 
+                   "sporulation", 
+                   "% of culture")
+
+hm <- Heatmap(mydata, 
+              col = col_fun, 
+              border = TRUE, 
+              name = 'Z-score',
+              cluster_rows = FALSE,
+              cluster_columns = TRUE,
+              cluster_column_slices = FALSE,
+              cluster_row_slices = FALSE,
+              show_row_dend = FALSE,
+              show_column_dend = FALSE,
+              row_split = compound_split,
+              row_labels = custom_labels,
+              row_title_gp = gpar(fontsize = 16), 
+              clustering_distance_columns = "manhattan", 
+              right_annotation = NULL,
+              bottom_annotation = ha,
+              column_names_gp = grid::gpar(fontsize = 9),
+              column_title = NULL,
+              show_heatmap_legend = FALSE)
+
+################################################################################
+# Manually create legend objects
+################################################################################
+# Heatmap (Z-score) legend
+lg_heatmap <- Legend(col_fun = col_fun, title = "Z-score")
+
+# Region legend (adjust levels and colors as needed)
+lg_region <- Legend(title = "Region",
+                    at = c("North-West Norway", "South-West Norway", "Central-Eastern Norway", 
+                           "South-Eastern Norway", "Latvia", "Lithuania", "Russia", "Ale"),
+                    legend_gp = gpar(fill = c("#0571B0", "#92C5DE", "#018571", "#80CDC1",
+                                              "#FFDA00", "#FBA01D", "#A6611A", "#FF0000")))
+
+# Preservation legend: combining both preservation annotations
+lg_preservation <- Legend(title = "Preservation",
+                          at = c("Dried", "Liquid"),
+                          legend_gp = gpar(fill = c("purple", "green")))
+
+################################################################################
+# Pack legends vertically
+################################################################################
+combined_legends <- packLegend(lg_heatmap, lg_region, lg_preservation, direction = "vertical")
+
+
 ```
 
 
-## Figure & plot
+## Figure 6 plot
 
 ```{r}
 #| echo: FALSE
@@ -86,7 +211,19 @@ final_plot = cowplot::plot_grid(
 #| fig.height: 18
 #| fig.cap: '[Figure 6: High-throughput phenotyping of farmhouse and industrial yeasts.]{style="color: steelblue;"}'
 
-final_plot
+pushViewport(viewport(layout = grid.layout(1, 2, widths = unit(c(0.9, 0.1), "npc"))))
+
+# Draw the heatmap in the left column
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 1))
+draw(hm, newpage = FALSE, show_heatmap_legend = FALSE, show_annotation_legend = FALSE)
+popViewport()
+
+# Draw the combined legend in the right column
+pushViewport(viewport(layout.pos.row = 1, layout.pos.col = 2))
+grid.draw(combined_legends)
+popViewport()
+
+popViewport()
 
 ```
 

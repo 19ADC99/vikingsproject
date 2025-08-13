@@ -145,7 +145,6 @@ counts_farm_only = counts[which(rownames(counts) %in% metadata_farm_only$group),
 
 
 
-
 #### Background: no farmhouse yeasts
 
 
@@ -171,7 +170,17 @@ if(elbow_method >= nPCopt){
   nPCmax= nPCopt
 }
 
-### SCREEPLOT
+```
+
+saassa
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 4
+#| fig.cap: '[Figure 1: Screeplot of PC variants without farmhouse yeasts.]{style="color: steelblue;"}'
+
 # screeplot
 p1 = PCAtools::screeplot(pca_obj,
                         components = pca_obj$components[1:nPCmax],
@@ -182,7 +191,20 @@ p1 = PCAtools::screeplot(pca_obj,
   geom_label(aes(x = elbow_method, y = 50, label = "Elbow method", vjust = -1, size = 8)) +
   geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, size = 8), colour = "steelblue") +
   theme(plot.title = element_blank())
-print(p1)
+
+p1
+
+```
+
+
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 2: Biplot of industrial yests phenotypes.]{style="color: steelblue;"}'
 
 ### BIPLOT
 p1 = PCAtools::biplot(pca_obj,
@@ -191,37 +213,52 @@ p1 = PCAtools::biplot(pca_obj,
                       drawConnectors = FALSE,
                       max.overlaps = 700,
                       colby = "Industry",
-                      colkey = c('#e6194b', '#ffe119', '#3cb44b', '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
+                      colkey = c('#e6194b', '#ffe119', '#46f0f0', '#911eb4', "grey75", '#bcf60c'),
                       legendPosition = "bottom") +
   theme(plot.title = element_text(size = 22, hjust = 0.5),
         plot.subtitle = element_text(size = 18, hjust = 0.5),
         legend.background = element_rect(colour = "grey25", size = 0.5))
-plot(p1)
-p1 = PCAtools::biplot(pca_obj,
-                      labSize = 2,
-                      pointSize = 5,
-                      drawConnectors = TRUE,
-                      max.overlaps = 700,
-                      colby = "Industry",
-                      title = "PCA - Industry",
-                      legendPosition = "bottom") +
-  theme(plot.title = element_text(size = 22, hjust = 0.5),
-        plot.subtitle = element_text(size = 18, hjust = 0.5),
-        legend.background = element_rect(colour = "grey25", size = 0.5))
-plot(p1)
+p1
+
+```
+
+
+saasas
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 3: Biplot of industrial yests phenotypes.]{style="color: steelblue;"}'
 
 ## PAIRSPLOT
 max_pairplot_comp = ifelse(nPCmax - 1 <= 10, nPCmax - 1, 10)
 p1 = PCAtools::pairsplot(pca_obj,
                           components = pca_obj$components[1:(max_pairplot_comp)],
                           colby = "Industry",
+                          colkey = c('#e6194b', '#ffe119', '#46f0f0', '#911eb4', "grey75", '#bcf60c'),
                           pointSize = 2,
                           trianglelabSize = 12,
                           plotaxes = FALSE,
                           margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm"),
                           title = paste0("Top ", nPCmax - 1, " Principal Components")) +
-  theme(plot.title = element_text(size = 12, hjust = 0.5))
-print(p1)
+  theme(plot.title = element_blank())
+p1
+
+```
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 4: Industrial yests phenotypes loadings.]{style="color: steelblue;"}'
+
 
 ### PRINCIPAL COMPONENTS LOADINGS
 # plot loadings
@@ -237,19 +274,17 @@ p1 = PCAtools::plotloadings(pca_obj,
                             drawConnectors = TRUE) +
   theme(plot.title = element_text(size = 22, hjust = 0.5),
         plot.subtitle = element_text(size = 18, hjust = 0.5))
-print(p1)
+p1
 
 ```
 
 
 
 
-### PCA all
+#### Farmhouse and industrial yeasts
 
-```{r}
 
-#------------------------------------------------------------------------------#
-## 3.1 - PCA                                                                ####
+```{r, warning=FALSE, message=FALSE}
 
 # create PCA object
 pca_obj = PCAtools::pca(t(counts),
@@ -258,11 +293,6 @@ pca_obj = PCAtools::pca(t(counts),
 
 
 ### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS
-# Horn method
-horn_method = tryCatch(
-  PCAtools::parallelPCA(counts),
-  error = function(e) { list(n = 1) }
-)
 
 # Elbow method
 elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
@@ -271,16 +301,23 @@ elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
 nPCopt = which(cumsum(pca_obj$variance) > 80)[1]
 
 # max number of component + 1
-if(horn_method$n >= elbow_method & horn_method$n >= nPCopt){
-  nPCmax = horn_method$n + 1
-} else if(elbow_method >= horn_method$n & elbow_method >= nPCopt){
+if(elbow_method >= nPCopt){
   nPCmax = elbow_method + 1
 } else{
   nPCmax= nPCopt
 }
 
+```
 
-### SCREEPLOT
+sssss
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 4
+#| fig.cap: '[Figure 5: Screeplot of PC variants of industrial and farmhouse yeasts.]{style="color: steelblue;"}'
+
 # screeplot
 p_all_scree = PCAtools::screeplot(pca_obj,
                         components = pca_obj$components[1:nPCmax],
@@ -294,7 +331,19 @@ p_all_scree = PCAtools::screeplot(pca_obj,
   geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, size = 8), colour = "steelblue") +
   theme(plot.title = element_blank(),
         axis.title.x = element_blank())
-print(p_all_scree)
+p_all_scree
+
+```
+
+
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
 
 ### BIPLOT
 p_all_bi = PCAtools::biplot(pca_obj,
@@ -305,12 +354,12 @@ p_all_bi = PCAtools::biplot(pca_obj,
                             shape ="Outside",
                             shapekey = c(20, 21),
                             colby = "Industry",
-                            colkey = c('#e6194b', '#ffe119', '#3cb44b', '#4363d8', "red", '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
+                            colkey = c("red", '#e6194b', '#ffe119', '#3cb44b', '#4363d8',  '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
                             title = "PCA - Industry",
                             legendPosition = "bottom") +
   theme(plot.title = element_blank(),
         legend.background = element_rect(colour = "grey25", size = 0.5))
-plot(p_all_bi)
+p_all_bi
 
 
 
@@ -362,16 +411,7 @@ print(p_all_loads)
 
 
 
-
-
-##### SPLS-DA
-
-
-
-## FArmhouse
-
-
-### PCA
+#### Farmhouse yeasts only
 
 
 ```{r}
@@ -439,7 +479,7 @@ p_farm = PCAtools::biplot(pca_obj,
                           pointSize = 2,
                           drawConnectors = FALSE,
                           max.overlaps = 700,
-                          shape ="Outside",
+                          shape ="Allochthonous",
                           shapekey = c(20, 21),
                           colby = "region",
                           colkey = c('#0571B0', '#FBA01D',"#FFDA00", "steelblue", '#A6611A',"#008470",'#92C5DE'),
@@ -452,7 +492,7 @@ plot(p_farm)
 p_farm_pair = PCAtools::pairsplot(pca_obj,
                                   components = pca_obj$components[1:4],
                                   colby = "region",
-                                  shape ="Outside",
+                                  shape ="Allochthonous",
                                   shapekey = c(20, 21),
                                   colkey = c('#0571B0', '#FBA01D',"#FFDA00", "steelblue", '#A6611A',"#008470",'#92C5DE'),
                                   pointSize = 1,
@@ -505,6 +545,19 @@ print(p1)
 
 ```
 
+
+
+
+### Discriminant analysis
+
+
+sPLS-DA
+
+
+## FArmhouse
+
+
+### PCA
 
 
 

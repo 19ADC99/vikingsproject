@@ -53,7 +53,7 @@ final_plot = ggplot2::ggplot() + ggplot2::annotation_custom(
 #| echo: FALSE
 #| message: FALSE
 #| warning: FALSE
-#| fig.height: 18
+#| fig.height: 6
 #| fig.cap: '[Figure S1: Schematic overview of the project’s workflow.]{style="color: steelblue;"}'
 
 final_plot

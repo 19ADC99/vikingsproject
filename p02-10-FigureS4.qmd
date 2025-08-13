@@ -51,7 +51,7 @@ final_plot = ggplot2::ggplot() + ggplot2::annotation_custom(
 #| echo: FALSE
 #| message: FALSE
 #| warning: FALSE
-#| fig.height: 18
+#| fig.height: 3
 #| fig.cap: '[Figure S4: Strain overlap between cultures originating from the same farmhouse, but isolated at different times.]{style="color: steelblue;"}'
 
 final_plot

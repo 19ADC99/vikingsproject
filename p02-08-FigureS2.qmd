@@ -62,7 +62,7 @@ knitr::opts_knit$set(root.dir = mainDir)
 #| fig.height: 18
 #| fig.cap: '[Figure 6: High-throughput phenotyping of farmhouse and industrial yeasts.]{style="color: steelblue;"}'
 
-final_plot
+#final_plot
 
 ```
 

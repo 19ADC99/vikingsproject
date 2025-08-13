@@ -1,4 +1,4 @@
-# Figure 5
+# Figure S6
 
 ```{css, echo=FALSE}
 
@@ -20,10 +20,12 @@ div.sourceCode {
 
 ```{r, echo=FALSE, include=FALSE}
 # load required libraries
-up_packages = c("dplyr", "forcats", "ggplot2",  "ggrepel", "mixOmics", "patchwork",
-                "PCAtools", "RColorBrewer", "tidytext", "umap", "vegan")
+up_packages = c("ape", "aplot", "BiocManager", "clusterProfiler", "colorRamp2", "ComplexHeatmap",
+                "DOSE", "dplyr", "edgeR", "EnhancedVolcano", "enrichplot", "grid", "gridExtra",
+                "ggplot2", "ggh4x", "gggenomes",  "ggnewscale", "ggtree", "ggtreeExtra", "plyr",
+                "RColorBrewer", "ReactomePA", "rstatix", "stats", "stringr", "treeio")
 lapply(up_packages, require, character.only = TRUE)
-
+ 
 # set working directory
 mainDir = "/home/andrea/19ADC99/vikingsproject"
 knitr::opts_knit$set(root.dir = mainDir)
@@ -31,17 +33,291 @@ knitr::opts_knit$set(root.dir = mainDir)
 ```
 
 
-## Figure 5 code
-
+## Figure S6 code
 
 ### Panel A code
 
 ```{r, warning=FALSE, message=FALSE}
 
+
+#==============================================================================#
+# 1 - k-mer frequencies                                                     ####
+
+#------------------------------------------------------------------------------#
+## 1.1 - Import and reformat k-mer freq                                     ####
+
+# mapping swap_yeasts
+to_swap = data.frame(
+  old_name = c("21P1", "17P5", "45P5", "28P1", "28P6"),
+  new_name = c("21R40", "17R20", "45R38", "28R31", "28R1")
+)
+
+
+# load the tree file to make dendrogram
+tree = read.tree("./data/p02-12/genetrees.output.BS.best.2025.tre")
+
+# Define the specific samples to keep
+selected_samples = c(
+  "1R16", "2R23", "3R11", "6R15", "k7R25", "7R7", "8R19", "9R40", "14R30", "14R6", 
+  "16R23", "16R37", "17P5", "19R18", "21P1", "21R38", "27R17", "28P1", "28P6", "28R21", 
+  "28R33", "28R8", "38R16", "39R20", "40R1", "40R14", "40R20", "41R10", "41R15", "42R20", 
+  "42R31", "44R32", "44R7", "45P5", "45R11", "46R12", "46R37", "Hornindal1", "Hornindal2",
+  "Laerdal2", "Muri" , "SortdalEbbe1", "Voss1", "Granvin1", "Skud"
+)
+
+# Prune the tree to keep only the selected samples
+pruned_tree = keep.tip(tree, selected_samples)
+# Reroot the pruned tree with "Skud" as outgroup
+pruned_tree = root(pruned_tree, outgroup = "Skud", resolve.root = FALSE)
+# Prune the pruned tree to remove Skud 
+pruned_tree = drop.tip(pruned_tree, "Skud")
+# dendrogram plot
+p_tree = # Plot the pruned tree
+  ggtree(pruned_tree) + 
+  theme(plot.margin = margin(10, 10, 10, 10)) + 
+  xlim(0, 15) 
+# extract tip order
+tip_order = p_tree$data %>% 
+  filter(isTip) %>%           # Select only tip labels
+  arrange(y) %>%              # Arrange by y-axis position
+  pull(label)
+
+for(k in 1:nrow(to_swap)){
+  tip_order = stringr::str_replace_all(
+    tip_order,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
+  )
+}
+
+
+
+# import CNV matrix
+kmer41freq = read.delim("./data/p02-12/Vikings.species.kmer41freq.mod.txt", header = FALSE)
+colnames(kmer41freq) = c("strain", "type", "kmer", "freq")
+
+for(k in 1:nrow(to_swap)){
+  kmer41freq$strain = stringr::str_replace_all(
+    kmer41freq$strain,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
+  )
+}
+
+kmer41freq$strain = factor(kmer41freq$strain, levels = rev(tip_order))
+
+kmer41freq$peak = ifelse(
+  kmer41freq$strain %in% c("Muri", "k7R25"), "one_peak",
+  ifelse(
+    kmer41freq$strain %in% c("38R16", "16R23", "39R20", "40R14"), "two_peaks",
+    ifelse(
+      kmer41freq$strain %in% c(
+        "41R10", "21R38", "21P1", "28P1", "28P6", "28R21", "28R33", "28R8",
+        "46R12", "46R37", "16R37", "40R1", "40R20"
+      ), "three_peaks",
+      ifelse(kmer41freq$strain == "44R32", "five_peaks", "four_peaks")
+    )
+  )
+)
+kmer41freq$peak = factor(
+  kmer41freq$peak,
+  levels = c("one_peak", "two_peaks", "three_peaks", "four_peaks", "five_peaks")
+)
+
+
+
+#------------------------------------------------------------------------------#
+## 3.2 - Plot                                                               ####
+
+# set color labels
+col_label = c("#0571B0", rep("#92C5DE", 5), "#0571B0", rep("#92C5DE", 3),
+    rep("#0571B0", 9), rep("#92C5DE", 4), rep("#FFDA00", 4),
+    rep("#FBA01D", 3), rep("#008470", 6), rep("grey75", 6),
+    "#A6611A", "#FBA01D")
+
+# plot kmer distributions
+p_kmer = ggplot(kmer41freq, aes(x = kmer, y = freq)) +
+  geom_line(aes(colour = peak), linewidth = 2) +
+  scale_colour_manual(values = c("tomato4", "tomato2", "skyblue1", "skyblue3", "skyblue4")) +
+  coord_cartesian(expand = FALSE) +
+  annotation_custom(grid::linesGrob(y = c(0, 0), gp = grid::gpar(lwd = 3))) +
+  ggh4x::facet_grid2(strain ~ type,
+                     scales = "free",
+                     independent = "x",
+                     switch = "both",
+                     strip = strip_themed(
+                       background_y = ggh4x::elem_list_rect(fill = col_label),
+                       text_y = ggh4x::elem_list_text(color = c(
+                         rep("black", 36), rep("grey50", 6), rep("black", 2)
+                       ))
+                    )) +
+  theme(plot.title = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "none",
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        panel.spacing = unit(0, "lines"),
+        strip.background = element_blank(),
+        strip.text.x = element_text(size = 8),
+        strip.text.y.left = element_text(size = 8, angle = 0, face = "bold"))
+
+
+
+#==============================================================================#
+# 2 - CNVs                                                                  ####
+
+#------------------------------------------------------------------------------#
+## 2.1 - Import and reformat coverage                                       ####
+
+# import CNV matrix
+CNV_table = read.delim("./data/p02-12/Vikings.CNVsmerged.all.tab", header = TRUE)
+CNV_table$CNV = as.factor(CNV_table$CNV)
+
+# import dataset
+file_list = list.files(
+  path = "./data/p02-12/01_start_bed/",
+  pattern = "1kb_cov.bed",
+  full.names = TRUE,
+  ignore.case = FALSE
+)
+
+# declare average df
+average_table = data.frame(
+  strain = character(),
+  average = double(),
+  max = double(),
+  sd = double(),
+  stringsAsFactors = FALSE
+)
+
+# declare cov df
+coverage_table = data.frame(
+  strain = character(),
+  chr = character(),
+  start = integer(),
+  stop = integer(),
+  cov = double(),
+  stringsAsFactors = FALSE
+)
+
+# import coverage counts per strain
+for(file_to_import in file_list){
+  
+  tmp_table = read.delim(file_to_import, header = FALSE)
+  
+  colnames(tmp_table) = c("strain", "chr", "start", "stop", "cov")
+  tmp_table = tmp_table[which(tmp_table$chr != "ref|NC_001224|"), ]
+  
+  strain_name = stringr::str_remove(file_to_import, ".align.sort.1kb_cov.bed")
+  strain_name = stringr::str_remove(strain_name, "./data/p02-12/01_start_bed//")
+  average_table = rbind(
+    average_table,
+    data.frame(
+      "strain" = strain_name,
+      "average" = mean(tmp_table$cov),
+      "max" = max(tmp_table$cov),
+      "sd" = sd(tmp_table$cov)
+    )
+  )
+  
+  tmp_table = tmp_table[which(tmp_table$cov <= mean(tmp_table$cov)+sd(tmp_table$cov)), ]
+  
+  coverage_table = rbind(coverage_table, tmp_table)
+  
+  CNV_table[which(CNV_table$strain == strain_name), "stop_y"] = max(tmp_table$cov)
+  
+}
+
+
+
+#------------------------------------------------------------------------------#
+## 4.2 - plot coverage                                                      ####
+
+# format
+coverage_table$chr = factor(
+  coverage_table$chr,
+  levels = c("I", "II", "III", "IV", "V", "VI", "VII", "VIII",
+             "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI")
+)
+CNV_table$chr = factor(
+  CNV_table$chr,
+  levels = c("I", "II", "III", "IV", "V", "VI", "VII", "VIII",
+             "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI")
+)
+
+for(k in 1:nrow(to_swap)){
+  coverage_table$strain = stringr::str_replace_all(
+    coverage_table$strain,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
+  )
+  CNV_table$strain = stringr::str_replace_all(
+    CNV_table$strain,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
+  )
+  average_table$strain = stringr::str_replace_all(
+    average_table$strain,
+    to_swap[k, "old_name"],
+    to_swap[k, "new_name"]
+  )
+}
+
+# relevel
+coverage_table$strain = factor(coverage_table$strain, levels = rev(tip_order))
+CNV_table$strain = factor(CNV_table$strain, levels = rev(tip_order))
+average_table$strain = factor(average_table$strain, levels = rev(tip_order))
+
+# debug
+# average_table = average_table[which(average_table$strain == "Voss1"), ]
+# coverage_table = coverage_table[which(coverage_table$strain == "Voss1"), ]
+# CNV_table = CNV_table[which(CNV_table$strain == "Voss1"), ]
+
+# plot
+p_CNV = ggplot() +
+  geom_rect(data = subset(
+    coverage_table,
+    chr %in% c("I", "III", "V", "VII", "IX", "XI", "XIII", "XV")),
+    fill = "grey95",
+    xmin = 0, xmax = max(coverage_table$stop),
+    ymin = 0, ymax = max(coverage_table$cov),
+    alpha = 0.3) +
+  geom_rect(data = CNV_table,
+            aes(fill = CNV,
+                xmin = start, xmax = stop,
+                ymin = start_y, ymax = stop_y),
+            alpha = 0.75) +
+  geom_hline(data = average_table, 
+             aes(yintercept = average),
+             color = "firebrick",
+             linewidth = 1.5) +
+  geom_point(data = coverage_table,
+             aes(x = start, y = cov),
+             size = 0.05, color = "grey35", alpha = 0.5) +
+  scale_fill_manual(values = c("steelblue", "white", "salmon", "grey95")) +
+  scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +
+  coord_cartesian(expand = FALSE) +
+  annotation_custom(grid::linesGrob(y = c(0, 0), gp = grid::gpar(lwd = 3))) +
+  facet_grid(strain ~ chr,
+             scales = "free",
+             space = "free_x",
+             switch = "both") +
+  theme(plot.title = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position = "none",
+        panel.background = element_blank(),
+        panel.border = element_blank(),
+        panel.spacing = unit(0, "lines"),
+        strip.background = element_blank(),
+        strip.text.x = element_text(size = 8),
+        strip.text.y.left = element_blank())
+
+
 ```
-
-
-
 
 
 ### Merge
@@ -49,34 +325,24 @@ knitr::opts_knit$set(root.dir = mainDir)
 
 ```{r, warning=FALSE, message=FALSE}
 
-final_plot = cowplot::plot_grid(
-  cowplot::plot_grid(
-    p_all_spls, p_farm_spls, p_diversity_individuals,
-    nrow = 1,
-    rel_widths = c(1, 1, 1),
-    labels = c("A", "B", "C")
-  ),
-  cowplot::plot_grid(
-    p_violins_final[[1]], p_violins_final[[2]], p_violins_final[[3]],
-    p_violins_final[[4]],
-    ncol = 1,
-    labels = c("D", NA, NA, NA)
-  ),
-  nrow = 3,
-  rel_heights = c(1.5, 1, 2.5)
+final_plot = ggpubr::ggarrange(
+  p_tree, p_kmer, p_CNV,
+  ncol = 3, nrow = 1,
+  align = "h",
+  widths = c(0.15, 0.15, 0.7)
 )
 
 ```
 
 
-## Figure 5 plot
+## Figure S6 plot
 
 ```{r}
 #| echo: FALSE
 #| message: FALSE
 #| warning: FALSE
-#| fig.height: 18
-#| fig.cap: '[Figure 6: High-throughput phenotyping of farmhouse and industrial yeasts.]{style="color: steelblue;"}'
+#| fig.height: 16
+#| fig.cap: '[Figure S6: Farmhouse yeast genomic landscape.]{style="color: steelblue;"}'
 
 final_plot
 

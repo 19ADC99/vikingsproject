@@ -476,8 +476,8 @@ final_plot = cowplot::plot_grid(
     ncol = 1,
     labels = c("D", NA, NA, NA)
   ),
-  nrow = 3,
-  rel_heights = c(1.5, 1, 2.5)
+  nrow = 2,
+  rel_heights = c(1.5, 2.5)
 )
 
 ```

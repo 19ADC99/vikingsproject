@@ -1,4 +1,4 @@
-# Figure 5
+# Figure S3
 
 ```{css, echo=FALSE}
 
@@ -51,7 +51,7 @@ final_plot = ggplot2::ggplot() + ggplot2::annotation_custom(
 #| echo: FALSE
 #| message: FALSE
 #| warning: FALSE
-#| fig.height: 18
+#| fig.height: 4
 #| fig.cap: '[Figure S3: Strain diversity within farmhouse yeast cultures.]{style="color: steelblue;"}'
 
 final_plot
