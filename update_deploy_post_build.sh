@@ -4,9 +4,7 @@
 # Andrea Del Cortona
 # 2024/09/27
 
-DEPLOY_DIR=$1
-
-~/bin/quarto-1.5.57/bin/quarto render --output-dir ./docs
+quarto render --output-dir ./docs
 
 #rsync -ah --remove-source-files --info=progress2 docs/ "${DEPLOY_DIR}"/
 #rm -rf docs
