@@ -32,14 +32,36 @@ knitr::opts_knit$set(root.dir = mainDir)
 
 ## On this page
 
-Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-genome-compisition.
 
-* Here
+* Here we sequence 37 genomes of Farmhouse yeasts isolates and we control the quality of the sequencing libraries.
+* We characterize the phylogenetic origin of the isolates by aligning the reads to six *Saccharomyces* species reference genomes.
+* Then, we estimate the ploidy estimations based on their k-mer frequency distributions.
+
+## Origin of the Farmhouse yeasts isolates
+
+Samples were obtained from 44 Northern and Eastern European farmhouse yeast cultures, including from Western & Eastern Norway, Latvia, Lithuania, and Russia. To investigate genetic relationships within and between cultures, we performed whole-genome sequencing on 37 representative isolates from 22 farmhouse yeast cultures of diverse geographical origins.
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 7.5
+#| fig.cap: '[Figure 1: Georgaphical distribution of Farmhouse yeasts cultures.]{style="color: steelblue;"}'
+panel_a = ggplot2::ggplot() + ggplot2::annotation_custom(
+  grid::rasterGrob(
+    magick::image_read("data/p02-01/fig-1A-map-with-numbers.png"),
+    width = ggplot2::unit(1, "npc"),
+    height = ggplot2::unit(1, "npc")),
+  -Inf, Inf, -Inf, Inf)
+
+panel_a
+```
 
 
 ## Reads QC and Filtering
 
-Just trim low quality bases with Trimmomatic and discard short reads. I keep only properly paired reads and I discard the unpaired, since the latter are just a tiny fraction of my total data, they complicate the analysis and there is not much added value in them (at least for the analysis we run).
+Libraries QC is performed by trimming low quality bases with Trimmomatic and discard short reads. I keep only properly paired reads and I discard the unpaired, since the latter are just a tiny fraction of my total data, they complicate the analysis and there is not much added value in them (at least for the analysis we run).
 
 The file sample.lst just contains the names of my kveiks samples.
 
@@ -67,7 +89,7 @@ done < sample.lst
 
 ## Genome Composition
 
-We check the composition of the sequenced kveiks by aligning the reads to a set of Saccharomyces reference genomes.
+We check the composition of the sequenced kveiks by aligning the reads to a set of *Saccharomyces* reference genomes. We add as well as a reference, 7 additional Farmhouse yeasts genomes sequenced by [Preiss et al., 2018](doi: 10.3389/fmicb.2018.02137): *Granvin1*, *Hornidal1*, *Hornidal2*, *Laerdal2*, *Stordal Ebbergarden1*, *Voss1*.
 
 
 ```{r, echo=FALSE}
@@ -190,7 +212,7 @@ We then remove windows with 0 coverage to have a clearer figure, and we plot the
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 9
-#| fig.cap: '[Figure 1: Coverage of Reference Genomes.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 2: Coverage of Reference Genomes.]{style="color: steelblue;"}'
 
 data_cov = read.delim("data/p01-01/Viking.species.cov.chr.bed", header = FALSE)
 data_cov$V7 = ifelse(data_cov$V6 >= 1, "Up", "Down")
@@ -290,7 +312,7 @@ for (i in 1:length(sample_list)){
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["14R30"]]
 
@@ -303,7 +325,7 @@ plot_lst[["14R30"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["14R6"]]
 
@@ -316,7 +338,7 @@ plot_lst[["14R6"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["16R23"]]
 
@@ -329,7 +351,7 @@ plot_lst[["16R23"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["16R37"]]
 
@@ -342,7 +364,7 @@ plot_lst[["16R37"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["17P5"]]
 
@@ -355,7 +377,7 @@ plot_lst[["17P5"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["19R18"]]
 
@@ -368,7 +390,7 @@ plot_lst[["19R18"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["1R16"]]
 
@@ -381,7 +403,7 @@ plot_lst[["1R16"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["21P1"]]
 
@@ -394,7 +416,7 @@ plot_lst[["21P1"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["21R38"]]
 
@@ -407,7 +429,7 @@ plot_lst[["21R38"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["27R17"]]
 
@@ -420,7 +442,7 @@ plot_lst[["27R17"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["28P1"]]
 
@@ -433,7 +455,7 @@ plot_lst[["28P1"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["28P6"]]
 
@@ -446,7 +468,7 @@ plot_lst[["28P6"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["28R21"]]
 
@@ -459,7 +481,7 @@ plot_lst[["28R21"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["28R33"]]
 
@@ -472,7 +494,7 @@ plot_lst[["28R33"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["28R8"]]
 
@@ -485,7 +507,7 @@ plot_lst[["28R8"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["2R23"]]
 
@@ -498,7 +520,7 @@ plot_lst[["2R23"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["38R16"]]
 
@@ -511,8 +533,8 @@ plot_lst[["38R16"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
-#| 
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
+
 plot_lst[["39R20"]]
 
 ```
@@ -524,7 +546,7 @@ plot_lst[["39R20"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["3R11"]]
 
@@ -537,7 +559,7 @@ plot_lst[["3R11"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["40R14"]]
 
@@ -550,7 +572,7 @@ plot_lst[["40R14"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["40R1"]]
 
@@ -563,7 +585,7 @@ plot_lst[["40R1"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["40R20"]]
 
@@ -576,7 +598,7 @@ plot_lst[["40R20"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["41R10"]]
 
@@ -589,7 +611,7 @@ plot_lst[["41R10"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["41R15"]]
 
@@ -602,7 +624,7 @@ plot_lst[["41R15"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["42R20"]]
 
@@ -615,7 +637,7 @@ plot_lst[["42R20"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["42R31"]]
 
@@ -628,7 +650,7 @@ plot_lst[["42R31"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["44R32"]]
 
@@ -641,7 +663,7 @@ plot_lst[["44R32"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["44R7"]]
 
@@ -654,7 +676,7 @@ plot_lst[["44R7"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["45P5"]]
 
@@ -667,7 +689,7 @@ plot_lst[["45P5"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["45R11"]]
 
@@ -680,7 +702,7 @@ plot_lst[["45R11"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["46R12"]]
 
@@ -693,7 +715,7 @@ plot_lst[["46R12"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["46R37"]]
 
@@ -706,7 +728,7 @@ plot_lst[["46R37"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["6R15"]]
 
@@ -719,7 +741,7 @@ plot_lst[["6R15"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["7R7"]]
 
@@ -732,7 +754,7 @@ plot_lst[["7R7"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["8R19"]]
 
@@ -745,7 +767,7 @@ plot_lst[["8R19"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["9R40"]]
 
@@ -758,7 +780,7 @@ plot_lst[["9R40"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["Granvin1"]]
 
@@ -771,7 +793,7 @@ plot_lst[["Granvin1"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["Hornindal1"]]
 
@@ -784,7 +806,7 @@ plot_lst[["Hornindal1"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["Hornindal2"]]
 
@@ -797,7 +819,7 @@ plot_lst[["Hornindal2"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["k7R15"]]
 
@@ -810,7 +832,7 @@ plot_lst[["k7R15"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["k7R25"]]
 
@@ -823,7 +845,7 @@ plot_lst[["k7R25"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["Laerdal2"]]
 
@@ -836,7 +858,7 @@ plot_lst[["Laerdal2"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["Muri"]]
 
@@ -849,7 +871,7 @@ plot_lst[["Muri"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["SortdalEbbe1"]]
 
@@ -862,7 +884,7 @@ plot_lst[["SortdalEbbe1"]]
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 6
-#| fig.cap: '[Figure 2: Subgenome coverages.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 3: Subgenome coverages.]{style="color: steelblue;"}'
 
 plot_lst[["Voss1"]]
 
@@ -871,7 +893,7 @@ plot_lst[["Voss1"]]
 :::
 
 
-Muri and k7R25 are triple hybrids _S. cerevisiae_ X _S. eubayanus_ X _S. uvarum_. What is extremely interesting is that they share the same genomic composition in terms of origin of the chromosomes, but they have distinct CNVs patterns. I would suggest a common origin for such hybrid.
+*Muri* and *k7R25* are triple hybrids _S. cerevisiae_ X _S. eubayanus_ X _S. uvarum_. What is extremely interesting is that they share the same genomic composition in terms of origin of the chromosomes, but they have distinct CNVs patterns. I would suggest a common origin for such hybrid.
 
 
 
@@ -900,8 +922,7 @@ done > Viking.species.kmer41freq.txt
 ```
 
 
-
-Kmer frequency distribution plots can suggest us the degree of heterozygosity of kveiks genomes. All Kveiks seems to have a high degree of heterozygosity, except for hybrid strains Muri and k7R25. This support the idea that the sequenced kveiks so far are tetraploid _S. cerevisiae_, while Muri and k7R25 are triploid hybrids _S. cerevisiae_ X _Seubayanus_ X _S. uvarum_.
+K-mer frequency distribution plots can suggest us the degree of heterozygosity of kveiks genomes. All Kveiks seems to have a high degree of heterozygosity, except for hybrid strains Muri and k7R25. This support the idea that the sequenced kveiks so far are tetraploid _S. cerevisiae_, while Muri and k7R25 are triploid hybrids _S. cerevisiae_ X _Seubayanus_ X _S. uvarum_.
 
 
 ```{r}
@@ -909,7 +930,7 @@ Kmer frequency distribution plots can suggest us the degree of heterozygosity of
 #| message: FALSE
 #| warning: FALSE
 #| fig.height: 9
-#| fig.cap: '[Figure 2: K-mer frequencies distribution.]{style="color: steelblue;"}'
+#| fig.cap: '[Figure 4: K-mer frequencies distribution.]{style="color: steelblue;"}'
 
 data_k = read.delim("./data/p01-01/Viking.species.kmer41freq.mod.txt", header = FALSE)
 data_k$V2 = as.numeric(data_k$V2)
@@ -936,13 +957,12 @@ ggplot(data_k, aes(x = V2, y = V3)) +
 
 
 
+## Lessons Learnt {#sec-lesson-learnt-genome-compisition}
 
+Based on the initial analysis of the Farmhouse yeasts isolates genomics libraries we have learnt:
 
-## Lessons Learnt {#sec-lesson-learnt-feature-selection}
-
-Based on the  we have learnt:
-
-* Fr
+* All Farmhouse yeasts isolates sequenced so far are pure *S. cerevisiae*, except for *Muri* and the *k7R25* isolate we sequenced. *Muri* was first identified by [Preiss to be a unique *Saccharomyces cerevisiae* × *Saccharomyces eubayanus* x *Saccharomyces uvarum* triple hybrid](https://doi.org/10.3389/fmicb.2018.02253), potentially originating from a contamination of British Ales. *k7R25*, surprisingly, show the same *S. cerevisiae* × *S. eubayanus* x *S. uvarum* hybridization pattern, suggesting a common origin with *Muri*.
+* Most farmhouse yeast isolates we analysed appear to be tetraploid based on their k-mer frequency distributions. Exceptions to this are the isolates *16R23*, *38R16*, *39R20* and *40R14* of Lithuanian and Russian origin, which appears to be diploid, and the triple hybrids *Muri* and *k7R25*, which seems to have a single copy of each subgenome.
 
 
 ## Session Information

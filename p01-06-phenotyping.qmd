@@ -243,8 +243,7 @@ p1 = PCAtools::pairsplot(pca_obj,
                           pointSize = 2,
                           trianglelabSize = 12,
                           plotaxes = FALSE,
-                          margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm"),
-                          title = paste0("Top ", nPCmax - 1, " Principal Components")) +
+                          margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm")) +
   theme(plot.title = element_blank())
 p1
 
@@ -361,21 +360,16 @@ p_all_bi = PCAtools::biplot(pca_obj,
         legend.background = element_rect(colour = "grey25", size = 0.5))
 p_all_bi
 
+```
 
+sssssss
 
-# p1 = PCAtools::biplot(pca_obj,
-#                       labSize = 2,
-#                       pointSize = 5,
-#                       drawConnectors = TRUE,
-#                       max.overlaps = 700,
-#                       colby = "Industry",
-#                       #colkey = c("grey75", colorRampPalette(brewer.pal(n = 4, name = "Reds"))(8)),
-#                       title = "PCA - Industry",
-#                       legendPosition = "bottom") +
-#   theme(plot.title = element_text(size = 22, hjust = 0.5),
-#         plot.subtitle = element_text(size = 18, hjust = 0.5),
-#         legend.background = element_rect(colour = "grey25", size = 0.5))
-# plot(p1)
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
 
 ## PAIRSPLOT
 p_all_pair = PCAtools::pairsplot(pca_obj,
@@ -383,13 +377,27 @@ p_all_pair = PCAtools::pairsplot(pca_obj,
                                  shape ="Outside",
                                  shapekey = c(20, 21),
                                  colby = "Industry",
-                                 colkey = c('#e6194b', '#ffe119', '#3cb44b', '#4363d8', "red", '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
+                                 colkey = c("red", '#e6194b', '#ffe119', '#3cb44b', '#4363d8',  '#e6beff', '#911eb4', '#46f0f0', '#bcf60c'),
                                  pointSize = 1,
                                  trianglelabSize = 12,
                                  plotaxes = FALSE,
                                  margingaps = unit(c(0.05, 0.05, 0.05, 0.05), "cm")) +
   theme(plot.title = element_blank())
 print(p_all_pair)
+
+```
+
+saassasa
+asas
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
+
 
 ### PRINCIPAL COMPONENTS LOADINGS
 # plot loadings
@@ -414,7 +422,7 @@ print(p_all_loads)
 #### Farmhouse yeasts only
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 
 # create PCA object
 pca_obj = PCAtools::pca(t(counts_farm_only),
@@ -423,11 +431,6 @@ pca_obj = PCAtools::pca(t(counts_farm_only),
 
 
 ### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS
-# Horn method
-horn_method = tryCatch(
-  PCAtools::parallelPCA(counts),
-  error = function(e) { list(n = 1) }
-)
 
 # Elbow method
 elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
@@ -436,44 +439,56 @@ elbow_method = PCAtools::findElbowPoint(pca_obj$variance)
 nPCopt = which(cumsum(pca_obj$variance) > 80)[1]
 
 # max number of component + 1
-if(horn_method$n >= elbow_method & horn_method$n >= nPCopt){
-  nPCmax = horn_method$n + 1
-} else if(elbow_method >= horn_method$n & elbow_method >= nPCopt){
+if(elbow_method >= nPCopt){
   nPCmax = elbow_method + 1
 } else{
   nPCmax= nPCopt
 }
+
+```
+
+saassasa
+asas
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
 
 
 ### SCREEPLOT
 # screeplot
 p1 = PCAtools::screeplot(pca_obj,
                         components = pca_obj$components[1:nPCmax],
-                        vline = c(horn_method$n, elbow_method, nPCopt),
+                        vline = c(elbow_method, nPCopt),
                         title = "Screeplot - number of significant Principal Components",
                         colBar = rev(colorRampPalette(brewer.pal(7, "Blues"))(nPCmax)),
                         axisLabSize = 18,
                         titleLabSize = 22) +
-  geom_label(aes(x = horn_method$n, y = 50, label = "Horn\'s", vjust = -1, size = 8)) +
   geom_label(aes(x = elbow_method, y = 50, label = "Elbow method", vjust = -1, size = 8)) +
   geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, size = 8), colour = "steelblue") +
   theme(plot.title = element_text(size = 18, hjust = 0.5))
 print(p1)
 
+
+```
+
+saassasa
+asas
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
+
+
 ### BIPLOT
-p1 = PCAtools::biplot(pca_obj,
-                      labSize = 0,
-                      pointSize = 2,
-                      drawConnectors = FALSE,
-                      max.overlaps = 700,
-                      colby = "culture",
-                      #colkey = c("grey75", colorRampPalette(brewer.pal(n = 4, name = "Reds"))(8)),
-                      title = "PCA - culture",
-                      legendPosition = "bottom") +
-  theme(plot.title = element_text(size = 22, hjust = 0.5),
-        plot.subtitle = element_text(size = 18, hjust = 0.5),
-        legend.background = element_rect(colour = "grey25", size = 0.5))
-plot(p1)
 p_farm = PCAtools::biplot(pca_obj,
                           labSize = 0,
                           pointSize = 2,
@@ -484,11 +499,29 @@ p_farm = PCAtools::biplot(pca_obj,
                           colby = "region",
                           colkey = c('#0571B0', '#FBA01D',"#FFDA00", "steelblue", '#A6611A',"#008470",'#92C5DE'),
                           title = "PCA - region",
-                          legendPosition = "none") +
+                          legendPosition = "right") +
   theme(plot.title = element_blank(),
         plot.subtitle = element_blank(),
         legend.background = element_rect(colour = "grey25", size = 0.5))
 plot(p_farm)
+
+
+
+```
+
+saassasa
+asas
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
+
+
+
 p_farm_pair = PCAtools::pairsplot(pca_obj,
                                   components = pca_obj$components[1:4],
                                   colby = "region",
@@ -502,6 +535,19 @@ p_farm_pair = PCAtools::pairsplot(pca_obj,
   theme(plot.title = element_blank())
 print(p_farm_pair)
 
+```
+
+saassasa
+asas
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
+
 
 p1 = PCAtools::biplot(pca_obj,
                       labSize = 0,
@@ -510,12 +556,30 @@ p1 = PCAtools::biplot(pca_obj,
                       max.overlaps = 700,
                       colby = "method",
                       colkey = c("grey75", "firebrick", "steelblue"),
-                      title = "PCA - preservation",
                       legendPosition = "bottom") +
-  theme(plot.title = element_text(size = 22, hjust = 0.5),
+  theme(plot.title = element_blank(),
         plot.subtitle = element_text(size = 18, hjust = 0.5),
         legend.background = element_rect(colour = "grey25", size = 0.5))
 plot(p1)
+
+```
+
+as
+as
+as
+asassaas
+as
+
+
+
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
+
 p1 = PCAtools::pairsplot(pca_obj,
                           components = pca_obj$components[1:10],
                           colby = "method",
@@ -527,20 +591,33 @@ p1 = PCAtools::pairsplot(pca_obj,
   theme(plot.title = element_blank())
 print(p1)
 
+
+
+```
+
+saassasa
+asas
+asasas
+
+```{r}
+#| echo: TRUE
+#| message: FALSE
+#| warning: FALSE
+#| fig.height: 6
+#| fig.cap: '[Figure 6: Biplot of framhouse and industrial yests phenotypes.]{style="color: steelblue;"}'
+
+
+
 ### PRINCIPAL COMPONENTS LOADINGS
 # plot loadings
 p1 = PCAtools::plotloadings(pca_obj,
                             components = getComponents(pca_obj, seq_len(nPCmax - 1)),
                             rangeRetain = 0.01,
                             labSize = 3,
-                            title = "Loadings plot: correlation between phenotypes",
-                            subtitle = paste0("and the ", nPCmax - 1, " Significant Principal Components "),
                             caption = "Top 1% variables",
                             shape = 21,
                             col = c('steelblue', 'white', 'red3'),
-                            drawConnectors = TRUE) +
-  theme(plot.title = element_text(size = 22, hjust = 0.5),
-        plot.subtitle = element_text(size = 18, hjust = 0.5))
+                            drawConnectors = TRUE)
 print(p1)
 
 ```

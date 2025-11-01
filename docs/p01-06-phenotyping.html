@@ -550,10 +550,9 @@ div.sourceCode {
 <span id="cb5-7"><a href="#cb5-7"></a>                          <span class="at">pointSize =</span> <span class="dv">2</span>,</span>
 <span id="cb5-8"><a href="#cb5-8"></a>                          <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
 <span id="cb5-9"><a href="#cb5-9"></a>                          <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb5-10"><a href="#cb5-10"></a>                          <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>),</span>
-<span id="cb5-11"><a href="#cb5-11"></a>                          <span class="at">title =</span> <span class="fu">paste0</span>(<span class="st">"Top "</span>, nPCmax <span class="sc">-</span> <span class="dv">1</span>, <span class="st">" Principal Components"</span>)) <span class="sc">+</span></span>
-<span id="cb5-12"><a href="#cb5-12"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb5-13"><a href="#cb5-13"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-10"><a href="#cb5-10"></a>                          <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb5-12"><a href="#cb5-12"></a>p1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -663,41 +662,33 @@ div.sourceCode {
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># p1 = PCAtools::biplot(pca_obj,</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="co">#                       labSize = 2,</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#                       pointSize = 5,</span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co">#                       drawConnectors = TRUE,</span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">#                       max.overlaps = 700,</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="co">#                       colby = "Industry",</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a><span class="co">#                       #colkey = c("grey75", colorRampPalette(brewer.pal(n = 4, name = "Reds"))(8)),</span></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="co">#                       title = "PCA - Industry",</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="co">#                       legendPosition = "bottom") +</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a><span class="co">#   theme(plot.title = element_text(size = 22, hjust = 0.5),</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="co">#         plot.subtitle = element_text(size = 18, hjust = 0.5),</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="co">#         legend.background = element_rect(colour = "grey25", size = 0.5))</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a><span class="co"># plot(p1)</span></span>
-<span id="cb10-14"><a href="#cb10-14"></a></span>
-<span id="cb10-15"><a href="#cb10-15"></a><span class="do">## PAIRSPLOT</span></span>
-<span id="cb10-16"><a href="#cb10-16"></a>p_all_pair <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pairsplot</span>(pca_obj,</span>
-<span id="cb10-17"><a href="#cb10-17"></a>                                 <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>],</span>
-<span id="cb10-18"><a href="#cb10-18"></a>                                 <span class="at">shape =</span><span class="st">"Outside"</span>,</span>
-<span id="cb10-19"><a href="#cb10-19"></a>                                 <span class="at">shapekey =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">21</span>),</span>
-<span id="cb10-20"><a href="#cb10-20"></a>                                 <span class="at">colby =</span> <span class="st">"Industry"</span>,</span>
-<span id="cb10-21"><a href="#cb10-21"></a>                                 <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">'#e6194b'</span>, <span class="st">'#ffe119'</span>, <span class="st">'#3cb44b'</span>, <span class="st">'#4363d8'</span>, <span class="st">"red"</span>, <span class="st">'#e6beff'</span>, <span class="st">'#911eb4'</span>, <span class="st">'#46f0f0'</span>, <span class="st">'#bcf60c'</span>),</span>
-<span id="cb10-22"><a href="#cb10-22"></a>                                 <span class="at">pointSize =</span> <span class="dv">1</span>,</span>
-<span id="cb10-23"><a href="#cb10-23"></a>                                 <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
-<span id="cb10-24"><a href="#cb10-24"></a>                                 <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb10-25"><a href="#cb10-25"></a>                                 <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb10-26"><a href="#cb10-26"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb10-27"><a href="#cb10-27"></a><span class="fu">print</span>(p_all_pair)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>sssssss</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="do">## PAIRSPLOT</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>p_all_pair <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pairsplot</span>(pca_obj,</span>
+<span id="cb10-3"><a href="#cb10-3"></a>                                 <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>],</span>
+<span id="cb10-4"><a href="#cb10-4"></a>                                 <span class="at">shape =</span><span class="st">"Outside"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5"></a>                                 <span class="at">shapekey =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">21</span>),</span>
+<span id="cb10-6"><a href="#cb10-6"></a>                                 <span class="at">colby =</span> <span class="st">"Industry"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7"></a>                                 <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">'#e6194b'</span>, <span class="st">'#ffe119'</span>, <span class="st">'#3cb44b'</span>, <span class="st">'#4363d8'</span>,  <span class="st">'#e6beff'</span>, <span class="st">'#911eb4'</span>, <span class="st">'#46f0f0'</span>, <span class="st">'#bcf60c'</span>),</span>
+<span id="cb10-8"><a href="#cb10-8"></a>                                 <span class="at">pointSize =</span> <span class="dv">1</span>,</span>
+<span id="cb10-9"><a href="#cb10-9"></a>                                 <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
+<span id="cb10-10"><a href="#cb10-10"></a>                                 <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-11"><a href="#cb10-11"></a>                                 <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="fu">print</span>(p_all_pair)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="960"></p>
 <figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
+</div>
+<p>saassasa asas asasas</p>
+<div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="do">### PRINCIPAL COMPONENTS LOADINGS</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="co"># plot loadings</span></span>
 <span id="cb11-3"><a href="#cb11-3"></a>p_all_loads <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">plotloadings</span>(pca_obj,</span>
@@ -716,7 +707,7 @@ div.sourceCode {
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
 <figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
@@ -729,642 +720,160 @@ div.sourceCode {
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># create PCA object</span></span>
 <span id="cb12-2"><a href="#cb12-2"></a>pca_obj <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pca</span>(<span class="fu">t</span>(counts_farm_only),</span>
 <span id="cb12-3"><a href="#cb12-3"></a>                        metadata_farm_only,</span>
-<span id="cb12-4"><a href="#cb12-4"></a>                        <span class="at">removeVar =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>-- removing the lower 10% of variables based on variance</code></pre>
+<span id="cb12-4"><a href="#cb12-4"></a>                        <span class="at">removeVar =</span> <span class="fl">0.1</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a></span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="do">### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a></span>
+<span id="cb12-9"><a href="#cb12-9"></a><span class="co"># Elbow method</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a>elbow_method <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">findElbowPoint</span>(pca_obj<span class="sc">$</span>variance)</span>
+<span id="cb12-11"><a href="#cb12-11"></a></span>
+<span id="cb12-12"><a href="#cb12-12"></a><span class="co"># minimum number of components that explains 80% of variance</span></span>
+<span id="cb12-13"><a href="#cb12-13"></a>nPCopt <span class="ot">=</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pca_obj<span class="sc">$</span>variance) <span class="sc">&gt;</span> <span class="dv">80</span>)[<span class="dv">1</span>]</span>
+<span id="cb12-14"><a href="#cb12-14"></a></span>
+<span id="cb12-15"><a href="#cb12-15"></a><span class="co"># max number of component + 1</span></span>
+<span id="cb12-16"><a href="#cb12-16"></a><span class="cf">if</span>(elbow_method <span class="sc">&gt;=</span> nPCopt){</span>
+<span id="cb12-17"><a href="#cb12-17"></a>  nPCmax <span class="ot">=</span> elbow_method <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb12-18"><a href="#cb12-18"></a>} <span class="cf">else</span>{</span>
+<span id="cb12-19"><a href="#cb12-19"></a>  nPCmax<span class="ot">=</span> nPCopt</span>
+<span id="cb12-20"><a href="#cb12-20"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="do">### IDENTIFY NUMBER OF SIGNIFICANT PRINCIPAL COMPONENTS</span></span>
-<span id="cb14-2"><a href="#cb14-2"></a><span class="co"># Horn method</span></span>
-<span id="cb14-3"><a href="#cb14-3"></a>horn_method <span class="ot">=</span> <span class="fu">tryCatch</span>(</span>
-<span id="cb14-4"><a href="#cb14-4"></a>  PCAtools<span class="sc">::</span><span class="fu">parallelPCA</span>(counts),</span>
-<span id="cb14-5"><a href="#cb14-5"></a>  <span class="at">error =</span> <span class="cf">function</span>(e) { <span class="fu">list</span>(<span class="at">n =</span> <span class="dv">1</span>) }</span>
-<span id="cb14-6"><a href="#cb14-6"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available
-Warning in check_numbers(x, k = k, nu = nu, nv = nv): more singular
-values/vectors requested than available</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># Elbow method</span></span>
-<span id="cb16-2"><a href="#cb16-2"></a>elbow_method <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">findElbowPoint</span>(pca_obj<span class="sc">$</span>variance)</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="co"># minimum number of components that explains 80% of variance</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a>nPCopt <span class="ot">=</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pca_obj<span class="sc">$</span>variance) <span class="sc">&gt;</span> <span class="dv">80</span>)[<span class="dv">1</span>]</span>
-<span id="cb16-6"><a href="#cb16-6"></a></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># max number of component + 1</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="cf">if</span>(horn_method<span class="sc">$</span>n <span class="sc">&gt;=</span> elbow_method <span class="sc">&amp;</span> horn_method<span class="sc">$</span>n <span class="sc">&gt;=</span> nPCopt){</span>
-<span id="cb16-9"><a href="#cb16-9"></a>  nPCmax <span class="ot">=</span> horn_method<span class="sc">$</span>n <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb16-10"><a href="#cb16-10"></a>} <span class="cf">else</span> <span class="cf">if</span>(elbow_method <span class="sc">&gt;=</span> horn_method<span class="sc">$</span>n <span class="sc">&amp;</span> elbow_method <span class="sc">&gt;=</span> nPCopt){</span>
-<span id="cb16-11"><a href="#cb16-11"></a>  nPCmax <span class="ot">=</span> elbow_method <span class="sc">+</span> <span class="dv">1</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a>} <span class="cf">else</span>{</span>
-<span id="cb16-13"><a href="#cb16-13"></a>  nPCmax<span class="ot">=</span> nPCopt</span>
-<span id="cb16-14"><a href="#cb16-14"></a>}</span>
-<span id="cb16-15"><a href="#cb16-15"></a></span>
-<span id="cb16-16"><a href="#cb16-16"></a></span>
-<span id="cb16-17"><a href="#cb16-17"></a><span class="do">### SCREEPLOT</span></span>
-<span id="cb16-18"><a href="#cb16-18"></a><span class="co"># screeplot</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">screeplot</span>(pca_obj,</span>
-<span id="cb16-20"><a href="#cb16-20"></a>                        <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span>nPCmax],</span>
-<span id="cb16-21"><a href="#cb16-21"></a>                        <span class="at">vline =</span> <span class="fu">c</span>(horn_method<span class="sc">$</span>n, elbow_method, nPCopt),</span>
-<span id="cb16-22"><a href="#cb16-22"></a>                        <span class="at">title =</span> <span class="st">"Screeplot - number of significant Principal Components"</span>,</span>
-<span id="cb16-23"><a href="#cb16-23"></a>                        <span class="at">colBar =</span> <span class="fu">rev</span>(<span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">7</span>, <span class="st">"Blues"</span>))(nPCmax)),</span>
-<span id="cb16-24"><a href="#cb16-24"></a>                        <span class="at">axisLabSize =</span> <span class="dv">18</span>,</span>
-<span id="cb16-25"><a href="#cb16-25"></a>                        <span class="at">titleLabSize =</span> <span class="dv">22</span>) <span class="sc">+</span></span>
-<span id="cb16-26"><a href="#cb16-26"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> horn_method<span class="sc">$</span>n, <span class="at">y =</span> <span class="dv">50</span>, <span class="at">label =</span> <span class="st">"Horn</span><span class="sc">\'</span><span class="st">s"</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
-<span id="cb16-27"><a href="#cb16-27"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> elbow_method, <span class="at">y =</span> <span class="dv">50</span>, <span class="at">label =</span> <span class="st">"Elbow method"</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
-<span id="cb16-28"><a href="#cb16-28"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> nPCopt, <span class="at">y =</span> <span class="dv">50</span>, <span class="at">label =</span> <span class="st">"80% variance"</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>), <span class="at">colour =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb16-29"><a href="#cb16-29"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
-<span id="cb16-30"><a href="#cb16-30"></a><span class="fu">print</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_label(aes(x = horn_method$n, y = 50, label = "Horn's", vjust = -1, : All aesthetics have length 1, but the data has 4 rows.
-ℹ Please consider using `annotate()` or provide this layer with data containing
-  a single row.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_label(aes(x = elbow_method, y = 50, label = "Elbow method", : All aesthetics have length 1, but the data has 4 rows.
-ℹ Please consider using `annotate()` or provide this layer with data containing
-  a single row.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in geom_label(aes(x = nPCopt, y = 50, label = "80% variance", vjust = -1, : All aesthetics have length 1, but the data has 4 rows.
-ℹ Please consider using `annotate()` or provide this layer with data containing
-  a single row.</code></pre>
-</div>
+<p>saassasa asas asasas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="do">### SCREEPLOT</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># screeplot</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">screeplot</span>(pca_obj,</span>
+<span id="cb13-4"><a href="#cb13-4"></a>                        <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span>nPCmax],</span>
+<span id="cb13-5"><a href="#cb13-5"></a>                        <span class="at">vline =</span> <span class="fu">c</span>(elbow_method, nPCopt),</span>
+<span id="cb13-6"><a href="#cb13-6"></a>                        <span class="at">title =</span> <span class="st">"Screeplot - number of significant Principal Components"</span>,</span>
+<span id="cb13-7"><a href="#cb13-7"></a>                        <span class="at">colBar =</span> <span class="fu">rev</span>(<span class="fu">colorRampPalette</span>(<span class="fu">brewer.pal</span>(<span class="dv">7</span>, <span class="st">"Blues"</span>))(nPCmax)),</span>
+<span id="cb13-8"><a href="#cb13-8"></a>                        <span class="at">axisLabSize =</span> <span class="dv">18</span>,</span>
+<span id="cb13-9"><a href="#cb13-9"></a>                        <span class="at">titleLabSize =</span> <span class="dv">22</span>) <span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> elbow_method, <span class="at">y =</span> <span class="dv">50</span>, <span class="at">label =</span> <span class="st">"Elbow method"</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">x =</span> nPCopt, <span class="at">y =</span> <span class="dv">50</span>, <span class="at">label =</span> <span class="st">"80% variance"</span>, <span class="at">vjust =</span> <span class="sc">-</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">8</span>), <span class="at">colour =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span>
+<span id="cb13-13"><a href="#cb13-13"></a><span class="fu">print</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="do">### BIPLOT</span></span>
-<span id="cb20-2"><a href="#cb20-2"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">biplot</span>(pca_obj,</span>
-<span id="cb20-3"><a href="#cb20-3"></a>                      <span class="at">labSize =</span> <span class="dv">0</span>,</span>
-<span id="cb20-4"><a href="#cb20-4"></a>                      <span class="at">pointSize =</span> <span class="dv">2</span>,</span>
-<span id="cb20-5"><a href="#cb20-5"></a>                      <span class="at">drawConnectors =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb20-6"><a href="#cb20-6"></a>                      <span class="at">max.overlaps =</span> <span class="dv">700</span>,</span>
-<span id="cb20-7"><a href="#cb20-7"></a>                      <span class="at">colby =</span> <span class="st">"culture"</span>,</span>
-<span id="cb20-8"><a href="#cb20-8"></a>                      <span class="co">#colkey = c("grey75", colorRampPalette(brewer.pal(n = 4, name = "Reds"))(8)),</span></span>
-<span id="cb20-9"><a href="#cb20-9"></a>                      <span class="at">title =</span> <span class="st">"PCA - culture"</span>,</span>
-<span id="cb20-10"><a href="#cb20-10"></a>                      <span class="at">legendPosition =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb20-11"><a href="#cb20-11"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">22</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb20-12"><a href="#cb20-12"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb20-13"><a href="#cb20-13"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey25"</span>, <span class="at">size =</span> <span class="fl">0.5</span>))</span>
-<span id="cb20-14"><a href="#cb20-14"></a><span class="fu">plot</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>saassasa asas asasas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="do">### BIPLOT</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a>p_farm <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">biplot</span>(pca_obj,</span>
+<span id="cb14-3"><a href="#cb14-3"></a>                          <span class="at">labSize =</span> <span class="dv">0</span>,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>                          <span class="at">pointSize =</span> <span class="dv">2</span>,</span>
+<span id="cb14-5"><a href="#cb14-5"></a>                          <span class="at">drawConnectors =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb14-6"><a href="#cb14-6"></a>                          <span class="at">max.overlaps =</span> <span class="dv">700</span>,</span>
+<span id="cb14-7"><a href="#cb14-7"></a>                          <span class="at">shape =</span><span class="st">"Allochthonous"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8"></a>                          <span class="at">shapekey =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">21</span>),</span>
+<span id="cb14-9"><a href="#cb14-9"></a>                          <span class="at">colby =</span> <span class="st">"region"</span>,</span>
+<span id="cb14-10"><a href="#cb14-10"></a>                          <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">'#0571B0'</span>, <span class="st">'#FBA01D'</span>,<span class="st">"#FFDA00"</span>, <span class="st">"steelblue"</span>, <span class="st">'#A6611A'</span>,<span class="st">"#008470"</span>,<span class="st">'#92C5DE'</span>),</span>
+<span id="cb14-11"><a href="#cb14-11"></a>                          <span class="at">title =</span> <span class="st">"PCA - region"</span>,</span>
+<span id="cb14-12"><a href="#cb14-12"></a>                          <span class="at">legendPosition =</span> <span class="st">"right"</span>) <span class="sc">+</span></span>
+<span id="cb14-13"><a href="#cb14-13"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-14"><a href="#cb14-14"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb14-15"><a href="#cb14-15"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey25"</span>, <span class="at">size =</span> <span class="fl">0.5</span>))</span>
+<span id="cb14-16"><a href="#cb14-16"></a><span class="fu">plot</span>(p_farm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>p_farm <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">biplot</span>(pca_obj,</span>
-<span id="cb21-2"><a href="#cb21-2"></a>                          <span class="at">labSize =</span> <span class="dv">0</span>,</span>
-<span id="cb21-3"><a href="#cb21-3"></a>                          <span class="at">pointSize =</span> <span class="dv">2</span>,</span>
-<span id="cb21-4"><a href="#cb21-4"></a>                          <span class="at">drawConnectors =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb21-5"><a href="#cb21-5"></a>                          <span class="at">max.overlaps =</span> <span class="dv">700</span>,</span>
-<span id="cb21-6"><a href="#cb21-6"></a>                          <span class="at">shape =</span><span class="st">"Allochthonous"</span>,</span>
-<span id="cb21-7"><a href="#cb21-7"></a>                          <span class="at">shapekey =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">21</span>),</span>
-<span id="cb21-8"><a href="#cb21-8"></a>                          <span class="at">colby =</span> <span class="st">"region"</span>,</span>
-<span id="cb21-9"><a href="#cb21-9"></a>                          <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">'#0571B0'</span>, <span class="st">'#FBA01D'</span>,<span class="st">"#FFDA00"</span>, <span class="st">"steelblue"</span>, <span class="st">'#A6611A'</span>,<span class="st">"#008470"</span>,<span class="st">'#92C5DE'</span>),</span>
-<span id="cb21-10"><a href="#cb21-10"></a>                          <span class="at">title =</span> <span class="st">"PCA - region"</span>,</span>
-<span id="cb21-11"><a href="#cb21-11"></a>                          <span class="at">legendPosition =</span> <span class="st">"none"</span>) <span class="sc">+</span></span>
-<span id="cb21-12"><a href="#cb21-12"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb21-13"><a href="#cb21-13"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb21-14"><a href="#cb21-14"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey25"</span>, <span class="at">size =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">plot</span>(p_farm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>saassasa asas asasas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>p_farm_pair <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pairsplot</span>(pca_obj,</span>
+<span id="cb15-2"><a href="#cb15-2"></a>                                  <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>],</span>
+<span id="cb15-3"><a href="#cb15-3"></a>                                  <span class="at">colby =</span> <span class="st">"region"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4"></a>                                  <span class="at">shape =</span><span class="st">"Allochthonous"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5"></a>                                  <span class="at">shapekey =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">21</span>),</span>
+<span id="cb15-6"><a href="#cb15-6"></a>                                  <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">'#0571B0'</span>, <span class="st">'#FBA01D'</span>,<span class="st">"#FFDA00"</span>, <span class="st">"steelblue"</span>, <span class="st">'#A6611A'</span>,<span class="st">"#008470"</span>,<span class="st">'#92C5DE'</span>),</span>
+<span id="cb15-7"><a href="#cb15-7"></a>                                  <span class="at">pointSize =</span> <span class="dv">1</span>,</span>
+<span id="cb15-8"><a href="#cb15-8"></a>                                  <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
+<span id="cb15-9"><a href="#cb15-9"></a>                                  <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb15-10"><a href="#cb15-10"></a>                                  <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="fu">print</span>(p_farm_pair)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>p_farm_pair <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pairsplot</span>(pca_obj,</span>
-<span id="cb24-2"><a href="#cb24-2"></a>                                  <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>],</span>
-<span id="cb24-3"><a href="#cb24-3"></a>                                  <span class="at">colby =</span> <span class="st">"region"</span>,</span>
-<span id="cb24-4"><a href="#cb24-4"></a>                                  <span class="at">shape =</span><span class="st">"Allochthonous"</span>,</span>
-<span id="cb24-5"><a href="#cb24-5"></a>                                  <span class="at">shapekey =</span> <span class="fu">c</span>(<span class="dv">20</span>, <span class="dv">21</span>),</span>
-<span id="cb24-6"><a href="#cb24-6"></a>                                  <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">'#0571B0'</span>, <span class="st">'#FBA01D'</span>,<span class="st">"#FFDA00"</span>, <span class="st">"steelblue"</span>, <span class="st">'#A6611A'</span>,<span class="st">"#008470"</span>,<span class="st">'#92C5DE'</span>),</span>
-<span id="cb24-7"><a href="#cb24-7"></a>                                  <span class="at">pointSize =</span> <span class="dv">1</span>,</span>
-<span id="cb24-8"><a href="#cb24-8"></a>                                  <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
-<span id="cb24-9"><a href="#cb24-9"></a>                                  <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb24-10"><a href="#cb24-10"></a>                                  <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb24-11"><a href="#cb24-11"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">print</span>(p_farm_pair)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>saassasa asas asasas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">biplot</span>(pca_obj,</span>
+<span id="cb16-2"><a href="#cb16-2"></a>                      <span class="at">labSize =</span> <span class="dv">0</span>,</span>
+<span id="cb16-3"><a href="#cb16-3"></a>                      <span class="at">pointSize =</span> <span class="dv">2</span>,</span>
+<span id="cb16-4"><a href="#cb16-4"></a>                      <span class="at">drawConnectors =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>                      <span class="at">max.overlaps =</span> <span class="dv">700</span>,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>                      <span class="at">colby =</span> <span class="st">"method"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7"></a>                      <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">"grey75"</span>, <span class="st">"firebrick"</span>, <span class="st">"steelblue"</span>),</span>
+<span id="cb16-8"><a href="#cb16-8"></a>                      <span class="at">legendPosition =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-10"><a href="#cb16-10"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
+<span id="cb16-11"><a href="#cb16-11"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey25"</span>, <span class="at">size =</span> <span class="fl">0.5</span>))</span>
+<span id="cb16-12"><a href="#cb16-12"></a><span class="fu">plot</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-4.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">biplot</span>(pca_obj,</span>
-<span id="cb28-2"><a href="#cb28-2"></a>                      <span class="at">labSize =</span> <span class="dv">0</span>,</span>
-<span id="cb28-3"><a href="#cb28-3"></a>                      <span class="at">pointSize =</span> <span class="dv">2</span>,</span>
-<span id="cb28-4"><a href="#cb28-4"></a>                      <span class="at">drawConnectors =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb28-5"><a href="#cb28-5"></a>                      <span class="at">max.overlaps =</span> <span class="dv">700</span>,</span>
-<span id="cb28-6"><a href="#cb28-6"></a>                      <span class="at">colby =</span> <span class="st">"method"</span>,</span>
-<span id="cb28-7"><a href="#cb28-7"></a>                      <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">"grey75"</span>, <span class="st">"firebrick"</span>, <span class="st">"steelblue"</span>),</span>
-<span id="cb28-8"><a href="#cb28-8"></a>                      <span class="at">title =</span> <span class="st">"PCA - preservation"</span>,</span>
-<span id="cb28-9"><a href="#cb28-9"></a>                      <span class="at">legendPosition =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
-<span id="cb28-10"><a href="#cb28-10"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">22</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb28-11"><a href="#cb28-11"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb28-12"><a href="#cb28-12"></a>        <span class="at">legend.background =</span> <span class="fu">element_rect</span>(<span class="at">colour =</span> <span class="st">"grey25"</span>, <span class="at">size =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="fu">plot</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>as as as asassaas as</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pairsplot</span>(pca_obj,</span>
+<span id="cb17-2"><a href="#cb17-2"></a>                          <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],</span>
+<span id="cb17-3"><a href="#cb17-3"></a>                          <span class="at">colby =</span> <span class="st">"method"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4"></a>                          <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">"grey75"</span>, <span class="st">"firebrick"</span>, <span class="st">"steelblue"</span>),</span>
+<span id="cb17-5"><a href="#cb17-5"></a>                          <span class="at">pointSize =</span> <span class="dv">1</span>,</span>
+<span id="cb17-6"><a href="#cb17-6"></a>                          <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
+<span id="cb17-7"><a href="#cb17-7"></a>                          <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb17-8"><a href="#cb17-8"></a>                          <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="fu">print</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-5.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">pairsplot</span>(pca_obj,</span>
-<span id="cb31-2"><a href="#cb31-2"></a>                          <span class="at">components =</span> pca_obj<span class="sc">$</span>components[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>],</span>
-<span id="cb31-3"><a href="#cb31-3"></a>                          <span class="at">colby =</span> <span class="st">"method"</span>,</span>
-<span id="cb31-4"><a href="#cb31-4"></a>                          <span class="at">colkey =</span> <span class="fu">c</span>(<span class="st">"grey75"</span>, <span class="st">"firebrick"</span>, <span class="st">"steelblue"</span>),</span>
-<span id="cb31-5"><a href="#cb31-5"></a>                          <span class="at">pointSize =</span> <span class="dv">1</span>,</span>
-<span id="cb31-6"><a href="#cb31-6"></a>                          <span class="at">trianglelabSize =</span> <span class="dv">12</span>,</span>
-<span id="cb31-7"><a href="#cb31-7"></a>                          <span class="at">plotaxes =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb31-8"><a href="#cb31-8"></a>                          <span class="at">margingaps =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>, <span class="fl">0.05</span>), <span class="st">"cm"</span>)) <span class="sc">+</span></span>
-<span id="cb31-9"><a href="#cb31-9"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Scale for colour is already present.
-Adding another scale for colour, which will replace the existing scale.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.
-Coordinate system already present. Adding new coordinate system, which will
-replace the existing one.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">print</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>saassasa asas asasas</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="do">### PRINCIPAL COMPONENTS LOADINGS</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="co"># plot loadings</span></span>
+<span id="cb18-3"><a href="#cb18-3"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">plotloadings</span>(pca_obj,</span>
+<span id="cb18-4"><a href="#cb18-4"></a>                            <span class="at">components =</span> <span class="fu">getComponents</span>(pca_obj, <span class="fu">seq_len</span>(nPCmax <span class="sc">-</span> <span class="dv">1</span>)),</span>
+<span id="cb18-5"><a href="#cb18-5"></a>                            <span class="at">rangeRetain =</span> <span class="fl">0.01</span>,</span>
+<span id="cb18-6"><a href="#cb18-6"></a>                            <span class="at">labSize =</span> <span class="dv">3</span>,</span>
+<span id="cb18-7"><a href="#cb18-7"></a>                            <span class="at">caption =</span> <span class="st">"Top 1% variables"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8"></a>                            <span class="at">shape =</span> <span class="dv">21</span>,</span>
+<span id="cb18-9"><a href="#cb18-9"></a>                            <span class="at">col =</span> <span class="fu">c</span>(<span class="st">'steelblue'</span>, <span class="st">'white'</span>, <span class="st">'red3'</span>),</span>
+<span id="cb18-10"><a href="#cb18-10"></a>                            <span class="at">drawConnectors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb18-11"><a href="#cb18-11"></a><span class="fu">print</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-6.png" class="img-fluid figure-img" width="960"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a><span class="do">### PRINCIPAL COMPONENTS LOADINGS</span></span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="co"># plot loadings</span></span>
-<span id="cb34-3"><a href="#cb34-3"></a>p1 <span class="ot">=</span> PCAtools<span class="sc">::</span><span class="fu">plotloadings</span>(pca_obj,</span>
-<span id="cb34-4"><a href="#cb34-4"></a>                            <span class="at">components =</span> <span class="fu">getComponents</span>(pca_obj, <span class="fu">seq_len</span>(nPCmax <span class="sc">-</span> <span class="dv">1</span>)),</span>
-<span id="cb34-5"><a href="#cb34-5"></a>                            <span class="at">rangeRetain =</span> <span class="fl">0.01</span>,</span>
-<span id="cb34-6"><a href="#cb34-6"></a>                            <span class="at">labSize =</span> <span class="dv">3</span>,</span>
-<span id="cb34-7"><a href="#cb34-7"></a>                            <span class="at">title =</span> <span class="st">"Loadings plot: correlation between phenotypes"</span>,</span>
-<span id="cb34-8"><a href="#cb34-8"></a>                            <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"and the "</span>, nPCmax <span class="sc">-</span> <span class="dv">1</span>, <span class="st">" Significant Principal Components "</span>),</span>
-<span id="cb34-9"><a href="#cb34-9"></a>                            <span class="at">caption =</span> <span class="st">"Top 1% variables"</span>,</span>
-<span id="cb34-10"><a href="#cb34-10"></a>                            <span class="at">shape =</span> <span class="dv">21</span>,</span>
-<span id="cb34-11"><a href="#cb34-11"></a>                            <span class="at">col =</span> <span class="fu">c</span>(<span class="st">'steelblue'</span>, <span class="st">'white'</span>, <span class="st">'red3'</span>),</span>
-<span id="cb34-12"><a href="#cb34-12"></a>                            <span class="at">drawConnectors =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb34-13"><a href="#cb34-13"></a>  <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">22</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb34-14"><a href="#cb34-14"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">18</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>-- variables retained:
-Biggy, CuSO4_0.1, T39C</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="fu">print</span>(p1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-12-7.png" class="img-fluid figure-img" width="960"></p>
+<p><img src="p01-06-phenotyping_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="960"></p>
+<figcaption><span style="color: steelblue;">Figure 6: Biplot of framhouse and industrial yests phenotypes.</span></figcaption>
 </figure>
 </div>
 </div>
