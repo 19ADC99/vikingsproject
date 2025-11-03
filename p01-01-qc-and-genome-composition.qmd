@@ -32,7 +32,7 @@ knitr::opts_knit$set(root.dir = mainDir)
 
 ## On this page
 
-Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-genome-compisition.
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-genome-composition.
 
 * Here we sequence 37 genomes of Farmhouse yeasts isolates and we control the quality of the sequencing libraries.
 * We characterize the phylogenetic origin of the isolates by aligning the reads to six *Saccharomyces* species reference genomes.
@@ -957,7 +957,7 @@ ggplot(data_k, aes(x = V2, y = V3)) +
 
 
 
-## Lessons Learnt {#sec-lesson-learnt-genome-compisition}
+## Lessons Learnt {#sec-lesson-learnt-genome-composition}
 
 Based on the initial analysis of the Farmhouse yeasts isolates genomics libraries we have learnt:
 

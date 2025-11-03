@@ -35,14 +35,18 @@ knitr::opts_knit$set(root.dir = mainDir)
 
 ## On this page
 
-Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-variant-calling.
 
-* Here
+* Here we perform and in-depth analysis of farmhouse yeasts Single Nucleotide Variants (SNPs).
+* First, we call the variants against the *S. cerevisiae* S288C reference genome.
+* Based on the SNPs, we explore farmhouse yeasts heterozygosity and Loss-Of-Heterozygosity (LOH).
+* Then, we look into potential signatures of yeast hybridizations in those cultures for which we have sequenced 3 isolates or more.
+* Finally, we investigate any potential signature of genome domestication.
 
 
 ## Variant Calling
 
-We will now analyse the DNA variants between the sequenced farmhouse yeasts and the reference _S. cerevisiae_ lab strain S288C. Genetic variants will be combined with information from the 151 yeast strains sequenced in Gallone et al 2019 used to reconstruct (kveiks) population structures, levels of heterozygosities, putative regions with Loss Of Heterozygosity (LOH) and the eventual genes affected by LOH.
+We will now analyse the DNA variants between the sequenced farmhouse yeasts and the reference _S. cerevisiae_ lab strain S288C. Genetic variants will be combined with information from the 151 yeast strains sequenced in [Gallone et al. 2019](https://www.nature.com/articles/s41559-019-0997-9) used to reconstruct (kveiks) population structures, levels of heterozygosities, putative regions with Loss Of Heterozygosity (LOH) and the eventual genes affected by LOH.
 
 
 ### Reads alignment
@@ -1650,14 +1654,12 @@ grid.draw(g)
 
 
 
+## Lessons Learnt {#sec-lesson-learnt-variant-calling}
 
+Based on the initial analysis of the Farmhouse yeasts isolates genomics libraries we have learnt:
 
-## Lessons Learnt {#sec-lesson-learnt-feature-selection}
-
-Based on the  we have learnt:
-
-* Fr
-
+* All Farmhouse yeasts isolates sequenced so far are pure *S. cerevisiae*, except for *Muri* and the *k7R25* isolate we sequenced. *Muri* was first identified by [Preiss to be a unique *Saccharomyces cerevisiae* × *Saccharomyces eubayanus* x *Saccharomyces uvarum* triple hybrid](https://doi.org/10.3389/fmicb.2018.02253), potentially originating from a contamination of British Ales. *k7R25*, surprisingly, show the same *S. cerevisiae* × *S. eubayanus* x *S. uvarum* hybridization pattern, suggesting a common origin with *Muri*.
+* Most farmhouse yeast isolates we analysed appear to be tetraploid based on their k-mer frequency distributions. Exceptions to this are the isolates *16R23*, *38R16*, *39R20* and *40R14* of Lithuanian and Russian origin, which appears to be diploid, and the triple hybrids *Muri* and *k7R25*, which seems to have a single copy of each subgenome.
 
 ## Session Information
 

@@ -63,9 +63,11 @@ GO_universe = as.character(c(GO_universe[!is.na(GO_universe$EntrezID), ]$EntrezI
 
 ## On this page
 
-Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @sec-lesson-learnt-feature-selection.
+Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: @Lesson Learnt: @sec-lesson-learnt-genome-assembly
 
-* Here
+* Here we perform a *de novo* assembly and annotation of the 37 genomes of Farmhouse yeasts isolates plus the 7 already published by [Preiss et al. 2018](doi: 10.3389/fmicb.2018.02137)).
+* Based on the ene annotations we generate, we first try to identify Famhouse yeats's specific gene families and lineage specific expansion.
+* Finally, we investigate traces of potential Horizontal Gene Transfer from bactierial or fungal origin.
 
 
 ## De novo assembly
@@ -167,7 +169,7 @@ DT::datatable(
 ```
 
 
-Despite being more or less fragmented, all assembled genomes are in the range of _Saccharomyces_ sizes. Notable exceptions are: Granvin1 (???), Muri and k7R25 (which are _S. cerevisiae_, _ X _S. eubayanus_ X _S. uvarum_ triple hybrids).
+Despite being more or less fragmented, all assembled genomes are in the range of _Saccharomyces_ sizes. Notable exceptions are: Granvin1 (???), Muri and k7R25 (which are _S. cerevisiae_, X _S. eubayanus_ X _S. uvarum_ triple hybrids).
 
 
 ## Genome Annotation
@@ -281,7 +283,7 @@ DT::datatable(
 
 ### Identification of Farmhouse-specific Gene Families
 
-Do kveiks harbor kveik-specific gene families? To answer this question we build protein orthogroups using proteomes from Kveiks, 302 industrail strains (from Gallone et al. 2019) and reference proteomes for _S. cerevisiae_, _S. kudriavzevii_, _S. eubayanus_, _S. uvarum_ using the Orthofinder pipeline. This approach resulted to be successful for clustering HGT, so hopefully we can identify Orthogroups specific for kveik strains.
+Do kveiks harbor kveik-specific gene families? To answer this question we build protein orthogroups using proteomes from Kveiks, 302 industrail strains (from [Gallone et al. 2019](https://www.nature.com/articles/s41559-019-0997-9)) and reference proteomes for _S. cerevisiae_, _S. kudriavzevii_, _S. eubayanus_, _S. uvarum_ using the Orthofinder pipeline. This approach resulted to be successful for clustering HGT, so hopefully we can identify Orthogroups specific for kveik strains.
 
 
 ```{bash, eval=FALSE}
@@ -544,7 +546,7 @@ DT::datatable(
 ```
 
 
-Kveik strains seems to have a significant higher number of Ascomycetes genes than the other industrial strains analysed. Are there additional proteins shared between all the kveiks (or by some kveiks with same geographical origin?). We can group these proteins in gene families and see if we see a common pattern. If not, we can BLAST back the proteins and see which specific genes have been acquired.
+Kveik strains seems to have a significant higher number of *Ascomycetes* genes than the other industrial strains analysed. Are there additional proteins shared between all the kveiks (or by some kveiks with same geographical origin)? We can group these proteins in gene families and see if we see a common pattern. If not, we can BLAST back the proteins and see which specific genes have been acquired.
 
 
 ```{bash, eval=FALSE}
@@ -559,7 +561,7 @@ Kveik strains seems to have a significant higher number of Ascomycetes genes tha
 ```
 
 
-From OrthoFinder output we can identify 49 orthogroups containing four genes or more. We visualize them as heatmap, anc we can see that kveiks strains have a higher number of common additional orthogroups that are absent from S288C and industrial strains. Interestingly, the distribution pattern does not seem to overlap with the geographical isolation of the kveik culture.
+From OrthoFinder output we can identify 49 orthogroups containing four genes or more. We visualize them as heatmap, we can see that kveiks strains have a higher number of common additional orthogroups that are absent from S288C and industrial strains. Interestingly, the distribution pattern does not seem to overlap with the geographical isolation of the kveik culture.
 
 
 ```{r}
@@ -859,11 +861,11 @@ print(p0)
 
 
 
-## Lessons Learnt {#sec-lesson-learnt-feature-selection}
+## Lessons Learnt {#sec-lesson-learnt-genome-assembly}
 
-Based on the  we have learnt:
+Based on the genome *de novo* assembly and annotation, we have discovered::
 
-* Fr
+* 5 / 8 (62.5%) baltic strains we have sequenced share a region of 8 *Z. parabailli* genes that are absent in the other Farmhouse yeasts and brewing industrial strains. This genomic region could represent a Horizontal Gene Transfer event that happened in the ancestor of these Farmhouse yeasts from Latvia and Lithuania.
 
 
 ## Session Information

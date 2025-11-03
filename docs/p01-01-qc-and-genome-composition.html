@@ -320,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#reads-qc-and-filtering" id="toc-reads-qc-and-filtering" class="nav-link" data-scroll-target="#reads-qc-and-filtering"><span class="header-section-number">1.3</span> Reads QC and Filtering</a></li>
   <li><a href="#genome-composition" id="toc-genome-composition" class="nav-link" data-scroll-target="#genome-composition"><span class="header-section-number">1.4</span> Genome Composition</a></li>
   <li><a href="#ploydies-estimation" id="toc-ploydies-estimation" class="nav-link" data-scroll-target="#ploydies-estimation"><span class="header-section-number">1.5</span> Ploydies estimation</a></li>
-  <li><a href="#sec-lesson-learnt-genome-compisition" id="toc-sec-lesson-learnt-genome-compisition" class="nav-link" data-scroll-target="#sec-lesson-learnt-genome-compisition"><span class="header-section-number">1.6</span> Lessons Learnt</a></li>
+  <li><a href="#sec-lesson-learnt-genome-composition" id="toc-sec-lesson-learnt-genome-composition" class="nav-link" data-scroll-target="#sec-lesson-learnt-genome-composition"><span class="header-section-number">1.6</span> Lessons Learnt</a></li>
   <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">1.7</span> Session Information</a></li>
   </ul>
 </nav>
@@ -367,7 +367,7 @@ div.sourceCode {
 </div>
 <section id="on-this-page" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="on-this-page"><span class="header-section-number">1.1</span> On this page</h2>
-<p>Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: <a href="#sec-lesson-learnt-genome-compisition" class="quarto-xref"><span>Section 1.6</span></a>.</p>
+<p>Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: <a href="#sec-lesson-learnt-genome-composition" class="quarto-xref"><span>Section 1.6</span></a>.</p>
 <ul>
 <li>Here we sequence 37 genomes of Farmhouse yeasts isolates and we control the quality of the sequencing libraries.</li>
 <li>We characterize the phylogenetic origin of the isolates by aligning the reads to six <em>Saccharomyces</em> species reference genomes.</li>
@@ -424,8 +424,8 @@ div.sourceCode {
 <p>We check the composition of the sequenced kveiks by aligning the reads to a set of <em>Saccharomyces</em> reference genomes. We add as well as a reference, 7 additional Farmhouse yeasts genomes sequenced by <a href="doi:%2010.3389/fmicb.2018.02137">Preiss et al., 2018</a>: <em>Granvin1</em>, <em>Hornidal1</em>, <em>Hornidal2</em>, <em>Laerdal2</em>, <em>Stordal Ebbergarden1</em>, <em>Voss1</em>.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="datatables html-widget html-fill-item" id="htmlwidget-ad34af4d844ac9ef4e8b" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-ad34af4d844ac9ef4e8b">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 1: Yeast Reference Genomes.<\/caption>","data":[["S. cerevisiae","S. eubayanus","S. kudriavzevi","S. mikatae","S. paradoxus","S. uvarum"],["S288C_R64-2-1","GCF_001298625.1","gca_000167075","SRX055454","ASM207914v1","ASM224264v1"],["Scere","Seuba","Skudr","Smika","Spara","Suvar"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Species<\/th>\n      <th>Genome Accession<\/th>\n      <th>Label<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"name":"Species","targets":0},{"name":"Genome Accession","targets":1},{"name":"Label","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-89ead2224f076bf96041" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-89ead2224f076bf96041">{"x":{"filter":"none","vertical":false,"extensions":["FixedColumns","FixedHeader"],"caption":"<caption>Table 1: Yeast Reference Genomes.<\/caption>","data":[["S. cerevisiae","S. eubayanus","S. kudriavzevi","S. mikatae","S. paradoxus","S. uvarum"],["S288C_R64-2-1","GCF_001298625.1","gca_000167075","SRX055454","ASM207914v1","ASM224264v1"],["Scere","Seuba","Skudr","Smika","Spara","Suvar"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Species<\/th>\n      <th>Genome Accession<\/th>\n      <th>Label<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"scrollX":true,"paging":true,"fixedHeader":false,"pageLength":10,"columnDefs":[{"name":"Species","targets":0},{"name":"Genome Accession","targets":1},{"name":"Label","targets":2}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 <p>First, we align the reads to the six <em>Saccharomyces</em> reference genomes. Then we create 10kb windows with <code>bedtools</code> and we calculate the average coverage for each window.</p>
@@ -1196,8 +1196,8 @@ div.sourceCode {
 </div>
 </div>
 </section>
-<section id="sec-lesson-learnt-genome-compisition" class="level2" data-number="1.6">
-<h2 data-number="1.6" class="anchored" data-anchor-id="sec-lesson-learnt-genome-compisition"><span class="header-section-number">1.6</span> Lessons Learnt</h2>
+<section id="sec-lesson-learnt-genome-composition" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="sec-lesson-learnt-genome-composition"><span class="header-section-number">1.6</span> Lessons Learnt</h2>
 <p>Based on the initial analysis of the Farmhouse yeasts isolates genomics libraries we have learnt:</p>
 <ul>
 <li>All Farmhouse yeasts isolates sequenced so far are pure <em>S. cerevisiae</em>, except for <em>Muri</em> and the <em>k7R25</em> isolate we sequenced. <em>Muri</em> was first identified by <a href="https://doi.org/10.3389/fmicb.2018.02253">Preiss to be a unique <em>Saccharomyces cerevisiae</em> × <em>Saccharomyces eubayanus</em> x <em>Saccharomyces uvarum</em> triple hybrid</a>, potentially originating from a contamination of British Ales. <em>k7R25</em>, surprisingly, show the same <em>S. cerevisiae</em> × <em>S. eubayanus</em> x <em>S. uvarum</em> hybridization pattern, suggesting a common origin with <em>Muri</em>.</li>

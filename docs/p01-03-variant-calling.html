@@ -319,7 +319,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#identify-disrupted-genes" id="toc-identify-disrupted-genes" class="nav-link" data-scroll-target="#identify-disrupted-genes"><span class="header-section-number">3.6.4</span> Identify disrupted genes</a></li>
   <li><a href="#phylogenetic-relationships" id="toc-phylogenetic-relationships" class="nav-link" data-scroll-target="#phylogenetic-relationships"><span class="header-section-number">3.6.5</span> Phylogenetic relationships</a></li>
   </ul></li>
-  <li><a href="#sec-lesson-learnt-feature-selection" id="toc-sec-lesson-learnt-feature-selection" class="nav-link" data-scroll-target="#sec-lesson-learnt-feature-selection"><span class="header-section-number">3.7</span> Lessons Learnt</a></li>
+  <li><a href="#sec-lesson-learnt-variant-calling" id="toc-sec-lesson-learnt-variant-calling" class="nav-link" data-scroll-target="#sec-lesson-learnt-variant-calling"><span class="header-section-number">3.7</span> Lessons Learnt</a></li>
   <li><a href="#session-information" id="toc-session-information" class="nav-link" data-scroll-target="#session-information"><span class="header-section-number">3.8</span> Session Information</a></li>
   </ul>
 </nav>
@@ -366,9 +366,13 @@ div.sourceCode {
 </div>
 <section id="on-this-page" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="on-this-page"><span class="header-section-number">3.1</span> On this page</h2>
-<p>Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: <a href="p01-06-phenotyping.html#sec-lesson-learnt-feature-selection" class="quarto-xref"><span>Section 6.5</span></a>.</p>
+<p>Biological insights and take-home messages are at the bottom of the page at section Lesson Learnt: <a href="#sec-lesson-learnt-variant-calling" class="quarto-xref"><span>Section 3.7</span></a>.</p>
 <ul>
-<li>Here</li>
+<li>Here we perform and in-depth analysis of farmhouse yeasts Single Nucleotide Variants (SNPs).</li>
+<li>First, we call the variants against the <em>S. cerevisiae</em> S288C reference genome.</li>
+<li>Based on the SNPs, we explore farmhouse yeasts heterozygosity and Loss-Of-Heterozygosity (LOH).</li>
+<li>Then, we look into potential signatures of yeast hybridizations in those cultures for which we have sequenced 3 isolates or more.</li>
+<li>Finally, we investigate any potential signature of genome domestication.</li>
 </ul>
 </section>
 <section id="variant-calling" class="level2" data-number="3.2">
@@ -1859,11 +1863,12 @@ Scere64K: Scere64K</code></pre>
 </div>
 </section>
 </section>
-<section id="sec-lesson-learnt-feature-selection" class="level2" data-number="3.7">
-<h2 data-number="3.7" class="anchored" data-anchor-id="sec-lesson-learnt-feature-selection"><span class="header-section-number">3.7</span> Lessons Learnt</h2>
-<p>Based on the we have learnt:</p>
+<section id="sec-lesson-learnt-variant-calling" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="sec-lesson-learnt-variant-calling"><span class="header-section-number">3.7</span> Lessons Learnt</h2>
+<p>Based on the initial analysis of the Farmhouse yeasts isolates genomics libraries we have learnt:</p>
 <ul>
-<li>Fr</li>
+<li>All Farmhouse yeasts isolates sequenced so far are pure <em>S. cerevisiae</em>, except for <em>Muri</em> and the <em>k7R25</em> isolate we sequenced. <em>Muri</em> was first identified by <a href="https://doi.org/10.3389/fmicb.2018.02253">Preiss to be a unique <em>Saccharomyces cerevisiae</em> × <em>Saccharomyces eubayanus</em> x <em>Saccharomyces uvarum</em> triple hybrid</a>, potentially originating from a contamination of British Ales. <em>k7R25</em>, surprisingly, show the same <em>S. cerevisiae</em> × <em>S. eubayanus</em> x <em>S. uvarum</em> hybridization pattern, suggesting a common origin with <em>Muri</em>.</li>
+<li>Most farmhouse yeast isolates we analysed appear to be tetraploid based on their k-mer frequency distributions. Exceptions to this are the isolates <em>16R23</em>, <em>38R16</em>, <em>39R20</em> and <em>40R14</em> of Lithuanian and Russian origin, which appears to be diploid, and the triple hybrids <em>Muri</em> and <em>k7R25</em>, which seems to have a single copy of each subgenome.</li>
 </ul>
 </section>
 <section id="session-information" class="level2" data-number="3.8">
