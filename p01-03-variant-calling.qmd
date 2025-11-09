@@ -440,8 +440,9 @@ ggpubr::ggarrange(
 
 
 
-## Loss Of Heterozygosity (LOH)
+## Loss-Of-Heterozygosity (LOH)
 
+To identify potential regions affected by Loss-Of-Heterozygosity, we measured the average number of SNPs along a 10kb sliding window for each of the Farmhouse yeasts isolates, and selected brewing yeasts from the set published by Gallone et al. 2019. We could not identify any region in the Farmhouse yeasts genomes suggesting any LOH event.
 
 
 ```{r}
@@ -604,10 +605,11 @@ p_LOH1
 ```
 
 
-
-
 ## Search for signature of Culture #28 hybridization
 
+We have sequenced 5 distinct isolated from culture #28 (Central East Norway). As we will see in @sec-phylogeny-and-population-structure, 
+
+two lineages with  with 37 intersperced in them
 
 We look for variants in common between strains
 
@@ -1424,9 +1426,8 @@ Since it is difficult to eye-ball patterns of distributions of variants among st
 The protocol we will apply is the following:
 
 - For each strain of interest (kviks + 22 industrial), generate the consensus fasta file from the aligned variants.
--  Generate gene alignments.
+- Generate gene alignments.
 - Concatenate all the alignments for each of the 12 industrial phenotypes of interest.
-- 
 - Build a Maximum-Likelihood phylogenetic tree with IQtree.
 
 ```{bash, eval=FALSE}
@@ -1656,10 +1657,12 @@ grid.draw(g)
 
 ## Lessons Learnt {#sec-lesson-learnt-variant-calling}
 
-Based on the initial analysis of the Farmhouse yeasts isolates genomics libraries we have learnt:
+Based on the analysis of Farmhouse yeasts SNPs we have learnt:
 
-* All Farmhouse yeasts isolates sequenced so far are pure *S. cerevisiae*, except for *Muri* and the *k7R25* isolate we sequenced. *Muri* was first identified by [Preiss to be a unique *Saccharomyces cerevisiae* × *Saccharomyces eubayanus* x *Saccharomyces uvarum* triple hybrid](https://doi.org/10.3389/fmicb.2018.02253), potentially originating from a contamination of British Ales. *k7R25*, surprisingly, show the same *S. cerevisiae* × *S. eubayanus* x *S. uvarum* hybridization pattern, suggesting a common origin with *Muri*.
-* Most farmhouse yeast isolates we analysed appear to be tetraploid based on their k-mer frequency distributions. Exceptions to this are the isolates *16R23*, *38R16*, *39R20* and *40R14* of Lithuanian and Russian origin, which appears to be diploid, and the triple hybrids *Muri* and *k7R25*, which seems to have a single copy of each subgenome.
+* Farmhouse yeasts contains a high degree of Heterozygosity when compared to the other breweing yeasts, similar to yeast strains from the “mixed” Clade.
+* We could not identify any lineage-specific region with evident Loss-Of-Heterozygosity.
+* 
+
 
 ## Session Information
 

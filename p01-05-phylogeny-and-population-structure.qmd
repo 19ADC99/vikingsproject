@@ -1,4 +1,4 @@
-# Phylogeny and Population Structure
+# Phylogeny and Population Structure {#sec-phylogeny-and-population-structure}
 
 ```{css, echo=FALSE}
 
